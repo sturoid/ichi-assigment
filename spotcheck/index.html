@@ -14,7 +14,8 @@
           --accent: #7fb0e0; --ok: #5cc287; --bad: #ef7d74; --warn: #e3b04b; }
 }
 * { box-sizing: border-box; }
-body { margin: 0; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+body { margin: 0; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink);
+       height: 100vh; display: grid; grid-template-rows: auto minmax(0, 1fr); }
 header { display: flex; align-items: center; gap: 16px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
 header h1 { font-size: 17px; margin: 0; }
 #progress { flex: 1; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
@@ -22,7 +23,7 @@ header h1 { font-size: 17px; margin: 0; }
 #bar span { display: block; height: 100%; background: var(--ok); width: 0; }
 button { font: inherit; font-size: 13px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); cursor: pointer; }
 button:hover { border-color: var(--accent); }
-main { display: grid; grid-template-columns: 230px minmax(340px, 440px) 1fr; grid-template-rows: minmax(0, 1fr); height: calc(100vh - 49px); }
+main { display: grid; grid-template-columns: 230px minmax(340px, 440px) 1fr; grid-template-rows: minmax(0, 1fr); min-height: 0; }
 main > * { min-height: 0; }
 nav { overflow-y: auto; border-right: 1px solid var(--line); padding: 8px 0; }
 nav h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 14px 14px 4px; }
@@ -50,6 +51,7 @@ ol.steps .where { display: block; font-size: 12px; color: var(--muted); }
 .rule b { color: var(--ink); font-weight: 600; }
 .expect { font-size: 14px; }
 .mismatch { color: var(--bad); font-weight: 600; }
+.legend { font-size: 12px; color: var(--muted); margin-top: 6px; }
 .judge { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
 .judge button.on.ok { background: var(--ok); color: #fff; border-color: var(--ok); }
 .judge button.on.bad { background: var(--bad); color: #fff; border-color: var(--bad); }
@@ -68,7 +70,8 @@ kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3p
 .box { position: absolute; background: var(--hl); outline: 2px solid var(--hl-edge); border-radius: 2px; pointer-events: none; }
 .box.strong { background: rgba(255, 140, 0, .30); outline-color: #e06b00; }
 #nodoc { color: var(--muted); padding: 24px; }
-@media (max-width: 900px) { main { grid-template-columns: 1fr; height: auto; } nav { display: none; } #card { border-right: 0; } #stage { min-height: 60vh; } }
+@media (max-width: 900px) { body { height: auto; display: block; } main { grid-template-columns: 1fr; }
+  nav { max-height: 180px; border-right: 0; border-bottom: 1px solid var(--line); } #card { border-right: 0; } #stage { min-height: 60vh; } }
 </style>
 </head>
 <body>
@@ -161,7 +164,7 @@ const ITEMS = [
   { group: "2. Escape windows", id: "W-10", title: "Window 10, Bedroom 203", expect: "Fail", conf: "High",
     steps: w(10, "BEDROOM 203, 2' - 0\" × 2' - 6\", L.H. CASM'T, head 6' - 8\"", 12, [egressY(10),
       { t: "Width 2' - 0\", height 2' - 6\", head 6' - 8\".", where: "Window schedule, WIDTH, HEIGHT, HEAD HEIGHT", boxes: [wcell(10, "width"), wcell(10, "height"), wcell(10, "head")] }]),
-    math: "Area 2 × 2.5 = <b>5.0 sq ft</b> with the frame, so the real opening is under 5 → fails even the 5 sq ft ground-floor limit.<br>Sill 80 − 30 = <b>50 in</b>, over 44. → <b>Fail</b> (confidence High: the area alone uses printed sizes).", rules: ["L35", "L37", "L45"] },
+    math: "Area 2 × 2.5 = <b>5.0 sq ft</b> with the frame, so the real opening is under both 5 and 5.7 sq ft.<br>Sill 80 − 30 = <b>50 in</b>, over 44. → <b>Fail</b> (confidence High: the area alone uses printed sizes).", rules: ["L35", "L37", "L45"] },
   { group: "2. Escape windows", id: "W-12", title: "Window 12, Bedroom 205", expect: "Could Not Evaluate", conf: "Medium",
     steps: w(12, "BEDRROM 205, 3' - 0\" × 4' - 0\", S.H. (single hung), head 6' - 8\"", 14, [egressY(12),
       { t: "LOCATION is spelled BEDRROM, a scanning typo for BEDROOM. That is why confidence is Medium.", where: "Window schedule, LOCATION", boxes: [wcell(12, "location")] }]),
@@ -223,24 +226,27 @@ const KEY = "spotcheck.v1";
 let state = {};
 try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { state = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
-let cur = 0, stepIdx = 0, doc = "ws", zoom = 1, live = null;
+let cur = 0, stepIdx = 0, doc = "", zoom = 1, live = null;
 
 const VSHORT = { "Could Not Evaluate": "CNE", "Not Applicable": "N/A", "Fail": "Fail", "Pass": "Pass" };
 
 // ---- live report (works when served over http; the file:// fallback uses the values above) ----
-fetch("../findings.json").then(r => r.ok ? r.json() : null).then(j => {
-  if (!j) return;
+const builtIn = () => { document.getElementById("source").textContent = "Report values: built in (open via the local server for live values)"; };
+fetch("../findings.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => {
+  if (!j) return builtIn();
   live = Object.fromEntries(j.findings.map(f => [f.id, f]));
   document.getElementById("source").textContent = "Report values: live from findings.json";
   render();
-}).catch(() => { document.getElementById("source").textContent = "Report values: built in"; });
+}).catch(builtIn);
 
 function reportOf(it) {
   const f = live && live[it.id];
-  return f ? { verdict: f.verdict, conf: f.confidence, live: true } : { verdict: it.expect, conf: it.conf, live: false };
+  return f ? { verdict: f.verdict, conf: f.confidence, live: true }
+           : { verdict: it.expect, conf: it.conf, live: false, absent: !!live };
 }
 
 // ---- render ---------------------------------------------------------------------------------
+const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 function renderNav() {
   const nav = document.getElementById("nav"); nav.innerHTML = "";
   let g = "";
@@ -266,7 +272,8 @@ function renderCard() {
   card.innerHTML = `
     <h2>${it.id}</h2>
     <div class="sub">${it.title}</div>
-    <div>Report says: <span class="verdict ${vcls}">${rep.verdict}</span>${rep.conf ? ` · confidence <b>${rep.conf}</b>` : ""}</div>
+    <div>${rep.absent ? "Report notes this as" : "Report says"}: <span class="verdict ${vcls}">${rep.verdict}</span>${rep.conf ? ` · confidence <b>${rep.conf}</b>` : ""}${rep.absent ? ` <span class="legend">(a note in the report, not a verdict in findings.json)</span>` : ""}</div>
+    <div class="legend"><b>Fail</b>: breaks the rule. <b>Could Not Evaluate</b>: the sheets can't settle it (sizes include the frame, so they can prove a Fail but never a Pass). <b>Not Applicable</b>: the rule doesn't apply.</div>
     ${mismatch ? `<div class="mismatch">The live report differs from this checklist (expected ${it.expect}${it.conf ? " · " + it.conf : ""}). Check which is right.</div>` : ""}
     <div class="label">Check on the documents (click a step to show it)</div>
     <ol class="steps">${it.steps.map((s, i) => `<li data-i="${i}" class="${i === stepIdx ? "cur" : ""}"><span>${s.t}<span class="where">${s.where}</span></span></li>`).join("")}</ol>
@@ -279,7 +286,7 @@ function renderCard() {
       <button data-s="bad" class="${st.status === "bad" ? "on bad" : ""}">✗ Wrong</button>
       <button data-s="unsure" class="${st.status === "unsure" ? "on unsure" : ""}">? Unsure</button>
     </div>
-    <textarea placeholder="Notes (what you saw, what's wrong)">${(st.note || "").replace(/</g, "&lt;")}</textarea>
+    <textarea placeholder="Notes (what you saw, what's wrong)">${esc(st.note || "")}</textarea>
     <div class="navbtns"><button id="prev">← Previous</button><button id="next">Next →</button></div>
     <div class="keys"><kbd>←</kbd>/<kbd>→</kbd> item · <kbd>↑</kbd>/<kbd>↓</kbd> step · <kbd>C</kbd> correct · <kbd>W</kbd> wrong · <kbd>U</kbd> unsure</div>`;
   card.querySelectorAll("ol.steps li").forEach(li => li.onclick = () => { stepIdx = +li.dataset.i; showStep(); renderCard(); });
@@ -324,7 +331,7 @@ function drawDoc() {
 
 function showStep() {
   const step = ITEMS[cur].steps[stepIdx];
-  if (step && step.boxes.length) { doc = step.boxes[0].d; zoom = DOCS[doc].zoom; }
+  if (step && step.boxes.length && step.boxes[0].d !== doc) { doc = step.boxes[0].d; zoom = DOCS[doc].zoom; }
   drawDoc();
 }
 
@@ -339,7 +346,7 @@ function judge(s) {
 function render() { renderNav(); renderCard(); }
 
 document.addEventListener("keydown", e => {
-  if (e.target.tagName === "TEXTAREA") return;
+  if (e.ctrlKey || e.metaKey || e.altKey || ["TEXTAREA", "BUTTON", "INPUT"].includes(e.target.tagName)) return;
   const n = ITEMS[cur].steps.length;
   if (e.key === "ArrowRight") go(cur + 1);
   else if (e.key === "ArrowLeft") go(cur - 1);
@@ -352,13 +359,14 @@ document.addEventListener("keydown", e => {
 
 document.getElementById("export").onclick = () => {
   const label = { ok: "Correct", bad: "Wrong", unsure: "Unsure" };
-  const lines = ["# Spot check results", "", `Checked ${new Date().toISOString().slice(0, 10)}.`, "",
+  const lines = ["# Spot check results", "", `Checked ${new Date().toLocaleDateString()}.`, "",
     "| ID | Report says | Your verdict | Notes |", "|---|---|---|---|",
     ...ITEMS.map(it => { const r = reportOf(it), s = state[it.id] || {};
       return `| ${it.id} | ${r.verdict}${r.conf ? " (" + r.conf + ")" : ""} | ${label[s.status] || "not checked"} | ${(s.note || "").replace(/\|/g, "/").replace(/\n/g, " ")} |`; })];
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([lines.join("\n") + "\n"], { type: "text/markdown" }));
   a.download = "spot-check-results.md"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 };
 document.getElementById("reset").onclick = () => {
   if (confirm("Clear all your verdicts and notes?")) { state = {}; save(); render(); }
