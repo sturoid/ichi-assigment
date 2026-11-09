@@ -1,0 +1,36 @@
+{
+  "_about": "Expected values for IBC 2018 Table 504.3, transcribed by hand from the printed table image (instructions/readme_images/table-504-3.png), NOT from parser output. Status: pending user spot-check. Edit 'verified_by' when confirmed.",
+  "verified_by": [],
+  "table_id": "IBC:2018:T504.3",
+  "construction_order": ["I-A", "I-B", "II-A", "II-B", "III-A", "III-B", "IV-HT", "V-A", "V-B"],
+  "rows": [
+    {"occupancy": "A, B, E, F, M, S, U", "sprinkler": "NS",   "footnotes": ["b"],      "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "A, B, E, F, M, S, U", "sprinkler": "S",    "footnotes": [],         "values": ["UL", 180, 85, 75, 85, 75, 85, 70, 60]},
+    {"occupancy": "H-1, H-2, H-3, H-5",  "sprinkler": "NS",   "footnotes": ["c", "d"], "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "H-1, H-2, H-3, H-5",  "sprinkler": "S",    "footnotes": [],         "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "H-4",                 "sprinkler": "NS",   "footnotes": ["c", "d"], "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "H-4",                 "sprinkler": "S",    "footnotes": [],         "values": ["UL", 180, 85, 75, 85, 75, 85, 70, 60]},
+    {"occupancy": "I-1 Condition 1, I-3","sprinkler": "NS",   "footnotes": ["d", "e"], "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "I-1 Condition 1, I-3","sprinkler": "S",    "footnotes": [],         "values": ["UL", 180, 85, 75, 85, 75, 85, 70, 60]},
+    {"occupancy": "I-1 Condition 2, I-2","sprinkler": "NS",   "footnotes": ["d", "e", "f"], "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "I-1 Condition 2, I-2","sprinkler": "S",    "footnotes": [],         "values": ["UL", 180, 85, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "I-4",                 "sprinkler": "NS",   "footnotes": ["d", "g"], "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "I-4",                 "sprinkler": "S",    "footnotes": [],         "values": ["UL", 180, 85, 75, 85, 75, 85, 70, 60]},
+    {"occupancy": "R",                   "sprinkler": "NS",   "footnotes": ["h", "d"], "values": ["UL", 160, 65, 55, 65, 55, 65, 50, 40]},
+    {"occupancy": "R",                   "sprinkler": "S13D", "footnotes": ["h"],      "values": [60, 60, 60, 60, 60, 60, 60, 50, 40]},
+    {"occupancy": "R",                   "sprinkler": "S13R", "footnotes": ["h"],      "values": [60, 60, 60, 60, 60, 60, 60, 60, 60]},
+    {"occupancy": "R",                   "sprinkler": "S",    "footnotes": ["h"],      "values": ["UL", 180, 85, 75, 85, 75, 85, 70, 60]}
+  ],
+  "spot_checks": [
+    {"occupancy": "R",               "sprinkler": "S13D", "construction": "V-B",   "expected": 40,   "why": "Project case; the code analysis claims 60"},
+    {"occupancy": "R",               "sprinkler": "S13R", "construction": "V-B",   "expected": 60,   "why": "Neighbouring sub-row"},
+    {"occupancy": "R",               "sprinkler": "S",    "construction": "V-A",   "expected": 70,   "why": "Inside the 4-row R group"},
+    {"occupancy": "I-4",             "sprinkler": "NS",   "construction": "III-B", "expected": 55,   "why": "The README's Gemini question"},
+    {"occupancy": "I-1 Condition 2", "sprinkler": "S",    "construction": "II-B",  "expected": 55,   "why": "Inherited through rowspan; the source row has only 4 cells"},
+    {"occupancy": "I-2",             "sprinkler": "S",    "construction": "I-B",   "expected": 180,  "why": "Same row, not inherited"},
+    {"occupancy": "H-2",             "sprinkler": "S",    "construction": "I-B",   "expected": 160,  "why": "Whole row inherited from a 1-cell source row"},
+    {"occupancy": "B",               "sprinkler": "NS",   "construction": "II-B",  "expected": 55,   "why": "README worked example"},
+    {"occupancy": "U",               "sprinkler": "S",    "construction": "I-A",   "expected": "UL", "why": "Unlimited token"},
+    {"occupancy": "H-4",             "sprinkler": "S",    "construction": "IV-HT", "expected": 85,   "why": "Single-column TYPE IV header"}
+  ]
+}
