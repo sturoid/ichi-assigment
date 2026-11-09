@@ -1,0 +1,372 @@
+{
+  "_about": "Every document a check may need for this project, including the ones we do not have. Paths are relative to this file. Hand-written: nothing is found by filename matching. 'referenced_by' says where the need comes from, so a check can explain why it could not evaluate something.",
+  "manifest_version": 1,
+  "project": "Meridian Falls 3-story single-family dwelling with ADU (challenge fixtures)",
+  "documents": [
+    {
+      "id": "IBC:2018:T504.3",
+      "kind": "code_table",
+      "short_name": "Table 504.3",
+      "title": "Allowable Building Height in Feet Above Grade Plane",
+      "edition": "IBC 2018",
+      "status": "available",
+      "covers": [
+        "^IBC 504\\.3$",
+        "^IBC T504\\.3$"
+      ],
+      "authority": "code_text",
+      "files": [
+        {
+          "path": "table-504.3.html",
+          "role": "table_body",
+          "parse": {
+            "as": "matrix",
+            "spec": "ibc2018-504.3",
+            "table": 0
+          }
+        },
+        {
+          "path": "code/table-504.3-notes.md",
+          "role": "caption_legend_footnotes",
+          "parse": {
+            "as": "table_notes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "IBC:2018:1030",
+      "kind": "code_section",
+      "short_name": "Section 1030",
+      "title": "Emergency Escape and Rescue",
+      "edition": "IBC 2018",
+      "status": "available",
+      "covers": [
+        "^IBC 1030(\\.|$)"
+      ],
+      "authority": "code_text",
+      "files": [
+        {
+          "path": "code/section-1030-emergency-escape-and-rescue.md",
+          "role": "section_text",
+          "loaded": false
+        }
+      ]
+    },
+    {
+      "id": "IBC:2018:1030.4",
+      "kind": "code_section",
+      "title": "Window wells",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC 1030\\.4(\\.|$)"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "Section 1030 (window wells)"
+      ],
+      "why_unavailable": {
+        "authority": "challenge_brief",
+        "source": "code/section-1030-emergency-escape-and-rescue.md line 3",
+        "reason": "omitted from the reproduced text because the project has no basement"
+      }
+    },
+    {
+      "id": "IBC:2018:202",
+      "kind": "code_section",
+      "title": "Definitions (full section)",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC 202$"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "terms used by Table 504.3 and Section 1030 (grade plane, building height, sleeping unit)"
+      ]
+    },
+    {
+      "id": "IBC:2018:310",
+      "kind": "code_section",
+      "title": "Residential Group R (occupancy classification)",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC 310(\\.|$)"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "needed to place R-3 in the Table 504.3 row R"
+      ]
+    },
+    {
+      "id": "IBC:2018:903",
+      "kind": "code_section",
+      "title": "Automatic Sprinkler Systems (903.2, 903.3.1.1-903.3.1.3)",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC 903(\\.|$)"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "Table 504.3 legend (S, S13R, S13D)",
+        "Table 504.3 footnotes b, c, e, f, g, h"
+      ]
+    },
+    {
+      "id": "IBC:2018:CH4-CH5",
+      "kind": "code_section",
+      "title": "Chapters 4 and 5 (height exceptions)",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC CH [45]$"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "Table 504.3 footnote a"
+      ]
+    },
+    {
+      "id": "IBC:2018:1510.2.4",
+      "kind": "code_section",
+      "title": "Roof structures (and Chapter 15)",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC 1510(\\.|$)",
+        "^IBC CH 15$"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "Section 504.3 exception (towers, spires, steeples)"
+      ]
+    },
+    {
+      "id": "IEBC:2018",
+      "kind": "code_book",
+      "title": "International Existing Building Code",
+      "edition": "2018",
+      "status": "unavailable",
+      "covers": [
+        "^IEBC"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "Table 504.3 footnote d (NS values are for existing buildings)"
+      ]
+    },
+    {
+      "id": "IFC:2018:1103.5",
+      "kind": "code_section",
+      "title": "International Fire Code 1103.5",
+      "edition": "2018",
+      "status": "unavailable",
+      "covers": [
+        "^IFC 1103\\.5(\\.|$)"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "Table 504.3 footnote f"
+      ]
+    },
+    {
+      "id": "LOCAL:MERIDIAN-FALLS:IBC-AMENDMENTS",
+      "kind": "local_amendments",
+      "title": "City of Meridian Falls amendments to the 2018 IBC",
+      "status": "unavailable",
+      "authority": "code_text",
+      "referenced_by": [
+        "code analysis A0.1: 'AS ADOPTED BY THE CITY OF MERIDIAN FALLS'"
+      ]
+    },
+    {
+      "id": "IBC:2018:504.1-504.2",
+      "kind": "code_section",
+      "title": "Height and story limits: general, and measurement / sprinkler basis",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC 504\\.[12](\\.|$)"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "how building height is measured for Table 504.3 (the notes reproduce only 504.3)"
+      ]
+    },
+    {
+      "id": "IBC:2018:T504.4",
+      "kind": "code_table",
+      "title": "Allowable Number of Stories Above Grade Plane",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC T504\\.4$",
+        "^IBC 504\\.4$"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "code analysis A0.1: 'ALLOWABLE STORIES 3 PER TABLE 504.4' (out of scope for Check 1)"
+      ]
+    },
+    {
+      "id": "IBC:2018:CH6",
+      "kind": "code_section",
+      "title": "Chapter 6, Types of Construction (Table 601)",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC CH 6$",
+        "^IBC 60\\d(\\.|$)"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "what construction type V-B requires (Table 504.3 columns)"
+      ]
+    },
+    {
+      "id": "IBC:2018:CH3",
+      "kind": "code_section",
+      "title": "Chapter 3, Occupancy Classification (302-312, other than 310)",
+      "edition": "IBC 2018",
+      "status": "unavailable",
+      "covers": [
+        "^IBC CH 3$",
+        "^IBC 3(0[2-9]|1[12])(\\.|$)"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "Table 504.3 occupancy rows other than R"
+      ]
+    },
+    {
+      "id": "NFPA:13",
+      "kind": "standard",
+      "title": "NFPA 13, Installation of Sprinkler Systems",
+      "status": "unavailable",
+      "covers": [
+        "^NFPA 13$"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "IBC 903.3.1.1, via the Table 504.3 notes' sprinkler shorthand"
+      ]
+    },
+    {
+      "id": "NFPA:13R",
+      "kind": "standard",
+      "title": "NFPA 13R, sprinkler systems in low-rise residential occupancies",
+      "status": "unavailable",
+      "covers": [
+        "^NFPA 13R$"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "IBC 903.3.1.2, via the Table 504.3 notes"
+      ]
+    },
+    {
+      "id": "NFPA:13D",
+      "kind": "standard",
+      "title": "NFPA 13D, sprinkler systems in one- and two-family dwellings",
+      "status": "unavailable",
+      "covers": [
+        "^NFPA 13D$"
+      ],
+      "authority": "code_text",
+      "referenced_by": [
+        "IBC 903.3.1.3, via the Table 504.3 notes",
+        "code analysis A0.1: 'PER NFPA 13D'"
+      ]
+    },
+    {
+      "id": "PROJECT:A0.1:CODE-ANALYSIS",
+      "kind": "project_table",
+      "title": "Code analysis, sheet A0.1",
+      "status": "available",
+      "authority": "project_submitted",
+      "files": [
+        {
+          "path": "code-analysis.html",
+          "role": "table",
+          "parse": {
+            "as": "kv",
+            "table": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "PROJECT:A6.1:WINDOW-SCHEDULE",
+      "kind": "project_table",
+      "title": "Window schedule, sheet A6.1",
+      "status": "available",
+      "authority": "project_submitted",
+      "files": [
+        {
+          "path": "window-schedule.html",
+          "role": "table",
+          "parse": {
+            "as": "records",
+            "table": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "PROJECT:FLOOR-PLANS",
+      "kind": "project_sheet",
+      "title": "Floor plans",
+      "status": "unavailable",
+      "authority": "project_submitted",
+      "referenced_by": [
+        "room locations and sleeping-room use"
+      ]
+    },
+    {
+      "id": "PROJECT:ELEVATIONS",
+      "kind": "project_sheet",
+      "title": "Elevations",
+      "status": "unavailable",
+      "authority": "project_submitted",
+      "referenced_by": [
+        "window schedule NOTES: 'SEE ELEVATIONS'",
+        "sill heights"
+      ]
+    },
+    {
+      "id": "PROJECT:WINDOW-DETAILS",
+      "kind": "project_sheet",
+      "title": "Window type details",
+      "status": "unavailable",
+      "authority": "project_submitted",
+      "referenced_by": [
+        "window schedule type marks",
+        "net clear opening (Section 1030.2)"
+      ]
+    },
+    {
+      "id": "PROJECT:C1.0:CIVIL",
+      "kind": "project_sheet",
+      "title": "Civil sheet C1.0 (grade plane)",
+      "status": "unavailable",
+      "authority": "project_submitted",
+      "referenced_by": [
+        "code analysis GRADE PLANE: 'SEE CIVIL C1.0'"
+      ]
+    },
+    {
+      "id": "PROJECT:BUILDING-SECTIONS",
+      "kind": "project_sheet",
+      "title": "Building sections / roof plan",
+      "status": "unavailable",
+      "authority": "project_submitted",
+      "referenced_by": [
+        "code analysis height '41'-6\" (TO AVG. HT. OF HIGHEST ROOF SURFACE)': the measurement cannot be checked"
+      ]
+    }
+  ],
+  "_about_covers": "'covers' are regexes over normalised references ('IBC 903.2.8', 'IBC CH 4', 'IEBC', 'IFC 1103.5', 'NFPA 13D'); the longest matching pattern wins. Used to link code references (footnotes, legend) to documents."
+}
