@@ -132,6 +132,26 @@ def _crit(f: Finding, prefix: str) -> Criterion | None:
 
 # --------------------------------------------------------------------------- sections
 
+def _rests(x: str) -> str:
+    """'src/NOTES.md decision: X' -> 'project decision: X' (the reader has no repo)."""
+    return re.sub(r"^src/NOTES\.md(?: decision)?[:,]\s*", "project decision: ", x)
+
+
+def _section_of(f: Finding) -> str:
+    if f.check == "height":
+        return "§4"
+    if f.check == "egress_room":
+        return "§5"
+    return "§7" if f.verdict == NA else "§6"
+
+
+def _where_ids(results: Results) -> str:
+    groups: dict[str, list[str]] = {}
+    for f in [results.height, *results.rooms, *results.windows]:
+        groups.setdefault(_section_of(f), []).append(f.id)
+    return "; ".join(f"{sec}: {', '.join(ids)}" for sec, ids in sorted(groups.items()))
+
+
 def _correction_findings(results: Results) -> list[Finding]:
     """One finding per correction item: the height, each failed room, and each failing window not in one."""
     failed_rooms = [r for r in results.rooms if r.verdict == FAIL]
@@ -173,7 +193,9 @@ def _corrections(results: Results, by_id: dict, out: list[str]) -> None:
     out.append("## 1. Corrections")
     out.append("")
     out.append("Raw material for the correction letter: the problem, the arithmetic and the deciding code section. "
-               "Each ID points to its evidence: H-1 in §4, rooms (R-) in §5, windows (W-) in §6 or §7.")
+               "Each ID's evidence is in a later section, found by searching for the ID.")
+    out.append("")
+    out.append(f"*Where each ID is:* {_where_ids(results)}.")
     out.append("")
     out.append("**Confidence** says how likely a correction is to stand once the full drawing set is seen. "
                "**High:** send it as written. **Medium:** one thing could overturn it; confirm that first, or send "
@@ -232,9 +254,13 @@ def _corrections(results: Results, by_id: dict, out: list[str]) -> None:
         for b in body:
             out.append(f"   - {b}")
         out.append(f"   - *Code:* {code}")
-        out.append(f"   - *Confidence:* **{f.confidence}**" + (
-            ". " + _cap("; ".join(_linkify(_plain(x)) for x in f.confidence_reasons)) + "."
-            if f.confidence_reasons else ". It rests on printed values only."))
+        rs = [_cap(_linkify(_plain(x))) for x in f.confidence_reasons]
+        if len(rs) > 1:
+            out.append(f"   - *Confidence:* **{f.confidence}**, for {len(rs)} reasons:")
+            out += [f"     - {x}." for x in rs]
+        else:
+            out.append(f"   - *Confidence:* **{f.confidence}**. " + (f"{rs[0]}." if rs else
+                                                                     "It rests on printed values only."))
     out.append("")
 
 
@@ -466,6 +492,9 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
     fs = results.all
     out.append("## Appendix")
     out.append("")
+    out.append("For checking the tool, not for reading the verdicts. File names are the tool's input files; rule ids "
+               "(`POL-…`) are the tool's named judgement calls.")
+    out.append("")
     cites: dict[str, str] = {}
     for f in fs:
         for ref in [*f.code_refs, *(c.code for c in f.criteria)]:
@@ -487,8 +516,8 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
     out.append("")
     out.append("Rows are counted from 1 at the top of each table, header rows included.")
     out.append("")
-    out.append("| ID | Source |")
-    out.append("|---|---|")
+    out.append("| ID | In section | Source |")
+    out.append("|---|---|---|")
     for f in fs:
         srcs = list(dict.fromkeys(e["source"].split(", label")[0] for e in f.evidence))
         rows: dict[str, list[str]] = {}
@@ -501,7 +530,7 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
                 other.append(x)
         srcs = [f"{k} table row{'s' if len(v) > 1 else ''} {', '.join(v)}" for k, v in rows.items()] + other
         if srcs:
-            out.append(f"| {_link(f.id)} | {_md('; '.join(srcs))} |")
+            out.append(f"| {_link(f.id)} | {_section_of(f)} | {_md('; '.join(srcs))} |")
     out.append("")
     used: dict[str, list[str]] = {}
     for f in fs:
@@ -524,7 +553,7 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
         p = POLICIES[pid]
         ids = list(dict.fromkeys(used[pid]))
         by = ", ".join(_link(i) for i in ids)
-        out.append(f"| `{p.id}` {_md(p.title)} | {_md(p.rule)} | {_md('; '.join(dict.fromkeys(p.rests_on)))} | "
+        out.append(f"| `{p.id}` {_md(p.title)} | {_md(p.rule)} | {_md('; '.join(dict.fromkeys(_rests(x) for x in p.rests_on)))} | "
                    f"{by or 'whole report'} |")
     out.append("")
     unused = [p for p in POLICIES if p not in used]

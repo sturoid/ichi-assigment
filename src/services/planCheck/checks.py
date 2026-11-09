@@ -634,7 +634,7 @@ def check_egress(store: Store, ca: CodeAnalysis, schedule: Schedule) -> tuple[li
             cn = [k for k, v in dv.items() if v == CNE]
             fl_ = [k for k, v in dv.items() if v == FAIL]
             summary = (f"{', '.join(cn)} could not be evaluated" + (f"; {', '.join(fl_)} fails" if fl_ else "")
-                       + ". The room has a complying opening only if " + ("it" if len(cn) == 1 else "one of them")
+                       + ". The room has a complying opening only if " + (cn[0] if len(cn) == 1 else "one of them")
                        + " is shown to comply.")
             settle = list(dict.fromkeys(s for k in cn for s in window_findings[k].settle))
         else:
@@ -762,8 +762,8 @@ def run_checks(store: Store, ca: CodeAnalysis, schedule: Schedule) -> Results:
                               [w.id for w in amb]))
     attn.append(Attention("unscheduled_rooms", "Sleeping rooms with no window are invisible to this tool",
                           "The tool only knows rooms that appear in the window schedule. A bedroom with no scheduled "
-                          "window would need an escape opening too; check the floor plans "
-                          f"({_doc_title(store, 'PROJECT:FLOOR-PLANS')}, not provided).", []))
+                          f"window would need an escape opening too; check the "
+                          f"{_doc_title(store, 'PROJECT:FLOOR-PLANS').lower()} (not provided).", []))
     for n in schedule.columns.notes:
         if n["code"] in ("type_columns_swapped", "operation_column_unrecognised", "duplicate_role"):
             attn.append(Attention(n["code"], "Window schedule columns", n["message"], []))

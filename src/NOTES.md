@@ -416,6 +416,15 @@ The user viewed REPORT.md in Notion. The `<a id>` anchors showed as raw HTML, an
 - Quoted feet-inch values no longer show a stray backslash (`'41' - 6"'` from Python repr).
 - Appendix C lists POL-GEN-CONFIDENCE as used. It had been wrongly listed under "not needed".
 
+**Sonnet review of the standalone report.** It found no accuracy errors in its spot-checks: H-1, W-4, W-10, W-13, W-20, the gaps and the tallies. It also found that nothing breaks in Notion. Fixed from the review:
+- §1 now lists every ID by the section that holds it, and Appendix B gained an "In section" column.
+- A confidence level with several reasons lists them as sub-bullets.
+- "only if it is shown to comply" now names the window.
+- A stray "(Floor plans, not provided)" now reads "the floor plans (not provided)".
+- Appendix C writes repo notes as "project decision: …", and the Appendix opens with a line saying it is for checking the tool.
+
+Left as is: the 12-column §6 table (it is the core evidence), and Appendix C's long cells (appendix only).
+
 ### Input: Check 1 requirements, and what they change in the store contract, phase 1d (2026-11-08)
 
 Check 1 asks for one finding for the building. It reads the project's occupancy, construction type, sprinklers and height, looks up the matching 504.3 cell, and compares the two heights. The finding cites the cell, as in this example: *row `A, B, E, F, M, S, U` / `NS` / column `II-B` = 55*.

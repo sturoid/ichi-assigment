@@ -156,7 +156,7 @@
       "check": "egress_room",
       "subject": "ADU BEDROOM 107 (room 107)",
       "verdict": "Could Not Evaluate",
-      "summary": "W-7 could not be evaluated. The room has a complying opening only if it is shown to comply.",
+      "summary": "W-7 could not be evaluated. The room has a complying opening only if W-7 is shown to comply.",
       "code_refs": [
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -244,7 +244,7 @@
       "check": "egress_room",
       "subject": "BEDROOM 205 (room 205)",
       "verdict": "Could Not Evaluate",
-      "summary": "W-12 could not be evaluated; W-13 fails. The room has a complying opening only if it is shown to comply.",
+      "summary": "W-12 could not be evaluated; W-13 fails. The room has a complying opening only if W-12 is shown to comply.",
       "code_refs": [
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -2550,7 +2550,7 @@
     {
       "code": "unscheduled_rooms",
       "title": "Sleeping rooms with no window are invisible to this tool",
-      "detail": "The tool only knows rooms that appear in the window schedule. A bedroom with no scheduled window would need an escape opening too; check the floor plans (Floor plans, not provided).",
+      "detail": "The tool only knows rooms that appear in the window schedule. A bedroom with no scheduled window would need an escape opening too; check the floor plans (not provided).",
       "related": []
     }
   ],
