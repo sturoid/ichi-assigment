@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spot Check</title>
+<style>
+:root {
+  --bg: #f6f6f3; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #e2e1dc;
+  --accent: #2f5d8a; --ok: #2e7d4f; --bad: #b3261e; --warn: #a66a00; --hl: rgba(255, 196, 0, .28); --hl-edge: #e0a800;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161615; --panel: #1f1f1d; --ink: #ecebe6; --muted: #a09f99; --line: #34332f;
+          --accent: #7fb0e0; --ok: #5cc287; --bad: #ef7d74; --warn: #e3b04b; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+header { display: flex; align-items: center; gap: 16px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+header h1 { font-size: 17px; margin: 0; }
+#progress { flex: 1; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
+#bar { flex: 1; max-width: 320px; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+#bar span { display: block; height: 100%; background: var(--ok); width: 0; }
+button { font: inherit; font-size: 13px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+main { display: grid; grid-template-columns: 230px minmax(340px, 440px) 1fr; grid-template-rows: minmax(0, 1fr); height: calc(100vh - 49px); }
+main > * { min-height: 0; }
+nav { overflow-y: auto; border-right: 1px solid var(--line); padding: 8px 0; }
+nav h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 14px 14px 4px; }
+nav a { display: flex; align-items: center; gap: 8px; padding: 4px 14px; color: var(--ink); text-decoration: none; font-size: 13.5px; cursor: pointer; }
+nav a.cur { background: var(--line); }
+nav .dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--muted); flex: none; }
+nav .dot.ok { background: var(--ok); border-color: var(--ok); }
+nav .dot.bad { background: var(--bad); border-color: var(--bad); }
+nav .dot.unsure { background: var(--warn); border-color: var(--warn); }
+nav .v { margin-left: auto; font-size: 11px; color: var(--muted); }
+#card { overflow-y: auto; padding: 16px 18px 40px; border-right: 1px solid var(--line); }
+#card h2 { margin: 0 0 2px; font-size: 20px; }
+.sub { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+.verdict { display: inline-block; font-weight: 600; padding: 1px 8px; border-radius: 4px; border: 1px solid var(--line); font-size: 13px; }
+.verdict.Fail { color: var(--bad); border-color: var(--bad); }
+.verdict.CNE { color: var(--warn); border-color: var(--warn); }
+.label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 16px 0 6px; }
+ol.steps { padding: 0; margin: 0; list-style: none; counter-reset: s; }
+ol.steps li { counter-increment: s; display: flex; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; cursor: pointer; background: var(--panel); }
+ol.steps li::before { content: counter(s); font-weight: 600; color: var(--accent); min-width: 14px; }
+ol.steps li.cur { border-color: var(--hl-edge); box-shadow: 0 0 0 2px var(--hl); }
+ol.steps .where { display: block; font-size: 12px; color: var(--muted); }
+.math { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 6px; padding: 8px 10px; }
+.rule { font-size: 13px; color: var(--muted); border-left: 2px solid var(--line); padding-left: 8px; margin: 4px 0; }
+.rule b { color: var(--ink); font-weight: 600; }
+.expect { font-size: 14px; }
+.mismatch { color: var(--bad); font-weight: 600; }
+.judge { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.judge button.on.ok { background: var(--ok); color: #fff; border-color: var(--ok); }
+.judge button.on.bad { background: var(--bad); color: #fff; border-color: var(--bad); }
+.judge button.on.unsure { background: var(--warn); color: #fff; border-color: var(--warn); }
+textarea { width: 100%; min-height: 64px; margin-top: 8px; font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); }
+.navbtns { display: flex; justify-content: space-between; margin-top: 14px; }
+.keys { font-size: 12px; color: var(--muted); margin-top: 10px; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 0 4px; font-size: 11px; }
+#viewer { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+#tabs { display: flex; gap: 4px; padding: 8px 10px; border-bottom: 1px solid var(--line); align-items: center; }
+#tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+#tabs .zoom { margin-left: auto; display: flex; gap: 4px; }
+#stage { flex: 1; min-height: 0; overflow: auto; padding: 12px; }
+#frame { position: relative; display: inline-block; background: #fff; }
+#frame img { display: block; width: 100%; }
+.box { position: absolute; background: var(--hl); outline: 2px solid var(--hl-edge); border-radius: 2px; pointer-events: none; }
+.box.strong { background: rgba(255, 140, 0, .30); outline-color: #e06b00; }
+#nodoc { color: var(--muted); padding: 24px; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; height: auto; } nav { display: none; } #card { border-right: 0; } #stage { min-height: 60vh; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Spot Check</h1>
+  <div id="progress"><div id="bar"><span></span></div><span id="ptext"></span></div>
+  <span id="source" style="font-size:12px;color:var(--muted)"></span>
+  <button id="export">Export results</button>
+  <button id="reset">Reset</button>
+</header>
+<main>
+  <nav id="nav"></nav>
+  <section id="card"></section>
+  <section id="viewer">
+    <div id="tabs"></div>
+    <div id="stage"><div id="frame"></div></div>
+  </section>
+</main>
+<script>
+// ---- documents ------------------------------------------------------------------------
+// Boxes are in each image's own pixel frame (w x h); the table image uses a 2000-wide frame.
+const IMG = "../instructions/readme_images/";
+const DOCS = {
+  ca: { name: "Code sheet", src: IMG + "code-analysis.png", w: 1000, h: 450, zoom: 1.2 },
+  ws: { name: "Window schedule", src: IMG + "window-schedule.png", w: 1340, h: 580, zoom: 1.1 },
+  t:  { name: "Height table", src: IMG + "table-504-3.png", w: 2000, h: 1826, zoom: 0.8 },
+};
+// code sheet rows (y bands)
+const CA = { project: [79, 104], occupancy: [142, 166], construction: [166, 190], sprinklers: [190, 229],
+             height: [253, 291], allowable: [291, 316], numbering: [364, 389], egress: [389, 412] };
+const ca = (k, strong) => ({ d: "ca", x0: 25, x1: 942, y0: CA[k][0], y1: CA[k][1], strong });
+// window schedule: row centre by window number, column x ranges
+const WY = { 1: 139, 2: 163, 3: 187, 4: 211, 5: 235, 6: 259, 7: 283, 8: 307, 10: 331, 11: 355, 12: 379, 13: 403,
+             14: 427, 20: 451, 21: 475, 22: 499, 23: 523 };
+const COL = { symbol: [25, 87], location: [87, 206], width: [206, 257], height: [257, 315], type: [315, 395],
+              mark: [395, 441], head: [441, 497], screen: [609, 662], egress: [741, 801] };
+const wrow = n => ({ d: "ws", x0: 25, x1: 1007, y0: WY[n] - 12, y1: WY[n] + 12 });
+const wcell = (n, c) => ({ d: "ws", x0: COL[c][0], x1: COL[c][1], y0: WY[n] - 12, y1: WY[n] + 12, strong: true });
+const wcol = c => ({ d: "ws", x0: COL[c][0], x1: COL[c][1], y0: 56, y1: 536 });
+// height table (2000-wide frame)
+const T = { s13d: [1203, 1248], s13r: [1248, 1293], s: [1293, 1338], vb: [1849, 1937], row: [649, 1937],
+            legend: [75, 1920, 1440, 1490], fna: [130, 900, 1495, 1522] };
+const tcell = (r, strong = true) => ({ d: "t", x0: T.vb[0], x1: T.vb[1], y0: T[r][0], y1: T[r][1], strong });
+const trow = r => ({ d: "t", x0: T.row[0], x1: T.row[1], y0: T[r][0], y1: T[r][1] });
+
+// ---- code rules (instructions/fixtures/code/section-1030-emergency-escape-and-rescue.md) ----
+const RULES = {
+  L13: ["line 13", "Sleeping rooms below the fourth story above grade plane shall have not fewer than one exterior emergency escape and rescue opening."],
+  L19: ["line 19", "Exception 2: not required from sleeping rooms that have an exit door … that opens directly into a public way or to a yard, court or exterior exit balcony."],
+  L31: ["line 31", "Openings shall be operational from inside the room without the use of keys or tools."],
+  L35: ["line 35", "Minimum net clear opening of 5.7 square feet."],
+  L37: ["line 37", "Exception: grade-floor openings, 5 square feet."],
+  L41: ["line 41", "Minimum net clear opening height 24 inches; minimum width 20 inches; dimensions are the result of normal operation."],
+  L45: ["line 45", "Bottom of the clear opening not greater than 44 inches measured from the floor."],
+};
+const ESC = ["L35", "L37", "L41", "L45", "L31"];
+
+// ---- the checklist ----------------------------------------------------------------------
+const w = (n, g, ln, extra = []) => [{ t: `Find window ${n} in the SYMBOL column. Check its row: ${g}.`, where: "Window schedule, row for window " + n, boxes: [wrow(n)] }, ...extra];
+const egressY = n => ({ t: "EGRESS column says Y (it is designated as an escape window).", where: "Window schedule, EGRESS column", boxes: [wrow(n), wcell(n, "egress")] });
+const egressBlank = n => ({ t: "EGRESS column is blank (not designated as an escape window).", where: "Window schedule, EGRESS column", boxes: [wrow(n), wcell(n, "egress")] });
+const roomCell = (n, name) => ({ t: `LOCATION says ${name}.`, where: "Window schedule, LOCATION column", boxes: [wrow(n), wcell(n, "location")] });
+
+const ITEMS = [
+  { group: "1. Building height", id: "H-1", title: "Building height", expect: "Fail", conf: "Medium",
+    steps: [
+      { t: "OCCUPANCY GROUP says R-3 (a house).", where: "Code sheet, row 4", boxes: [ca("occupancy")] },
+      { t: "CONSTRUCTION TYPE says V-B.", where: "Code sheet, row 5", boxes: [ca("construction")] },
+      { t: "FIRE SPRINKLERS says NFPA 13D (IBC 903.3.1.3).", where: "Code sheet, row 6", boxes: [ca("sprinklers")] },
+      { t: "BUILDING HEIGHT says 41' - 6\".", where: "Code sheet, row 8", boxes: [ca("height")] },
+      { t: "ALLOWABLE HEIGHT says 60' - 0\" PER TABLE 504.3 (the architect's figure).", where: "Code sheet, row 9", boxes: [ca("allowable")] },
+      { t: "The legend says S13D means a system per Section 903.3.1.3, which is NFPA 13D.", where: "Height table, legend under the table", boxes: [{ d: "t", x0: T.legend[0], x1: T.legend[1], y0: T.legend[2], y1: T.legend[3] }] },
+      { t: "Row R, sub-row S13D, column TYPE V / B says 40.", where: "Height table, bottom group (R)", boxes: [trow("s13d"), tcell("s13d")] },
+      { t: "In the same column, S13R and S both say 60. That is probably where the architect's 60 came from.", where: "Height table, rows below S13D", boxes: [tcell("s13r"), tcell("s")] },
+      { t: "Footnote a points to exceptions in Chapters 4 and 5, which were not provided. That is why confidence is Medium.", where: "Height table, footnote a", boxes: [{ d: "t", x0: T.fna[0], x1: T.fna[1], y0: T.fna[2], y1: T.fna[3] }] },
+    ],
+    math: "R-3 uses row R (the brief, instructions/README.md line 54: a numbered group goes in its letter's row).<br>41'-6\" = 41.5 ft, which is more than 40 ft → <b>Fail</b>, over by 1'-6\".",
+    rules: [] },
+
+  { group: "2. Escape windows", id: "W-1", title: "Window 1, Bedroom 101", expect: "Could Not Evaluate", conf: "High",
+    steps: w(1, "BEDROOM 101, 2' - 6\" × 4' - 0\", L.H. CASM'T, head 6' - 8\"", 4, [egressY(1)]),
+    math: "Area 2.5 × 4 = 10 sq ft (≥ 5.7). Height 48 in (≥ 24). Width 30 in (≥ 20). Sill 80 − 48 = 32 in (≤ 44).<br>Big enough on paper, but these are frame sizes, so the true opening isn't known → <b>Could Not Evaluate</b>.", rules: ESC },
+  { group: "2. Escape windows", id: "W-3", title: "Window 3, Bedroom 101", expect: "Could Not Evaluate", conf: "High",
+    steps: w(3, "BEDROOM 101, 2' - 6\" × 4' - 0\", R.H. CASM'T, head 6' - 8\"", 6, [egressY(3)]),
+    math: "Same as window 1: 10 sq ft, 48 in tall, 30 in wide, sill 32 in → <b>Could Not Evaluate</b>.", rules: ESC },
+  { group: "2. Escape windows", id: "W-7", title: "Window 7, ADU Bedroom 107", expect: "Could Not Evaluate", conf: "High",
+    steps: w(7, "ADU BEDROOM 107, 2'-6\" × 3' - 0\", L.H. CASM'T, head 6' - 8\"", 10, [egressY(7),
+      { t: "Head height 6' - 8\" = 80 in; window height 3' - 0\" = 36 in.", where: "Window schedule, HEAD HEIGHT and HEIGHT", boxes: [wcell(7, "head"), wcell(7, "height")] }]),
+    math: "Sill 80 − 36 = <b>44 in, exactly the limit</b>. Any bottom frame pushes the real opening above 44 in.<br>→ <b>Could Not Evaluate</b>, flagged as a likely Fail.", rules: ["L45"] },
+  { group: "2. Escape windows", id: "W-10", title: "Window 10, Bedroom 203", expect: "Fail", conf: "High",
+    steps: w(10, "BEDROOM 203, 2' - 0\" × 2' - 6\", L.H. CASM'T, head 6' - 8\"", 12, [egressY(10),
+      { t: "Width 2' - 0\", height 2' - 6\", head 6' - 8\".", where: "Window schedule, WIDTH, HEIGHT, HEAD HEIGHT", boxes: [wcell(10, "width"), wcell(10, "height"), wcell(10, "head")] }]),
+    math: "Area 2 × 2.5 = <b>5.0 sq ft</b> with the frame, so the real opening is under 5 → fails even the 5 sq ft ground-floor limit.<br>Sill 80 − 30 = <b>50 in</b>, over 44. → <b>Fail</b> (confidence High: the area alone uses printed sizes).", rules: ["L35", "L37", "L45"] },
+  { group: "2. Escape windows", id: "W-12", title: "Window 12, Bedroom 205", expect: "Could Not Evaluate", conf: "Medium",
+    steps: w(12, "BEDRROM 205, 3' - 0\" × 4' - 0\", S.H. (single hung), head 6' - 8\"", 14, [egressY(12),
+      { t: "LOCATION is spelled BEDRROM, a scanning typo for BEDROOM. That is why confidence is Medium.", where: "Window schedule, LOCATION", boxes: [wcell(12, "location")] }]),
+    math: "A single-hung window opens only its bottom half: 48 ÷ 2 = <b>24 in</b>, exactly the minimum before the frame.<br>Area 12 sq ft, sill 80 − 48 = 32 in. → <b>Could Not Evaluate</b>, flagged as a likely Fail on height.", rules: ["L41", "L35", "L45"] },
+  { group: "2. Escape windows", id: "W-13", title: "Window 13, Bedroom 205", expect: "Fail", conf: "High",
+    steps: w(13, "BEDROOM 205, 4' - 0\" × 4' - 0\", FIXED", 15, [egressY(13),
+      { t: "TYPE says FIXED: it does not open.", where: "Window schedule, TYPE", boxes: [wcell(13, "type")] }]),
+    math: "Marked as the escape window but it can't open → <b>Fail</b>.", rules: ["L31", "L41"] },
+  { group: "2. Escape windows", id: "W-20", title: "Window 20, Bedroom 301", expect: "Fail", conf: "Medium",
+    steps: w(20, "BEDROOM 301, 2' - 6\" × 3' - 0\", L.H. CASM'T, head 8' - 0\"", 17, [egressY(20),
+      { t: "Head height is 8' - 0\" (96 in), higher than the others; height 3' - 0\" (36 in).", where: "Window schedule, HEAD HEIGHT and HEIGHT", boxes: [wcell(20, "head"), wcell(20, "height")] }]),
+    math: "Sill 96 − 36 = <b>60 in</b>, over 44 → <b>Fail</b>.<br>Confidence Medium: the sill is worked out, not printed. Confirm on the elevations that head height is measured to the top of the window.", rules: ["L45"] },
+
+  { group: "3. Bedrooms", id: "R-101", title: "Bedroom 101", expect: "Could Not Evaluate", conf: "High",
+    steps: [{ t: "Windows 1, 2 and 3 are in BEDROOM 101. 1 and 3 are marked EGRESS Y; 2 is FIXED and blank.", where: "Window schedule, rows for windows 1–3", boxes: [wrow(1), wrow(2), wrow(3), wcell(1, "egress"), wcell(3, "egress")] },
+            { t: "Room numbering: 1XX is the first floor, so it is below the 4th story.", where: "Code sheet, row 12", boxes: [ca("numbering")] }],
+    math: "Neither escape window (1, 3) is settled → <b>Could Not Evaluate</b>.", rules: ["L13"] },
+  { group: "3. Bedrooms", id: "R-107", title: "ADU Bedroom 107", expect: "Could Not Evaluate", conf: "High",
+    steps: [{ t: "Window 7 is the only window in ADU BEDROOM 107.", where: "Window schedule, row for window 7", boxes: [wrow(7)] }],
+    math: "Window 7 is not settled → <b>Could Not Evaluate</b>.", rules: ["L13"] },
+  { group: "3. Bedrooms", id: "R-203", title: "Bedroom 203", expect: "Fail", conf: "Medium",
+    steps: [{ t: "Windows 10 and 11 are in BEDROOM 203. 10 is EGRESS Y; 11 is FIXED and blank.", where: "Window schedule, rows for windows 10–11", boxes: [wrow(10), wrow(11), wcell(11, "type")] },
+            { t: "Room numbering: 2XX is the second floor.", where: "Code sheet, row 12", boxes: [ca("numbering")] }],
+    math: "Window 10 fails, and window 11 can't open → <b>Fail</b>, unless the room has a door straight outside (Exception 2). The floor plans would show it; they weren't provided, so confidence is Medium.", rules: ["L13", "L19"] },
+  { group: "3. Bedrooms", id: "R-205", title: "Bedroom 205", expect: "Could Not Evaluate", conf: "Medium",
+    steps: [{ t: "Windows 12 (BEDRROM 205) and 13 (BEDROOM 205) are the same room: same number, one spelling is a typo.", where: "Window schedule, rows for windows 12–13", boxes: [wrow(12), wrow(13), wcell(12, "location"), wcell(13, "location")] }],
+    math: "Window 12 is not settled; window 13 fails → <b>Could Not Evaluate</b>.", rules: ["L13"] },
+  { group: "3. Bedrooms", id: "R-301", title: "Bedroom 301", expect: "Fail", conf: "Low",
+    steps: [{ t: "Window 20 is the only window in BEDROOM 301.", where: "Window schedule, row for window 20", boxes: [wrow(20)] },
+            { t: "Room numbering: 3XX is the third floor, still below the 4th story.", where: "Code sheet, row 12", boxes: [ca("numbering")] }],
+    math: "Window 20 fails → <b>Fail</b>, unless there's a door straight outside (Exception 2).<br>Confidence Low, for two reasons: the sill is worked out, and the floor plans weren't provided.", rules: ["L13", "L19"] },
+  { group: "3. Bedrooms", id: "R-303", title: "Guest Bed 303", expect: "Could Not Evaluate", conf: "High",
+    steps: [{ t: "Window 21 is the only window in GUEST BED 303. Its EGRESS cell is blank; the Y is in the SCREEN column.", where: "Window schedule, row for window 21", boxes: [wrow(21), wcell(21, "egress"), wcell(21, "screen")] }],
+    math: "No window is marked as the escape window, but 2'-6\" × 4'-0\" could work → <b>Could Not Evaluate</b>: ask the architect to designate one.", rules: ["L13"] },
+
+  ...[[2, "BEDROOM 101", "FIXED, not marked egress; the bedroom only needs one escape window (it was considered in R-101)."],
+      [11, "BEDROOM 203", "FIXED, not marked egress (considered in R-203)."],
+      [21, "GUEST BED 303", "Not marked egress (considered in R-303)."]].map(([n, room, why]) => ({
+    group: "4. Not Applicable", id: "W-" + n, title: `Window ${n}, ${room}`, expect: "Not Applicable", conf: "High",
+    steps: [roomCell(n, room), egressBlank(n)], math: why, rules: ["L13"] })),
+  { group: "4. Not Applicable", id: "W-4", title: "Window 4, Office 102", expect: "Not Applicable", conf: "Low",
+    steps: [roomCell(4, "OFFICE 102"), egressBlank(4),
+            { t: "WIDTH reads 3' - O\" (a letter O). It was taken as 3' - 0\".", where: "Window schedule, WIDTH", boxes: [wcell(4, "width")] }],
+    math: "An office isn't treated as a bedroom → <b>Not Applicable</b>. Confidence Low: if the office is used for sleeping, it needs an escape window. Ask.", rules: ["L13"] },
+  ...[[5, "LIVING 103"], [6, "KITCHEN 104"], [8, "LAUNDRY 108"], [14, "BATH 206"], [22, "HALL 302"], [23, "STAIR S1"]].map(([n, room]) => ({
+    group: "4. Not Applicable", id: "W-" + n, title: `Window ${n}, ${room}`, expect: "Not Applicable", conf: "High",
+    steps: [roomCell(n, room)], math: "Not a bedroom; the rule applies to sleeping rooms only → <b>Not Applicable</b>.", rules: ["L13"] })),
+
+  { group: "5. Other claims", id: "GAPS", title: "Missing window numbers", expect: "Flagged", conf: "",
+    steps: [{ t: "Read down the SYMBOL column. There is no window 9, and none from 15 to 19.", where: "Window schedule, SYMBOL column", boxes: [wcol("symbol")] }],
+    math: "Rows may have been lost in scanning, or the windows renumbered. The report lists this under “Check these”.", rules: [] },
+  { group: "5. Other claims", id: "CLAIM", title: "Architect's escape-opening claim", expect: "Not supported", conf: "",
+    steps: [{ t: "EMERGENCY ESCAPE & RESCUE says PROVIDED AT ALL SLEEPING ROOMS PER IBC 1030.", where: "Code sheet, row 13", boxes: [ca("egress")] }],
+    math: "Bedrooms 203 and 301 fail, and the others can't be confirmed from the schedule, so the claim is not supported.", rules: ["L13"] },
+];
+
+// ---- state ------------------------------------------------------------------------------------
+const KEY = "spotcheck.v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { state = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+let cur = 0, stepIdx = 0, doc = "ws", zoom = 1, live = null;
+
+const VSHORT = { "Could Not Evaluate": "CNE", "Not Applicable": "N/A", "Fail": "Fail", "Pass": "Pass" };
+
+// ---- live report (works when served over http; the file:// fallback uses the values above) ----
+fetch("../findings.json").then(r => r.ok ? r.json() : null).then(j => {
+  if (!j) return;
+  live = Object.fromEntries(j.findings.map(f => [f.id, f]));
+  document.getElementById("source").textContent = "Report values: live from findings.json";
+  render();
+}).catch(() => { document.getElementById("source").textContent = "Report values: built in"; });
+
+function reportOf(it) {
+  const f = live && live[it.id];
+  return f ? { verdict: f.verdict, conf: f.confidence, live: true } : { verdict: it.expect, conf: it.conf, live: false };
+}
+
+// ---- render ---------------------------------------------------------------------------------
+function renderNav() {
+  const nav = document.getElementById("nav"); nav.innerHTML = "";
+  let g = "";
+  ITEMS.forEach((it, i) => {
+    if (it.group !== g) { g = it.group; nav.insertAdjacentHTML("beforeend", `<h3>${g}</h3>`); }
+    const s = (state[it.id] || {}).status || "";
+    const a = document.createElement("a");
+    a.className = i === cur ? "cur" : "";
+    a.innerHTML = `<span class="dot ${s}"></span>${it.id}<span class="v">${VSHORT[reportOf(it).verdict] || reportOf(it).verdict}</span>`;
+    a.onclick = () => go(i);
+    nav.appendChild(a);
+  });
+  const done = ITEMS.filter(it => (state[it.id] || {}).status).length;
+  document.querySelector("#bar span").style.width = (100 * done / ITEMS.length) + "%";
+  document.getElementById("ptext").textContent = `${done} of ${ITEMS.length} checked`;
+}
+
+function renderCard() {
+  const it = ITEMS[cur], rep = reportOf(it), st = state[it.id] || {};
+  const vcls = rep.verdict === "Fail" ? "Fail" : rep.verdict === "Could Not Evaluate" ? "CNE" : "";
+  const mismatch = rep.live && (rep.verdict !== it.expect || (it.conf && rep.conf !== it.conf));
+  const card = document.getElementById("card");
+  card.innerHTML = `
+    <h2>${it.id}</h2>
+    <div class="sub">${it.title}</div>
+    <div>Report says: <span class="verdict ${vcls}">${rep.verdict}</span>${rep.conf ? ` · confidence <b>${rep.conf}</b>` : ""}</div>
+    ${mismatch ? `<div class="mismatch">The live report differs from this checklist (expected ${it.expect}${it.conf ? " · " + it.conf : ""}). Check which is right.</div>` : ""}
+    <div class="label">Check on the documents (click a step to show it)</div>
+    <ol class="steps">${it.steps.map((s, i) => `<li data-i="${i}" class="${i === stepIdx ? "cur" : ""}"><span>${s.t}<span class="where">${s.where}</span></span></li>`).join("")}</ol>
+    <div class="label">Then do the math</div>
+    <div class="math">${it.math}</div>
+    ${it.rules.length ? `<div class="label">The rule (section-1030 file)</div>${it.rules.map(k => `<div class="rule"><b>${RULES[k][0]}:</b> ${RULES[k][1]}</div>`).join("")}` : ""}
+    <div class="label">Your verdict on the report's ruling</div>
+    <div class="judge">
+      <button data-s="ok" class="${st.status === "ok" ? "on ok" : ""}">✓ Correct</button>
+      <button data-s="bad" class="${st.status === "bad" ? "on bad" : ""}">✗ Wrong</button>
+      <button data-s="unsure" class="${st.status === "unsure" ? "on unsure" : ""}">? Unsure</button>
+    </div>
+    <textarea placeholder="Notes (what you saw, what's wrong)">${(st.note || "").replace(/</g, "&lt;")}</textarea>
+    <div class="navbtns"><button id="prev">← Previous</button><button id="next">Next →</button></div>
+    <div class="keys"><kbd>←</kbd>/<kbd>→</kbd> item · <kbd>↑</kbd>/<kbd>↓</kbd> step · <kbd>C</kbd> correct · <kbd>W</kbd> wrong · <kbd>U</kbd> unsure</div>`;
+  card.querySelectorAll("ol.steps li").forEach(li => li.onclick = () => { stepIdx = +li.dataset.i; showStep(); renderCard(); });
+  card.querySelectorAll(".judge button").forEach(b => b.onclick = () => judge(b.dataset.s));
+  card.querySelector("textarea").oninput = e => { state[it.id] = { ...(state[it.id] || {}), note: e.target.value }; save(); };
+  card.querySelector("#prev").onclick = () => go(cur - 1);
+  card.querySelector("#next").onclick = () => go(cur + 1);
+}
+
+function renderTabs() {
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = Object.entries(DOCS).map(([k, d]) => `<button data-d="${k}" class="${k === doc ? "on" : ""}">${d.name}</button>`).join("")
+    + `<span class="zoom"><button data-z="-">−</button><button data-z="fit">Fit</button><button data-z="+">+</button></span>`;
+  tabs.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { doc = b.dataset.d; zoom = DOCS[doc].zoom; drawDoc(); });
+  tabs.querySelectorAll("[data-z]").forEach(b => b.onclick = () => {
+    const fit = (document.getElementById("stage").clientWidth - 24) / DOCS[doc].w;
+    zoom = b.dataset.z === "fit" ? fit : Math.max(.2, Math.min(3, zoom * (b.dataset.z === "+" ? 1.25 : .8))); drawDoc();
+  });
+}
+
+function drawDoc() {
+  renderTabs();
+  const d = DOCS[doc], frame = document.getElementById("frame"), stage = document.getElementById("stage");
+  const step = ITEMS[cur].steps[stepIdx];
+  const boxes = (step ? step.boxes : []).filter(b => b.d === doc);
+  frame.style.width = Math.round(zoom * d.w) + "px";
+  frame.innerHTML = `<img src="${d.src}" alt="${d.name}">` + boxes.map(b =>
+    `<div class="box ${b.strong ? "strong" : ""}" style="left:${100 * b.x0 / d.w}%;top:${100 * b.y0 / d.h}%;width:${100 * (b.x1 - b.x0) / d.w}%;height:${100 * (b.y1 - b.y0) / d.h}%"></div>`).join("");
+  const img = frame.querySelector("img");
+  const scrollTo = () => {
+    if (!boxes.length) return;
+    const focus = boxes.filter(b => b.strong);
+    const fb = focus.length ? focus : boxes;               // centre on the cells that matter
+    const cx = (Math.min(...fb.map(b => b.x0)) + Math.max(...fb.map(b => b.x1))) / 2 / d.w * img.clientWidth;
+    const y = Math.min(...boxes.map(b => b.y0)) / d.h * img.clientHeight;
+    const left = focus.length ? cx - stage.clientWidth / 2 : Math.min(...boxes.map(b => b.x0)) / d.w * img.clientWidth - 20;
+    stage.scrollTo({ top: Math.max(0, y - stage.clientHeight / 3), left: Math.max(0, left), behavior: "smooth" });
+  };
+  const later = () => requestAnimationFrame(() => requestAnimationFrame(scrollTo));
+  img.complete ? later() : img.onload = later;
+}
+
+function showStep() {
+  const step = ITEMS[cur].steps[stepIdx];
+  if (step && step.boxes.length) { doc = step.boxes[0].d; zoom = DOCS[doc].zoom; }
+  drawDoc();
+}
+
+function go(i) {
+  if (i < 0 || i >= ITEMS.length) return;
+  cur = i; stepIdx = 0; render(); showStep();
+}
+function judge(s) {
+  const it = ITEMS[cur]; const prev = (state[it.id] || {}).status;
+  state[it.id] = { ...(state[it.id] || {}), status: prev === s ? "" : s }; save(); render();
+}
+function render() { renderNav(); renderCard(); }
+
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "TEXTAREA") return;
+  const n = ITEMS[cur].steps.length;
+  if (e.key === "ArrowRight") go(cur + 1);
+  else if (e.key === "ArrowLeft") go(cur - 1);
+  else if (e.key === "ArrowDown") { stepIdx = Math.min(n - 1, stepIdx + 1); showStep(); renderCard(); e.preventDefault(); }
+  else if (e.key === "ArrowUp") { stepIdx = Math.max(0, stepIdx - 1); showStep(); renderCard(); e.preventDefault(); }
+  else if (e.key.toLowerCase() === "c") judge("ok");
+  else if (e.key.toLowerCase() === "w") judge("bad");
+  else if (e.key.toLowerCase() === "u") judge("unsure");
+});
+
+document.getElementById("export").onclick = () => {
+  const label = { ok: "Correct", bad: "Wrong", unsure: "Unsure" };
+  const lines = ["# Spot check results", "", `Checked ${new Date().toISOString().slice(0, 10)}.`, "",
+    "| ID | Report says | Your verdict | Notes |", "|---|---|---|---|",
+    ...ITEMS.map(it => { const r = reportOf(it), s = state[it.id] || {};
+      return `| ${it.id} | ${r.verdict}${r.conf ? " (" + r.conf + ")" : ""} | ${label[s.status] || "not checked"} | ${(s.note || "").replace(/\|/g, "/").replace(/\n/g, " ")} |`; })];
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([lines.join("\n") + "\n"], { type: "text/markdown" }));
+  a.download = "spot-check-results.md"; a.click();
+};
+document.getElementById("reset").onclick = () => {
+  if (confirm("Clear all your verdicts and notes?")) { state = {}; save(); render(); }
+};
+
+render(); showStep();
+</script>
+</body>
+</html>
