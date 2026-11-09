@@ -58,7 +58,7 @@ The report went from 585 lines to about 240 after three independent reviews: two
 - **Roles.** Claude Opus built the tool. Claude Sonnet did independent reviews at each design point: it got the files and the question, not Opus's conclusions. Disagreements were taken to me rather than settled silently.
 - **Hand-typed checks against the printed sources.**
   - All 144 cells of Table 504.3 were typed from the printed image, and the parser is tested against them.
-  - The eval set (`tests/fixtures/expected/verdicts.json`) was typed by hand, never generated from output. I spot-checked it against the sheet images.
+  - The eval set (`tests/fixtures/expected/verdicts.json`) was typed by hand, never generated from output. I spot-checked the verdicts against the sheet images; the confidence levels added later were typed by applying the rule by hand and are not yet spot-checked.
   - Every code quote the tool cites is tested against its line.
 - **What reviews caught.**
   - In fixture analysis, the AI first asserted that R / S13D / V-B was 60 ft. Checking against the image showed 40.

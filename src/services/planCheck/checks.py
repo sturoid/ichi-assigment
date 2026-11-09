@@ -413,6 +413,7 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
         used = (HH, H)
     else:
         sill, read, used = None, f"head height {_len_desc(HH)}, nominal height {_len_desc(H)}", ()
+    sbasis = "derived" if used == (HH, H) else "printed"
     if sill is None:
         crit.append(Criterion(sreq, sref, read, CNE, "the sill height can't be worked out", ["POL-E-SILL-LOWER"],
                               _settle(store, "PROJECT:ELEVATIONS")[0]))
@@ -424,14 +425,14 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
                                                 f"{fmt_in(H['inches'])} height = {sill:g} in, above "
                                                 f"{C.MAX_SILL.value:g} in" if used == (HH, H) else
                                                 f"scheduled sill {sill:g} in, above {C.MAX_SILL.value:g} in"),
-                                         basis="derived" if used == (HH, H) else "printed"),
+                                         basis=sbasis),
                                *used))
     else:
         cr = _guard_ocr(Criterion(sreq, sref, read, CNE,
                                   f"the frame sill is {sill:g} in ({C.MAX_SILL.value - sill:g} in below the "
                                   f"limit), but the clear opening's bottom sits higher by the bottom frame, "
                                   "which is not given", ["POL-E-SILL-LOWER"],
-                                  f"{wd} or {_settle(store, 'PROJECT:ELEVATIONS')[0]}"), *used)
+                                  f"{wd} or {_settle(store, 'PROJECT:ELEVATIONS')[0]}", basis=sbasis), *used)
         if cr.verdict == CNE and C.MAX_SILL.value - sill <= 1e-9:
             cr.policies.append("POL-E-AT-LIMIT")
             cr.flags.append({"code": "sill_at_limit",

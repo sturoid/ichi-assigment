@@ -389,7 +389,7 @@
       "check": "egress_window",
       "subject": "Window 1, BEDROOM 101",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -516,7 +516,7 @@
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
           "flags": [],
-          "basis": "printed"
+          "basis": "derived"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -662,7 +662,7 @@
       "check": "egress_window",
       "subject": "Window 3, BEDROOM 101",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -789,7 +789,7 @@
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
           "flags": [],
-          "basis": "printed"
+          "basis": "derived"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1082,7 +1082,7 @@
       "check": "egress_window",
       "subject": "Window 7, ADU BEDROOM 107",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 7.50 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 7.50 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 44 in (3'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -1215,7 +1215,7 @@
               "message": "expect a Fail on sill height: the frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions."
             }
           ],
-          "basis": "printed"
+          "basis": "derived"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1636,7 +1636,7 @@
       "check": "egress_window",
       "subject": "Window 12, BEDRROM 205",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 12.00 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 12.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -1771,7 +1771,7 @@
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
           "flags": [],
-          "basis": "printed"
+          "basis": "derived"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1955,7 +1955,7 @@
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
           "flags": [],
-          "basis": "printed"
+          "basis": "derived"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",

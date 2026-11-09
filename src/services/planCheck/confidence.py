@@ -27,7 +27,7 @@ _LEVELS = (LOW, MEDIUM, HIGH)
 # a room-name repair decides which rule applies; a repaired number already turns a Fail into CNE (POL-GEN-OCR)
 _REPAIRED = ("ocr_room_name",)
 # flags meaning the room's use was guessed
-_USE_GUESSED = ("ambiguous_room", "unrecognised_room", "egress_in_ambiguous_room")
+_USE_GUESSED = ("ambiguous_room", "unrecognised_room")   # a window marked egress there is evaluated anyway
 
 
 def _down(level: str, steps: int = 1) -> str:
