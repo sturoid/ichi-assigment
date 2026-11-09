@@ -1,0 +1,1382 @@
+{
+  "_about": "Table-structure scenarios for the htmlParser. See README.md for the catalogue. status 'pass' = must pass now. status 'known_gap' = must currently fail, AND the failure message must contain gap_signature (so a typo or unrelated error can't masquerade as the known gap). When a gap is fixed the runner fails until status is changed to 'pass'. Synthetic values are made up and are NOT code.",
+  "shared": {
+    "mini_height_spec": {
+      "table_id": "SYN-MINI-HEIGHT",
+      "row_dims": [
+        "occupancy",
+        "sprinkler"
+      ],
+      "col_dim": "construction",
+      "multi_value_dims": [
+        "occupancy"
+      ],
+      "column_key": "construction_type",
+      "tokens": {
+        "UL": "unlimited"
+      },
+      "unit": "ft"
+    },
+    "mini_height_lookups": [
+      {
+        "dims": {
+          "occupancy": "A",
+          "sprinkler": "NS",
+          "construction": "I-A"
+        },
+        "value": "UL"
+      },
+      {
+        "dims": {
+          "occupancy": "B",
+          "sprinkler": "S",
+          "construction": "II-B"
+        },
+        "value": 75
+      },
+      {
+        "dims": {
+          "occupancy": "R",
+          "sprinkler": "S13R",
+          "construction": "V-B"
+        },
+        "value": 60
+      },
+      {
+        "dims": {
+          "occupancy": "R",
+          "sprinkler": "NS",
+          "construction": "V-B"
+        },
+        "value": 40
+      },
+      {
+        "dims": {
+          "occupancy": "A",
+          "sprinkler": "S",
+          "construction": "V-B"
+        },
+        "value": 60
+      },
+      {
+        "dims": {
+          "occupancy": "R",
+          "sprinkler": "S",
+          "construction": "II-B"
+        },
+        "value": 75
+      },
+      {
+        "dims": {
+          "occupancy": "R",
+          "sprinkler": "S13R",
+          "construction": "I-A"
+        },
+        "value": 60
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "M01",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M01-baseline-thead-th.html",
+      "title": "Baseline: <thead>, <th>, rowspanned row labels",
+      "why": "Control case. M02-M07 carry the same data in a different shape and must give identical lookups.",
+      "spec": "$mini_height_spec",
+      "expect": {
+        "header_rows": [
+          0,
+          1,
+          2
+        ],
+        "data_row_count": 5,
+        "column_keys": [
+          "I-A",
+          "II-B",
+          "V-B"
+        ],
+        "cell_count": 15,
+        "index_size": 21,
+        "lookups": "$mini_height_lookups",
+        "absent_lookups": [
+          {
+            "occupancy": "A",
+            "sprinkler": "S13R",
+            "construction": "I-A"
+          },
+          {
+            "occupancy": "R",
+            "sprinkler": "NS",
+            "construction": "IV-HT"
+          }
+        ],
+        "bad_lookup_dims": [
+          {
+            "occupancy": "R",
+            "construction": "V-B"
+          },
+          {
+            "occupancy": "R",
+            "sprinkler": "NS",
+            "construction": "V-B",
+            "floor": "1"
+          }
+        ],
+        "warnings_empty": true,
+        "review_items_empty": true
+      }
+    },
+    {
+      "id": "M02",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M02-headers-plain-td-in-tbody.html",
+      "title": "Header rows are plain <td> inside <tbody>, no bold",
+      "why": "The real 504.3 scrape puts headers in <tbody> as <td>; only a CSS class marks them. If a scrape drops styling, headers must still be found from structure (merged cells spanning down to the data).",
+      "spec": "$mini_height_spec",
+      "expect": {
+        "header_rows": [
+          0,
+          1,
+          2
+        ],
+        "data_row_count": 5,
+        "same_index_as": "M01",
+        "warnings_empty": true
+      },
+      "fixed_by": "structural header detection (headers.py)"
+    },
+    {
+      "id": "M03",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M03-stub-labels-repeated-no-rowspan.html",
+      "title": "Row labels repeated on every row instead of rowspan",
+      "why": "Many publishers repeat the group label per row. The full key -> value index must be identical to the rowspan version.",
+      "spec": "$mini_height_spec",
+      "expect": {
+        "data_row_count": 5,
+        "same_index_as": "M01",
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M04",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M04-columns-reordered.html",
+      "title": "Value columns in a different order",
+      "why": "Lookups must key on header text, never on column position.",
+      "spec": "$mini_height_spec",
+      "expect": {
+        "column_keys": [
+          "V-B",
+          "I-A",
+          "II-B"
+        ],
+        "same_index_as": "M01",
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M05",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M05-transposed.html",
+      "title": "Transposed: construction down the left, occupancy/sprinkler across the top",
+      "why": "Some code tables put two dimensions in the column headers (e.g. IBC Table 508.4: occupancy groups across the top, each split into S / NS). A lookup by dimension name must not care which axis a dimension is on.",
+      "gap": "MatrixSpec supports one column dimension. Fix: col_dims list, one name per header level.",
+      "gap_signature": "col_dims",
+      "spec": {
+        "table_id": "SYN-MINI-HEIGHT-T",
+        "row_dims": [
+          "construction"
+        ],
+        "col_dims": [
+          "occupancy",
+          "sprinkler"
+        ],
+        "multi_value_dims": [
+          "occupancy"
+        ],
+        "tokens": {
+          "UL": "unlimited"
+        },
+        "unit": "ft"
+      },
+      "expect": {
+        "data_row_count": 3,
+        "lookups": "$mini_height_lookups"
+      }
+    },
+    {
+      "id": "M06",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M06-group-header-rows.html",
+      "title": "Occupancy given by full-width group rows (\"GROUP R\") instead of a label column",
+      "why": "Group sub-heading rows are common in code tables and schedules. The group row's label applies to the rows under it and must become neither a data row nor a header row.",
+      "gap": "No group-row concept; the bold group rows are also absorbed into the header. Fix: detect full-width label rows in the body and carry them as a dimension; strip a 'GROUP(S)' prefix via spec.",
+      "gap_signature": "group_row_dim",
+      "spec": {
+        "table_id": "SYN-MINI-HEIGHT-G",
+        "row_dims": [
+          "sprinkler"
+        ],
+        "group_row_dim": "occupancy",
+        "col_dim": "construction",
+        "multi_value_dims": [
+          "occupancy"
+        ],
+        "column_key": "construction_type",
+        "tokens": {
+          "UL": "unlimited"
+        },
+        "unit": "ft"
+      },
+      "expect": {
+        "header_rows": [
+          0,
+          1
+        ],
+        "data_row_count": 5,
+        "lookups": "$mini_height_lookups"
+      }
+    },
+    {
+      "id": "M07",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M07-value-colspan.html",
+      "title": "One value merged across several columns",
+      "why": "Code tables merge identical values horizontally (\"NP\" or \"60\" across all types). Each covered column must resolve, flagged as inherited.",
+      "spec": "$mini_height_spec",
+      "expect": {
+        "same_index_as": "M01",
+        "lookups": [
+          {
+            "dims": {
+              "occupancy": "R",
+              "sprinkler": "S13R",
+              "construction": "I-A"
+            },
+            "value": 60,
+            "inherited": false
+          },
+          {
+            "dims": {
+              "occupancy": "R",
+              "sprinkler": "S13R",
+              "construction": "II-B"
+            },
+            "value": 60,
+            "inherited": true
+          },
+          {
+            "dims": {
+              "occupancy": "R",
+              "sprinkler": "S13R",
+              "construction": "V-B"
+            },
+            "value": 60,
+            "inherited": true
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M08",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M08-value-footnotes-and-tokens.html",
+      "title": "Footnotes on value cells; NP and em-dash tokens",
+      "why": "Table 601-style cells carry their own footnotes (\"1<sup>b</sup>\"), and some cells are words, not numbers. Footnotes must be merged, tokens must keep their meaning, and nothing may be coerced to a number.",
+      "spec": {
+        "table_id": "SYN-MINI-HEIGHT-F",
+        "row_dims": [
+          "occupancy",
+          "sprinkler"
+        ],
+        "col_dim": "construction",
+        "multi_value_dims": [
+          "occupancy"
+        ],
+        "column_key": "construction_type",
+        "tokens": {
+          "UL": "unlimited",
+          "NP": "not_permitted",
+          "—": "not_applicable"
+        },
+        "unit": "ft"
+      },
+      "expect": {
+        "lookups": [
+          {
+            "dims": {
+              "occupancy": "B",
+              "sprinkler": "NS",
+              "construction": "II-B"
+            },
+            "value": 55,
+            "footnotes": [
+              "a"
+            ]
+          },
+          {
+            "dims": {
+              "occupancy": "A",
+              "sprinkler": "NS",
+              "construction": "V-B"
+            },
+            "value": 40,
+            "footnotes": []
+          },
+          {
+            "dims": {
+              "occupancy": "R",
+              "sprinkler": "NS",
+              "construction": "V-B"
+            },
+            "value": null,
+            "kind": "not_permitted"
+          },
+          {
+            "dims": {
+              "occupancy": "R",
+              "sprinkler": "S13R",
+              "construction": "I-A"
+            },
+            "value": null,
+            "kind": "not_applicable"
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M09",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M09-caption-title-and-footer-notes.html",
+      "title": "<caption>, a title row above the headers, and a footnote row below the data",
+      "why": "Scraped tables often carry the table number in <caption> and the legend/footnotes as a final full-width row. The caption is the table's identity; the footer must become notes, not a data row.",
+      "gap": "A full-width last row is read as data, and <caption> text is discarded. Fix: classify trailing full-width rows as notes; store caption on the grid.",
+      "gap_signature": "data_row_count",
+      "spec": "$mini_height_spec",
+      "expect": {
+        "data_row_count": 5,
+        "caption": "TABLE 999.1 MINI HEIGHT (SYNTHETIC)",
+        "title_contains": "ALLOWABLE HEIGHT",
+        "same_index_as": "M01",
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M10",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M10-header-repeated-mid-table.html",
+      "title": "Header block repeated mid-table (page break)",
+      "why": "Multi-page tables reprint headers. The repeat must be dropped and reported, not turned into data rows. (Duplicate keys in a law table stay a hard error.)",
+      "spec": "$mini_height_spec",
+      "expect": {
+        "data_row_count": 5,
+        "same_index_as": "M01",
+        "repeated_header_rows": [
+          5,
+          6,
+          7
+        ],
+        "review_items_contain": [
+          "header.repeat_dropped"
+        ]
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "Repeated header rows are treated as data, producing duplicate keys. Fix: drop body rows whose text matches the header rows and warn."
+    },
+    {
+      "id": "M11",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M11-label-ranges-and-conjunctions.html",
+      "title": "Row labels with 'and' / 'through' instead of commas",
+      "why": "Code labels use \"A-1 and A-2\", \"H-1 through H-3\". A comma-only split leaves \"R-2 and R-4\" as one atom and cannot expand a range.",
+      "gap": "Only commas split labels. Fix: split on ', ' and ' and '; expand 'X-n through X-m' when both ends share a prefix.",
+      "gap_signature": "no cell for {'occupancy': 'A-2'",
+      "spec": {
+        "table_id": "SYN-RANGES",
+        "row_dims": [
+          "occupancy"
+        ],
+        "col_dim": "construction",
+        "multi_value_dims": [
+          "occupancy"
+        ],
+        "column_key": "construction_type",
+        "tokens": {
+          "UL": "unlimited"
+        }
+      },
+      "expect": {
+        "lookups": [
+          {
+            "dims": {
+              "occupancy": "A-2",
+              "construction": "II-B"
+            },
+            "value": 55
+          },
+          {
+            "dims": {
+              "occupancy": "H-2",
+              "construction": "V-B"
+            },
+            "value": 50
+          },
+          {
+            "dims": {
+              "occupancy": "R-4",
+              "construction": "I-A"
+            },
+            "value": "UL"
+          },
+          {
+            "dims": {
+              "occupancy": "R-1",
+              "construction": "V-B"
+            },
+            "value": 60
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M12",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M12-single-value-column-with-qualifiers.html",
+      "title": "Two-column list table with qualified values (\"150 gross\")",
+      "why": "Table 1004.5-style lists have one value column, and values carry a qualifier that changes their meaning (net vs gross).",
+      "gap": "\"150 gross\" is parsed as unknown text. Also: the stub-column heuristic warns on single-level headers. Fix: number + qualifier parsing; skip the depth heuristic when all headers are one level.",
+      "gap_signature": "None != 20",
+      "spec": {
+        "table_id": "SYN-OLF",
+        "row_dims": [
+          "function"
+        ],
+        "col_dim": "measure"
+      },
+      "expect": {
+        "lookups": [
+          {
+            "dims": {
+              "function": "Classroom area",
+              "measure": "OCCUPANT LOAD FACTOR (SQ FT)"
+            },
+            "value": 20,
+            "qualifier": "net"
+          },
+          {
+            "dims": {
+              "function": "Business areas",
+              "measure": "OCCUPANT LOAD FACTOR (SQ FT)"
+            },
+            "value": 150,
+            "qualifier": "gross"
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M13",
+      "kind": "matrix",
+      "status": "pass",
+      "source": "../table-504.3.html",
+      "transforms": [
+        "strip_bold"
+      ],
+      "title": "Real Table 504.3 with its bold styling removed",
+      "why": "Same check as M02 on the real law table: today the only thing marking 504.3's headers is class=\"bold\".",
+      "spec": "ibc2018-504.3",
+      "expect": {
+        "header_rows": [
+          0,
+          1,
+          2
+        ],
+        "data_row_count": 16,
+        "lookups": [
+          {
+            "dims": {
+              "occupancy": "R",
+              "sprinkler": "S13D",
+              "construction": "V-B"
+            },
+            "value": 40
+          },
+          {
+            "dims": {
+              "occupancy": "I-2",
+              "sprinkler": "S",
+              "construction": "II-B"
+            },
+            "value": 55
+          },
+          {
+            "dims": {
+              "occupancy": "H-2",
+              "sprinkler": "S",
+              "construction": "I-B"
+            },
+            "value": 160
+          }
+        ],
+        "warnings_empty": true
+      },
+      "fixed_by": "structural header detection (headers.py)"
+    },
+    {
+      "id": "M14",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M14-value-rowspan.html",
+      "title": "Values merged vertically across sprinkler sub-rows",
+      "why": "Real 504.3 does this for H-1..H-5 and partly for I-2; a synthetic case keeps the contract tested even if the real fixture changes. Covered slots must resolve and be flagged inherited.",
+      "spec": {
+        "table_id": "SYN-VROWSPAN",
+        "row_dims": [
+          "occupancy",
+          "sprinkler"
+        ],
+        "col_dim": "construction",
+        "multi_value_dims": [
+          "occupancy"
+        ],
+        "column_key": "construction_type",
+        "tokens": {
+          "UL": "unlimited"
+        }
+      },
+      "expect": {
+        "header_rows": [
+          0,
+          1
+        ],
+        "data_row_count": 2,
+        "lookups": [
+          {
+            "dims": {
+              "occupancy": "H-2",
+              "sprinkler": "S",
+              "construction": "I-A"
+            },
+            "value": "UL",
+            "inherited": true
+          },
+          {
+            "dims": {
+              "occupancy": "H-1",
+              "sprinkler": "S",
+              "construction": "II-B"
+            },
+            "value": 55,
+            "inherited": true
+          },
+          {
+            "dims": {
+              "occupancy": "H-1",
+              "sprinkler": "S",
+              "construction": "V-B"
+            },
+            "value": 45,
+            "inherited": false
+          },
+          {
+            "dims": {
+              "occupancy": "H-1",
+              "sprinkler": "NS",
+              "construction": "V-B"
+            },
+            "value": 40,
+            "inherited": false
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M15",
+      "kind": "matrix",
+      "status": "pass",
+      "html": "M15-numeric-header-labels.html",
+      "title": "Numeric column headers (5 / 10 / 30) in plain <td>",
+      "why": "Fire-separation and rating tables use numbers as column labels. A structural header detector that stops at the 'first numeric row' would cut this header in half; this scenario guards the M02 fix.",
+      "spec": {
+        "table_id": "SYN-SEPARATION",
+        "row_dims": [
+          "element"
+        ],
+        "col_dim": "distance"
+      },
+      "expect": {
+        "header_rows": [
+          0,
+          1
+        ],
+        "data_row_count": 2,
+        "column_keys": [
+          "5",
+          "10",
+          "30"
+        ],
+        "lookups": [
+          {
+            "dims": {
+              "element": "Exterior wall",
+              "distance": "10"
+            },
+            "value": 1
+          },
+          {
+            "dims": {
+              "element": "Floor",
+              "distance": "30"
+            },
+            "value": 0
+          }
+        ],
+        "warnings_empty": true
+      },
+      "fixed_by": "structural header detection (headers.py)"
+    },
+    {
+      "id": "M16",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M16-non-integer-values.html",
+      "title": "Values that are not plain integers: 1,000 / 1/2 / −5 / 10-20 / 5% / ' NP '",
+      "why": "Real code tables contain thousands separators, fractions, ranges and percentages. Today each becomes 'unexpected value' text, so a lookup would return no number.",
+      "gap": "Value parser accepts only plain integers/decimals. Fix: thousands separators, fractions, unicode minus, ranges (kind 'range' with low/high), percent.",
+      "gap_signature": "None != 1000",
+      "spec": {
+        "table_id": "SYN-VALUES",
+        "row_dims": [
+          "item"
+        ],
+        "col_dim": "measure",
+        "tokens": {
+          "NP": "not_permitted"
+        }
+      },
+      "expect": {
+        "lookups": [
+          {
+            "dims": {
+              "item": "thousands",
+              "measure": "VALUE"
+            },
+            "value": 1000
+          },
+          {
+            "dims": {
+              "item": "fraction",
+              "measure": "VALUE"
+            },
+            "value": 0.5
+          },
+          {
+            "dims": {
+              "item": "unicode minus",
+              "measure": "VALUE"
+            },
+            "value": -5
+          },
+          {
+            "dims": {
+              "item": "range",
+              "measure": "VALUE"
+            },
+            "kind": "range"
+          },
+          {
+            "dims": {
+              "item": "percent",
+              "measure": "VALUE"
+            },
+            "value": 5,
+            "kind": "percent"
+          },
+          {
+            "dims": {
+              "item": "spaced token",
+              "measure": "VALUE"
+            },
+            "value": null,
+            "kind": "not_permitted"
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M17",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M17-sup-used-for-units.html",
+      "title": "<sup> used as an exponent (FT²) next to a real footnote <sup>a</sup>",
+      "why": "Today every <sup> is treated as a footnote, so 'AREA (FT<sup>2</sup>)' silently becomes 'AREA (FT)' with footnote '2'. Units must survive; header footnotes must reach the value.",
+      "gap": "No exponent vs footnote distinction; header-cell footnotes are not merged into value records; '23,000' is not a number. Fix: digit <sup> directly after a unit letter = exponent (render as ²/³); merge column-header footnotes.",
+      "gap_signature": "AREA (FT²)",
+      "spec": {
+        "table_id": "SYN-UNITS",
+        "row_dims": [
+          "occupancy"
+        ],
+        "col_dim": "measure"
+      },
+      "expect": {
+        "column_keys": [
+          "AREA (FT²)",
+          "HEIGHT (FT)"
+        ],
+        "lookups": [
+          {
+            "dims": {
+              "occupancy": "B",
+              "measure": "HEIGHT (FT)"
+            },
+            "value": 55,
+            "footnotes": [
+              "a"
+            ]
+          },
+          {
+            "dims": {
+              "occupancy": "R",
+              "measure": "AREA (FT²)"
+            },
+            "value": 7000
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M18",
+      "kind": "matrix",
+      "status": "known_gap",
+      "html": "M18-trailing-notes-column.html",
+      "title": "Text annotation column after the value columns",
+      "why": "Some tables end with a NOTES / SEE SECTION column. It annotates the row; it is not a value dimension and must not produce 'unexpected value' cells.",
+      "gap": "All non-stub columns are value columns. Fix: spec.annotation_cols, attached to each row's records.",
+      "gap_signature": "annotation_cols",
+      "spec": {
+        "table_id": "SYN-NOTES",
+        "row_dims": [
+          "occupancy"
+        ],
+        "col_dim": "construction",
+        "annotation_cols": [
+          "NOTES"
+        ],
+        "multi_value_dims": [
+          "occupancy"
+        ],
+        "column_key": "construction_type",
+        "tokens": {
+          "UL": "unlimited"
+        }
+      },
+      "expect": {
+        "column_keys": [
+          "I-A",
+          "II-B",
+          "V-B"
+        ],
+        "lookups": [
+          {
+            "dims": {
+              "occupancy": "B",
+              "construction": "II-B"
+            },
+            "value": 55
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "M19",
+      "kind": "records",
+      "status": "pass",
+      "html": "M19-headerless-first-row-merged.html",
+      "title": "No header; first data row has a merged label",
+      "why": "Guards structural header detection: a merged cell alone must not make a row a header when the row holds values.",
+      "expect": {
+        "header_rows": [],
+        "data_row_count": 2,
+        "warnings_contain": [
+          "no header rows detected"
+        ]
+      }
+    },
+    {
+      "id": "P01",
+      "kind": "records",
+      "status": "pass",
+      "html": "P01-different-schedule-no-egress-column.html",
+      "title": "Different schedule: other column names and order, combined size, no EGRESS column",
+      "why": "Another architect's schedule. The parser must not assume this project's columns exist, and must report EGRESS as absent rather than guessing.",
+      "expect": {
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 3,
+        "column_labels": [
+          "MARK",
+          "ROOM",
+          "SIZE (W x H)",
+          "OPERATION",
+          "HEAD HT.",
+          "REMARKS"
+        ],
+        "no_column": [
+          "EGRESS"
+        ],
+        "records": [
+          {
+            "key": {
+              "MARK": "W-A"
+            },
+            "cells": {
+              "SIZE (W x H)": {
+                "raw": "3'-0\" x 4'-0\""
+              },
+              "REMARKS": {
+                "text": "EGRESS"
+              }
+            }
+          },
+          {
+            "key": {
+              "MARK": "W-B"
+            },
+            "cells": {
+              "REMARKS": {
+                "text": ""
+              }
+            }
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "P02",
+      "kind": "records",
+      "status": "pass",
+      "source": "../window-schedule.html",
+      "transforms": [
+        "th_to_td"
+      ],
+      "title": "Real window schedule with every <th> turned into <td>",
+      "why": "OCR output is inconsistent about <th>. The two-row merged header must still be found from its rowspans.",
+      "expect": {
+        "header_rows": [
+          0,
+          1
+        ],
+        "separator_rows": [
+          2
+        ],
+        "data_row_count": 17
+      },
+      "fixed_by": "structural header detection (headers.py)"
+    },
+    {
+      "id": "P03",
+      "kind": "records",
+      "status": "pass",
+      "html": "P03-flat-header-plain-td.html",
+      "title": "Flat header of plain <td>, no spans, no styling",
+      "why": "Nothing structural marks the header. Contract: do not guess; warn, keep every row as data, and let the caller pass header_rows=1, which must then work.",
+      "expect": {
+        "header_rows": [],
+        "data_row_count": 3,
+        "warnings_contain": [
+          "no header rows detected"
+        ],
+        "override_header_rows": {
+          "header_rows": 1,
+          "data_row_count": 2,
+          "column_labels": [
+            "SYMBOL",
+            "LOCATION",
+            "WIDTH",
+            "HEIGHT",
+            "EGRESS"
+          ]
+        }
+      }
+    },
+    {
+      "id": "P04",
+      "kind": "records",
+      "status": "pass",
+      "html": "P04-header-repeated-after-page-break.html",
+      "title": "Schedule header repeated after a page break",
+      "why": "A repeated header row would otherwise become a fake window record named 'SYMBOL'.",
+      "expect": {
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 4,
+        "repeated_header_rows": [
+          3
+        ],
+        "review_items_contain": [
+          "header.repeat_dropped"
+        ]
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "Same as M10."
+    },
+    {
+      "id": "P05",
+      "kind": "kv",
+      "status": "pass",
+      "html": "P05-key-value-four-columns.html",
+      "title": "Key/value sheet with two pairs per row",
+      "why": "Cover-sheet data blocks often pack label/value pairs side by side. Reading column 0 as the only label loses half the data.",
+      "expect": {
+        "title": [
+          "PROJECT DATA"
+        ],
+        "entry_count": 4,
+        "entries": {
+          "OCCUPANCY GROUP": "R-3",
+          "CONSTRUCTION TYPE": "V-B",
+          "SPRINKLERS": "NFPA 13D",
+          "STORIES": "3"
+        },
+        "mode": "paired",
+        "review_items_contain": [
+          "kv.paired"
+        ]
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "KeyValueSheet assumes one pair per row. Fix: pair even/odd columns when the width is even and the even columns look like labels."
+    },
+    {
+      "id": "P06",
+      "kind": "kv",
+      "status": "pass",
+      "html": "P06-key-value-inline-colon.html",
+      "title": "Label and value in one cell (\"OCCUPANCY GROUP: R-3\")",
+      "why": "Some OCR passes collapse the two columns into one cell.",
+      "expect": {
+        "title": [
+          "CODE ANALYSIS"
+        ],
+        "entry_count": 3,
+        "entries": {
+          "OCCUPANCY GROUP": "R-3",
+          "CONSTRUCTION TYPE": "V-B",
+          "BUILDING HEIGHT": "41'-6\""
+        },
+        "mode": "inline_colon"
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "One-column tables have no value column. Fix: split on the first ':' when the table is one column wide; a first row without ':' is the title."
+    },
+    {
+      "id": "P07",
+      "kind": "records",
+      "status": "pass",
+      "html": "P07-messy-inline-markup.html",
+      "title": "&nbsp;, <br>, nested spans, entities, prime and curly-quote foot/inch marks",
+      "why": "OCR emits typographic quotes and primes for feet/inches. The parser must normalise whitespace but keep those characters verbatim (in both raw and text) so a later value parser can handle them.",
+      "expect": {
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 2,
+        "records": [
+          {
+            "key": {
+              "SYMBOL": "1"
+            },
+            "cells": {
+              "LOCATION": {
+                "text": "BEDROOM 101"
+              },
+              "WIDTH": {
+                "raw": "3′-0″",
+                "text": "3′-0″"
+              },
+              "HEIGHT": {
+                "raw": "4’-0”",
+                "text": "4’-0”"
+              },
+              "NOTES": {
+                "text": ""
+              }
+            }
+          },
+          {
+            "key": {
+              "SYMBOL": "2"
+            },
+            "cells": {
+              "LOCATION": {
+                "text": "OFFICE 102",
+                "join_candidates_contains": "OFFICE102"
+              },
+              "NOTES": {
+                "text": "SEE ELEV. & DET."
+              }
+            }
+          }
+        ],
+        "warnings_empty": true
+      }
+    },
+    {
+      "id": "P08",
+      "kind": "records",
+      "status": "pass",
+      "html": "P08-block-tags-inside-cells.html",
+      "title": "<p> / <div> lines inside a cell",
+      "why": "Without a break at block boundaries, \"<p>BED</p><p>ROOM 101</p>\" silently becomes \"BEDROOM 101\" and the alternative reading is lost.",
+      "expect": {
+        "records": [
+          {
+            "key": {
+              "SYMBOL": "1"
+            },
+            "cells": {
+              "LOCATION": {
+                "text": "BED ROOM 101",
+                "join_candidates_contains": "BEDROOM 101"
+              },
+              "NOTES": {
+                "text": "SEE ELEVATIONS"
+              }
+            }
+          }
+        ]
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "Only <br> is treated as a line break. Fix: treat p, div and li boundaries inside cells as line breaks."
+    },
+    {
+      "id": "P09",
+      "kind": "records",
+      "status": "pass",
+      "html": "P09-dropped-middle-cell.html",
+      "title": "OCR dropped a cell in the middle of a row",
+      "why": "Structurally this is just a short row: the parser cannot know WIDTH was the missing cell (later values shift left). The contract is a warning naming the row and the empty trailing slot; catching the shift needs type checks in the value layer.",
+      "expect": {
+        "warnings_contain": [
+          "row 2 has no cell at columns [4]"
+        ],
+        "records": [
+          {
+            "key": {
+              "SYMBOL": "2"
+            },
+            "cells": {
+              "EGRESS": {
+                "missing": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "P10",
+      "kind": "records",
+      "status": "pass",
+      "html": "P10-multiple-tables-warnings-isolated.html",
+      "table_index": 0,
+      "title": "Two tables in one file: warnings belong to the table they came from",
+      "why": "Sheets hold several tables. Each must be addressable by index and carry only its own warnings.",
+      "expect": {
+        "tables_count": 2,
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 1,
+        "warnings_empty": true
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "Collector-level warnings (e.g. 'nested <table>') are copied onto every table in the file. Fix: track warnings per table."
+    },
+    {
+      "id": "P11",
+      "kind": "records",
+      "status": "pass",
+      "html": "P11-nested-table-cell-text.html",
+      "title": "A 2x2 table nested inside a cell",
+      "why": "Nested tables must be reported, and their cell texts must not be glued together (\"in1in2in3in4\").",
+      "expect": {
+        "warnings_contain": [
+          "nested"
+        ],
+        "records": [
+          {
+            "key": {
+              "K": "X"
+            },
+            "cells": {
+              "V": {
+                "text": "outer in1 in2 in3 in4"
+              }
+            }
+          }
+        ]
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "Nested cell texts are concatenated without separators. Fix: insert a separator at nested cell/row boundaries."
+    },
+    {
+      "id": "P12",
+      "kind": "records",
+      "status": "pass",
+      "html": "P12-bold-first-data-row.html",
+      "title": "First data row is bold",
+      "why": "Drawings highlight rows; OCR keeps the bold. A fully bold row right after the header must not be absorbed into the header.",
+      "expect": {
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 2
+      },
+      "fixed_by": "structural header detection (headers.py)"
+    },
+    {
+      "id": "P13",
+      "kind": "records",
+      "status": "pass",
+      "html": "P13-td-group-header-no-rowspan.html",
+      "title": "Two-row <td> header grouped by colspan only",
+      "why": "A column-group cell (NOMINAL SIZE) implies child labels in the next row even with no rowspan and no <th>.",
+      "expect": {
+        "header_rows": [
+          0,
+          1
+        ],
+        "data_row_count": 1,
+        "column_labels": [
+          "MARK",
+          "NOMINAL SIZE / WIDTH",
+          "NOMINAL SIZE / HEIGHT",
+          "TYPE"
+        ],
+        "records": [
+          {
+            "key": {
+              "MARK": "W-A"
+            },
+            "cells": {
+              "NOMINAL SIZE / HEIGHT": {
+                "text": "4'-0\""
+              }
+            }
+          }
+        ],
+        "review_items_empty": true
+      }
+    },
+    {
+      "id": "P14",
+      "kind": "records",
+      "status": "pass",
+      "html": "P14-th-group-header-text-only-data.html",
+      "title": "<th> header with a colspan group, text-only first data row",
+      "why": "With a styled header, child labels must be styled too; a plain text data row (D-1 PAINT STAIN) stays data.",
+      "expect": {
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 2,
+        "review_items_empty": true
+      }
+    },
+    {
+      "id": "P15",
+      "kind": "records",
+      "status": "pass",
+      "html": "P15-td-group-header-text-only-data.html",
+      "title": "Plain <td> header with a colspan group, text-only first data row (ambiguous: read as data, flagged)",
+      "why": "Genuinely ambiguous from structure alone: the first data row looks like child labels. Decision (user, 2026-11-08): treat it as data and record it for review.",
+      "expect": {
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 2,
+        "review_items_contain": [
+          "header.row_read_as_data",
+          "header_rows=2"
+        ],
+        "override_header_rows": {
+          "header_rows": 2,
+          "column_labels": [
+            "MARK / D-1",
+            "FINISH / PAINT",
+            "FINISH / STAIN"
+          ],
+          "data_row_count": 1
+        }
+      },
+      "fixed_in": "phase 1c",
+      "was_gap": "Text-only first data row under an unstyled colspan header is read as header. Needs content signals (e.g. the row repeats in the body, or labels match a vocabulary) or header_rows=1."
+    },
+    {
+      "id": "P16",
+      "kind": "kv",
+      "status": "pass",
+      "html": "P16-key-value-unit-and-note-columns.html",
+      "title": "Four-column sheet: label | value | unit | note (guard for paired mode)",
+      "why": "An even width alone must not trigger paired label/value reading. A repeated unit (FT, FT) shows column 2 is not a label column.",
+      "expect": {
+        "title": [
+          "BUILDING DATA"
+        ],
+        "mode": "label_value",
+        "entry_count": 3,
+        "entries": {
+          "BUILDING HEIGHT": "41'-6\" FT SEE A3.1",
+          "ALLOWABLE HEIGHT": "60 FT PER 504.3",
+          "FLOOR AREA": "2,400 SF TOTAL"
+        },
+        "review_items_empty": true
+      }
+    },
+    {
+      "id": "P17",
+      "kind": "records",
+      "status": "pass",
+      "html": "P17-th-child-row-under-plain-th-label.html",
+      "title": "All-<th> child row under a plain <th> label (guard for the P15 tie-breaker)",
+      "why": "The tie-breaker must not demote an explicit <th> header row to data.",
+      "expect": {
+        "header_rows": [
+          0,
+          1
+        ],
+        "data_row_count": 1,
+        "column_labels": [
+          "MARK / NO.",
+          "FINISH / PAINT",
+          "FINISH / STAIN"
+        ],
+        "review_items_empty": true
+      }
+    },
+    {
+      "id": "P18",
+      "kind": "kv",
+      "status": "pass",
+      "html": "P18-key-value-units-and-code-refs.html",
+      "title": "Four-column sheets with distinct units or code references in column 2 (guard for paired mode)",
+      "why": "Sonnet review: distinct units (SF, FT, EA) or references (IBC 304) passed the distinct-label test and produced entries like 'SF => gross'. Column-2 cells must look like word labels.",
+      "added_in": "phase 1c review",
+      "expect": {
+        "mode": "label_value",
+        "entry_count": 3,
+        "entries": {
+          "AREA": "1200 SF GROSS",
+          "HEIGHT": "30 FT TO ROOF",
+          "OCCUPANCY": "B IBC 304 BUSINESS"
+        },
+        "review_items_empty": true
+      }
+    },
+    {
+      "id": "P19",
+      "kind": "kv",
+      "status": "pass",
+      "html": "P19-key-value-several-lines-per-cell.html",
+      "title": "One column, several 'LABEL: VALUE' lines in one cell",
+      "why": "Sonnet review: '<td>A: 1<br>B: 2</td>' became one entry 'A => 1 B: 2'. Each line is its own entry; a wrapped line without ':' continues the previous value.",
+      "added_in": "phase 1c review",
+      "expect": {
+        "mode": "inline_colon",
+        "title": [
+          "PROJECT DATA"
+        ],
+        "entry_count": 4,
+        "entries": {
+          "OCCUPANCY GROUP": "R-3",
+          "CONSTRUCTION TYPE": "V-B",
+          "SPRINKLERS": "NFPA 13D THROUGHOUT",
+          "STORIES": "3"
+        },
+        "warnings_contain": [
+          "appended to the previous value"
+        ]
+      }
+    },
+    {
+      "id": "P20",
+      "kind": "records",
+      "status": "pass",
+      "html": "P20-first-data-row-equals-header.html",
+      "title": "First data row has the same text as the one-row header (guard for repeated-header drop)",
+      "why": "Sonnet review: 'SF | SM' under a 'SF | SM' header was deleted. A reprinted header must follow real data; nothing is dropped otherwise.",
+      "added_in": "phase 1c review",
+      "expect": {
+        "header_rows": [
+          0
+        ],
+        "data_row_count": 2,
+        "repeated_header_rows": [],
+        "review_items_empty": true
+      }
+    },
+    {
+      "id": "P21",
+      "kind": "records",
+      "status": "pass",
+      "html": "P21-unclosed-table.html",
+      "title": "A <table> never closed before the next one starts",
+      "why": "Sonnet review: the second table's text was lost. Read it as two tables, warn on the second.",
+      "added_in": "phase 1c review",
+      "expect": {
+        "tables_count": 2,
+        "data_row_count": 1,
+        "warnings_empty": true
+      },
+      "table_index": 0
+    },
+    {
+      "id": "M20",
+      "kind": "records",
+      "status": "pass",
+      "html": "M20-units-row-under-plain-label.html",
+      "title": "Units row '(hr)' under a plain label, beside a column group's child labels",
+      "why": "Sonnet review: the P15 tie-breaker read 'ELEMENT / (hr) | MIN | MAX' as data, mis-keying the table. A parenthesised or unit-token cell under a plain label is a units row, not data.",
+      "added_in": "phase 1c review",
+      "expect": {
+        "header_rows": [
+          0,
+          1
+        ],
+        "data_row_count": 2,
+        "column_labels": [
+          "ELEMENT / (hr)",
+          "RATING / MIN",
+          "RATING / MAX"
+        ],
+        "review_items_empty": true
+      }
+    }
+  ]
+}
