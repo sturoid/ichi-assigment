@@ -99,7 +99,14 @@
         "Chapters 4 and 5 (height exceptions) (IBC:2018:CH4-CH5, not provided; related through footnote a)",
         "Automatic Sprinkler Systems (903.2, 903.3.1.1-903.3.1.3) (IBC:2018:903, not provided; related through footnote h)"
       ],
-      "related": []
+      "related": [],
+      "unresolved": [
+        "an exception in IBC CH 4 and IBC CH 5 (Table 504.3 footnote a), not provided"
+      ],
+      "confidence": "Medium",
+      "confidence_reasons": [
+        "it could be reversed by an exception in IBC CH 4 and IBC CH 5 (Table 504.3 footnote a), not provided"
+      ]
     },
     {
       "id": "R-101",
@@ -139,7 +146,10 @@
         "W-1",
         "W-2",
         "W-3"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "R-107",
@@ -177,7 +187,10 @@
       ],
       "related": [
         "W-7"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "R-203",
@@ -217,6 +230,13 @@
       "related": [
         "W-10",
         "W-11"
+      ],
+      "unresolved": [
+        "IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show"
+      ],
+      "confidence": "Medium",
+      "confidence_reasons": [
+        "it could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show"
       ]
     },
     {
@@ -265,6 +285,11 @@
       "related": [
         "W-12",
         "W-13"
+      ],
+      "unresolved": [],
+      "confidence": "Medium",
+      "confidence_reasons": [
+        "it rests on a repaired room name: room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan)"
       ]
     },
     {
@@ -304,6 +329,14 @@
       ],
       "related": [
         "W-20"
+      ],
+      "unresolved": [
+        "IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show"
+      ],
+      "confidence": "Low",
+      "confidence_reasons": [
+        "it could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show",
+        "W-20: it rests only on a derived value (frame sill = 8'-0\" head − 3'-0\" height = 60 in, above 44 in); confirm on the elevations that head height is measured to the top of the window"
       ]
     },
     {
@@ -346,14 +379,17 @@
       ],
       "related": [
         "W-21"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-1",
       "check": "egress_window",
       "subject": "Window 1, BEDROOM 101",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -419,7 +455,8 @@
           "policies": [],
           "settle": "",
           "brief": "casement",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -434,7 +471,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -448,7 +486,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -462,7 +501,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -475,7 +515,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -488,7 +529,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -501,7 +543,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -514,7 +557,8 @@
           ],
           "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         }
       ],
       "working": [
@@ -537,7 +581,10 @@
       ],
       "related": [
         "R-101"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-2",
@@ -605,14 +652,17 @@
       "settle": [],
       "related": [
         "R-101"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-3",
       "check": "egress_window",
       "subject": "Window 3, BEDROOM 101",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -678,7 +728,8 @@
           "policies": [],
           "settle": "",
           "brief": "casement",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -693,7 +744,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -707,7 +759,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -721,7 +774,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -734,7 +788,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -747,7 +802,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -760,7 +816,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -773,7 +830,8 @@
           ],
           "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         }
       ],
       "working": [
@@ -796,7 +854,10 @@
       ],
       "related": [
         "R-101"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-4",
@@ -871,7 +932,12 @@
       ],
       "interpretations": [],
       "settle": [],
-      "related": []
+      "related": [],
+      "unresolved": [],
+      "confidence": "Low",
+      "confidence_reasons": [
+        "it rests on a guess at the room's use; if the room is used for sleeping, it needs an escape opening"
+      ]
     },
     {
       "id": "W-5",
@@ -937,7 +1003,10 @@
       ],
       "interpretations": [],
       "settle": [],
-      "related": []
+      "related": [],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-6",
@@ -1003,14 +1072,17 @@
       ],
       "interpretations": [],
       "settle": [],
-      "related": []
+      "related": [],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-7",
       "check": "egress_window",
       "subject": "Window 7, ADU BEDROOM 107",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 7.50 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 44 in (3'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 7.50 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -1076,7 +1148,8 @@
           "policies": [],
           "settle": "",
           "brief": "casement",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1091,7 +1164,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -1105,7 +1179,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -1119,7 +1194,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1138,7 +1214,8 @@
               "code": "sill_at_limit",
               "message": "expect a Fail on sill height: the frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions."
             }
-          ]
+          ],
+          "basis": "printed"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1151,7 +1228,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1164,7 +1242,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1177,7 +1256,8 @@
           ],
           "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         }
       ],
       "working": [
@@ -1206,7 +1286,10 @@
       ],
       "related": [
         "R-107"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-8",
@@ -1272,7 +1355,10 @@
       ],
       "interpretations": [],
       "settle": [],
-      "related": []
+      "related": [],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-10",
@@ -1345,7 +1431,8 @@
           "policies": [],
           "settle": "",
           "brief": "casement",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1359,7 +1446,8 @@
           ],
           "settle": "",
           "brief": "nominal 2'-0\" × 2'-6\" = 5.00 sq ft; the clear opening is smaller, so under both 5 and 5.7 sq ft",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -1373,7 +1461,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -1387,7 +1476,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1400,7 +1490,8 @@
           ],
           "settle": "",
           "brief": "frame sill = 6'-8\" head − 2'-6\" height = 50 in, above 44 in",
-          "flags": []
+          "flags": [],
+          "basis": "derived"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1413,7 +1504,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1426,7 +1518,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1439,7 +1532,8 @@
           ],
           "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         }
       ],
       "working": [
@@ -1461,7 +1555,10 @@
       ],
       "related": [
         "R-203"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-11",
@@ -1529,14 +1626,17 @@
       "settle": [],
       "related": [
         "R-203"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-12",
       "check": "egress_window",
       "subject": "Window 12, BEDRROM 205",
       "verdict": "Could Not Evaluate",
-      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 12.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 12.00 sq ft is only an upper bound); clear height; clear width; sill height. Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
         "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
@@ -1602,7 +1702,8 @@
           "policies": [],
           "settle": "",
           "brief": "single hung",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1618,7 +1719,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -1639,7 +1741,8 @@
               "code": "partial_opening_at_minimum",
               "message": "expect a Fail on clear height: only the bottom sash opens, about 24 in before the frame, exactly the 24 in minimum, leaving nothing for the frame. Ask for the sash split and the manufacturer's clear opening."
             }
-          ]
+          ],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -1653,7 +1756,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1666,7 +1770,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1679,7 +1784,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1692,7 +1798,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1705,7 +1812,8 @@
           ],
           "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         }
       ],
       "working": [
@@ -1739,6 +1847,11 @@
       ],
       "related": [
         "R-205"
+      ],
+      "unresolved": [],
+      "confidence": "Medium",
+      "confidence_reasons": [
+        "it rests on a repaired room name: room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan)"
       ]
     },
     {
@@ -1813,7 +1926,8 @@
           ],
           "settle": "",
           "brief": "scheduled as 'FIXED', which does not open",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1826,7 +1940,8 @@
           ],
           "settle": "",
           "brief": "no clear opening",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1839,7 +1954,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1852,7 +1968,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1865,7 +1982,8 @@
           ],
           "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         }
       ],
       "working": [
@@ -1886,7 +2004,10 @@
       ],
       "related": [
         "R-205"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-14",
@@ -1952,7 +2073,10 @@
       ],
       "interpretations": [],
       "settle": [],
-      "related": []
+      "related": [],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-20",
@@ -2025,7 +2149,8 @@
           "policies": [],
           "settle": "",
           "brief": "casement",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -2040,7 +2165,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -2054,7 +2180,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -2068,7 +2195,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -2081,7 +2209,8 @@
           ],
           "settle": "",
           "brief": "frame sill = 8'-0\" head − 3'-0\" height = 60 in, above 44 in",
-          "flags": []
+          "flags": [],
+          "basis": "derived"
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -2094,7 +2223,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -2107,7 +2237,8 @@
           ],
           "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -2120,7 +2251,8 @@
           ],
           "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
           "brief": "",
-          "flags": []
+          "flags": [],
+          "basis": "printed"
         }
       ],
       "working": [
@@ -2142,6 +2274,11 @@
       ],
       "related": [
         "R-301"
+      ],
+      "unresolved": [],
+      "confidence": "Medium",
+      "confidence_reasons": [
+        "it rests only on a derived value (frame sill = 8'-0\" head − 3'-0\" height = 60 in, above 44 in); confirm on the elevations that head height is measured to the top of the window"
       ]
     },
     {
@@ -2210,7 +2347,10 @@
       "settle": [],
       "related": [
         "R-303"
-      ]
+      ],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-22",
@@ -2276,7 +2416,10 @@
       ],
       "interpretations": [],
       "settle": [],
-      "related": []
+      "related": [],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     },
     {
       "id": "W-23",
@@ -2342,7 +2485,10 @@
       ],
       "interpretations": [],
       "settle": [],
-      "related": []
+      "related": [],
+      "unresolved": [],
+      "confidence": "High",
+      "confidence_reasons": []
     }
   ],
   "attention": [
@@ -2442,6 +2588,15 @@
       "rule": "When every window mark is a whole number, numbers missing between the lowest and highest are listed for the plan checker: rows may have been lost in scanning, or windows renumbered. No verdict changes.",
       "rests_on": [
         "src/NOTES.md decision: report review rounds, 2026-11-08"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-GEN-CONFIDENCE": {
+      "id": "POL-GEN-CONFIDENCE",
+      "title": "Every finding carries a confidence level, from named reasons",
+      "rule": "Confidence (High, Medium, Low) says how likely a verdict is to survive review with the full drawing set. It starts at High and drops one level for each of: a Fail whose only failing grounds are derived values; a Fail that a document not provided could reverse (an exception it points to, not ruled out); a verdict resting on a repaired room-name reading. A verdict decided by a guess at a room's use is Low. A room's Fail takes on the lowered levels of the failing windows it rests on. Interpretations the brief itself gives do not lower it. Confidence never changes a verdict.",
+      "rests_on": [
+        "src/NOTES.md decision: confidence levels, 2026-11-08"
       ],
       "authority": "project_decision"
     },

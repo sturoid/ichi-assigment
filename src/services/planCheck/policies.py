@@ -48,6 +48,14 @@ POLICIES: dict[str, Policy] = {p.id: p for p in [
            "When every window mark is a whole number, numbers missing between the lowest and highest are listed for "
            "the plan checker: rows may have been lost in scanning, or windows renumbered. No verdict changes.",
            ("src/NOTES.md decision: report review rounds, 2026-11-08",), "project_decision"),
+    Policy("POL-GEN-CONFIDENCE", "Every finding carries a confidence level, from named reasons",
+           "Confidence (High, Medium, Low) says how likely a verdict is to survive review with the full drawing set. "
+           "It starts at High and drops one level for each of: a Fail whose only failing grounds are derived values; "
+           "a Fail that a document not provided could reverse (an exception it points to, not ruled out); a verdict "
+           "resting on a repaired room-name reading. A verdict decided by a guess at a room's use is Low. A room's Fail takes on the "
+           "lowered levels of the failing windows it rests on. Interpretations the brief itself gives do not lower "
+           "it. Confidence never changes a verdict.",
+           ("src/NOTES.md decision: confidence levels, 2026-11-08",), "project_decision"),
     # --- Check 1: height ---------------------------------------------------------
     Policy("POL-H-INTERPRETATION", "Brief rules may support a verdict, disclosed",
            "A mapping that rests on the challenge brief rather than code text (R-3 read as row R, because IBC 310 is "

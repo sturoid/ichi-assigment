@@ -27,6 +27,7 @@ class Criterion:
     settle: str = ""               # what document would settle a Could Not Evaluate
     brief: str = ""                # short plain statement for the report ("frame sill 50 in, above 44")
     flags: list[dict] = field(default_factory=list)   # raised onto the window finding
+    basis: str = "printed"         # printed | derived: whether the value read was printed or worked out
 
 
 @dataclass
@@ -45,6 +46,9 @@ class Finding:
     interpretations: list[str] = field(default_factory=list)
     settle: list[str] = field(default_factory=list)
     related: list[str] = field(default_factory=list)
+    unresolved: list[str] = field(default_factory=list)   # documents not given that could reverse a Fail
+    confidence: str = ""           # High | Medium | Low (POL-GEN-CONFIDENCE)
+    confidence_reasons: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         if self.verdict not in VERDICTS:

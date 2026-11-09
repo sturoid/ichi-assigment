@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from services.codeStore import Store
 
 from . import citations as C
+from . import confidence
 from .facts import CodeAnalysis, Schedule, Window
 from .findings import CNE, FAIL, NA, PASS, Attention, Criterion, Finding, worst
 from .resolver import resolve
@@ -122,6 +123,7 @@ def check_height(store: Store, ca: CodeAnalysis) -> tuple[Finding, list[Attentio
 
     # footnotes on the cell ---------------------------------------------------------
     policies.append("POL-H-FOOTNOTES")
+    unresolved: list[str] = []
     for cond in res.conditions:
         refs = cond.get("references", [])
         missing = [f"{r['ref']} ({r['document'] or 'not in manifest'}, {r['status']})" for r in refs
@@ -131,6 +133,9 @@ def check_height(store: Store, ca: CodeAnalysis) -> tuple[Finding, list[Attentio
         where = ("the whole table" if cond["attached_to"] == "table" else
                  f"the {cond['attached_to'].replace('row_label:', '')} row label" if cond["attached_to"].startswith(
                      "row_label") else "this cell")
+        if missing and "exception" in cond["text"].lower():   # an exception we can't read could reverse a Fail
+            unresolved.append(f"an exception in {' and '.join(r['ref'] for r in refs if r['status'] != 'available')} "
+                              f"(Table 504.3 footnote {cond['mark']}), not provided")
         working.append(f"footnote {cond['mark']} (printed on {where}): "
                        f"\"{cond['text']}\"" + (f" Points to: {'; '.join(missing)}." if missing else ""))
         for r in refs:
@@ -178,7 +183,8 @@ def check_height(store: Store, ca: CodeAnalysis) -> tuple[Finding, list[Attentio
     working.append(f"{height_ft:g} ft {'<=' if verdict == PASS else '>'} {limit:g} ft"
                    + (f"; over by {margin:g} ft = {fmt_in(margin * 12)}" if verdict == FAIL else ""))
     return Finding("H-1", "height", "Building height", verdict, summary, code_refs, evidence, [], working, flags,
-                   list(dict.fromkeys(policies)), interps, settle), attn
+                   list(dict.fromkeys(policies)), interps, settle,
+                   unresolved=unresolved if verdict == FAIL else []), attn
 
 
 def _cells_holding(store: Store, dims: dict, value_ft: float) -> list[str]:
@@ -417,7 +423,8 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
                                          brief=(f"frame sill = {fmt_in(HH['inches'])} head − "
                                                 f"{fmt_in(H['inches'])} height = {sill:g} in, above "
                                                 f"{C.MAX_SILL.value:g} in" if used == (HH, H) else
-                                                f"scheduled sill {sill:g} in, above {C.MAX_SILL.value:g} in")),
+                                                f"scheduled sill {sill:g} in, above {C.MAX_SILL.value:g} in"),
+                                         basis="derived" if used == (HH, H) else "printed"),
                                *used))
     else:
         cr = _guard_ocr(Criterion(sreq, sref, read, CNE,
@@ -506,7 +513,7 @@ def _summary(crit: list[Criterion], verdict: str) -> str:
             n = short_name(c)
             if n == "net clear area" and "nominal" in c.read:
                 n += f" (nominal {c.read.split('= ')[-1].replace(' (upper bound)', '')} is only an upper bound)"
-            elif n == "sill height" and "frame sill" in c.read:
+            elif n == "sill height" and c.basis == "derived":
                 n += f" (frame sill {c.read.split('= ')[-1]})"
             elif n == "net clear area" and "below" in c.reason:
                 n += " (meets only the grade-floor limit)"
@@ -672,7 +679,10 @@ def check_egress(store: Store, ca: CodeAnalysis, schedule: Schedule) -> tuple[li
             [C.SCOPE_SLEEPING.ref()] + ([C.EXCEPTION_2.ref()] if verdict == FAIL else []),
             [_ev("windows", ", ".join(f"{w.mark} ({w.operation_text}, egress {w.egress_text!r})" for w in ws),
                  f"{schedule.file}, LOCATION {', '.join(repr(n) for n in names)}")],
-            [], working, flags, pols, [], settle, [wid(w) for w in ws]))
+            [], working, flags, pols, [], settle, [wid(w) for w in ws],
+            unresolved=([f"IBC 1030.1 Exception 2 (an exit door to a public way), which the "
+                         f"{_doc_title(store, 'PROJECT:FLOOR-PLANS').lower()} (not provided) would show"]
+                        if verdict == FAIL else [])))
 
     ordered_windows = [window_findings[f"W-{w.mark}"] for w in schedule.windows]
     return room_findings, ordered_windows, attn
@@ -768,4 +778,5 @@ def run_checks(store: Store, ca: CodeAnalysis, schedule: Schedule) -> Results:
     amend = [d.get("title", d["id"]) for d in store.data["documents"]
              if d.get("kind") == "local_amendments" and d["status"] == "unavailable"]
     proj = ca.facts.get("project")
+    confidence.assign(height, rooms, windows)
     return Results(height, rooms, windows, attn, amend, proj.value if proj else "")

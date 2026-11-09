@@ -9,7 +9,7 @@ python -m services.planCheck ../tests/fixtures/code-analysis.html ../tests/fixtu
 python -m services.planCheck.evals ../tests/fixtures/expected/verdicts.json ../findings.json --report ../REPORT.md
 ```
 
-To run the tests, use `python -m unittest` in each of `tests/services/htmlParser`, `tests/services/codeStore` and `tests/services/planCheck`. That is 85 + 38 + 86 tests. Eight parser tests are known gaps and are skipped on purpose.
+To run the tests, use `python -m unittest` in each of `tests/services/htmlParser`, `tests/services/codeStore` and `tests/services/planCheck`. That is 85 + 38 + 87 tests. Eight parser tests are known gaps and are skipped on purpose.
 
 ## How it works
 
@@ -90,13 +90,33 @@ The report went from 585 lines to about 240 after three independent reviews: two
 - **A window cannot get a Pass from a schedule like this one.** Three requirements (hardware, screens, public way) never appear on a schedule, so I count them as Could Not Evaluate on every egress window (`POL-E-UNSEEN`). The Sonnet reviewer argued for a Pass on the measurable criteria, with those three listed as unverified. I kept the stricter reading, because a wrong Pass is worse than an honest Could Not Evaluate. It is one rule to change. On these fixtures it changes nothing, because no window has a net clear opening.
 - **Guest Bed 303 is Could Not Evaluate, not Fail.** No window is marked egress, but 1030.1 requires a complying opening to *exist*, and window 21 could comply at nominal size. So the finding is flagged "ask the architect to designate one" instead.
 - **Bedrooms 203 and 301 are Fail, although Exception 2 can't be ruled out.** Their only designated windows fail, and no other window could comply. Exception 2 (an exit door to the outside) is something the applicant claims. Here, the code analysis claims the openings are provided "per IBC 1030, see window schedule". Each Fail says "unless Exception 2 applies" and asks for the floor plans. One Sonnet review preferred Could Not Evaluate; the other agreed with Fail.
-- **Window 7 is Could Not Evaluate, flagged "expect a Fail".** Its frame sill is exactly 44 in, so any bottom frame puts the clear opening over the limit. That figure rests on head height being measured to the top of the unit. Windows 10 and 20 fail on sill with 6 in and 16 in to spare, which covers that uncertainty. Window 7 has no margin, so it is listed first among the items to check, not reported as a Fail (`POL-E-AT-LIMIT`). Window 12 is handled the same way: its bottom sash gives about 24 in, exactly the minimum.
+- **Window 7 is Could Not Evaluate, flagged "expect a Fail".** Its frame sill is exactly 44 in, so any bottom frame puts the clear opening over the limit. That figure rests on head height being measured to the top of the unit. Windows 10 and 20 fail on sill with 6 in and 16 in to spare, which covers that uncertainty. Window 7 has no margin, so it is listed first among the items to check, not reported as a Fail (`POL-E-AT-LIMIT`). Window 20 still gets Medium confidence (below), because its only failing ground is that derived sill. Window 12 is handled the same way: its bottom sash gives about 24 in, exactly the minimum.
 - **Height is a Fail, despite footnote a's unavailable exceptions.** The code analysis claims no exception, so a Fail stands unless an exception is claimed. The architect's 60 ft equals the R / S and R / S13R cells, so they probably read the wrong sprinkler sub-row. The report says so.
+
+## Confidence, and what to do with a low-confidence Fail
+
+Every finding has a confidence level: High, Medium or Low (`POL-GEN-CONFIDENCE`, in `planCheck/confidence.py`). It means how likely the verdict is to survive review with the full drawing set. It is a level, not a score, and it comes only from named reasons, which are listed with the finding. It never changes a verdict.
+
+- It starts at High.
+- It drops one level for each of these:
+  - a Fail whose only failing grounds are derived values, such as a sill worked out from head height minus window height;
+  - a Fail that a document we don't have could reverse: an exception the code points to, such as Exception 2 or the Chapter 4–5 exceptions in footnote a;
+  - a verdict resting on a repaired room name.
+- A verdict decided by guessing a room's use is Low. If the guess is wrong, a required opening goes unchecked.
+- A room's Fail takes on its failing window's lowered levels, because both must hold for the correction to stand.
+
+On these fixtures, window 13 is High: it is scheduled FIXED. Window 10 is High too, because its area fails on printed values even before the derived sill. The height Fail, Bedroom 203 and window 20 are Medium. Bedroom 301 is Low: it rests on a derived sill *and* an unseen exit door.
+
+**What a reviewer should do with a Low-confidence Fail:** don't send it as a correction yet. A wrong correction costs the applicant a redesign and the reviewer credibility. A wrong request for information costs one round trip. So:
+1. Check the named reasons against the sheets you have; for Bedroom 301, those are the elevations and the floor plans.
+2. If they hold, send the correction.
+3. If they can't be checked, send it as a request for information, quoting the arithmetic, so the applicant can answer with one sheet.
+
+For a Medium Fail, send the correction with the condition stated, as §1 already does for Exception 2. A review queue sorted by confidence puts the cheap checks first.
 
 ## With another day
 
 - Read the number of exits from the code analysis, so R-2 buildings can be scoped instead of returning Could Not Evaluate.
-- Give each finding a confidence level that drives review order. A Fail resting on a derived value would rank below one resting on a printed value.
 - Build a second fixture package with the traps this one doesn't have: reordered columns, no EGRESS column, an unnumbered room, square-inch areas.
 - Load IBC 1030 into the store as provisions instead of constants, if more prose sections are added.
 

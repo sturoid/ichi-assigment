@@ -60,6 +60,9 @@ def score(expected: dict, findings: dict, report_md: str | None = None) -> dict:
             misses.append(f"{e['id']}: missing flag(s) {lacking}")
         if f["verdict"] != e["verdict"]:
             misses.append(f"{e['id']}: expected {e['verdict']}, got {f['verdict']}")
+        if "confidence" in e and f.get("confidence") != e["confidence"]:
+            ok = False
+            misses.append(f"{e['id']}: expected confidence {e['confidence']}, got {f.get('confidence')}")
         rows.append((e["id"], e["verdict"], f["verdict"], "ok" if ok else "MISS"))
     known = {e["id"] for e in expected["expected"]}
     unexpected = sorted(set(got) - known)
@@ -90,7 +93,7 @@ def main(argv=None) -> int:
     w = max(len(r[0]) for r in res["rows"])
     for fid, exp, got, st in res["rows"]:
         print(f"{st:4}  {fid:<{w}}  expected {exp:<20} got {got}")
-    print(f"\n{res['correct']}/{res['total']} expected verdicts (with flags) correct")
+    print(f"\n{res['correct']}/{res['total']} expected verdicts (with flags and confidence) correct")
     for m in res["misses"]:
         print(f"  MISS {m}")
     return 1 if res["misses"] else 0

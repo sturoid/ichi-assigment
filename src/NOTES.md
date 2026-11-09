@@ -381,6 +381,34 @@ Tests: planCheck 86, adding `test_pol_e_at_limit` and `test_pol_gen_schedule_gap
 
 Status: planCheck 86, codeStore 38, htmlParser 85 (8 skipped) pass; eval 24/24; REPORT.md 241 lines.
 
+### Phase 6: confidence levels (2026-11-08)
+
+This is the brief's secondary objective: "a confidence level on each finding, and some thought on what a reviewer should do with a low-confidence Fail".
+
+**Built:**
+- `planCheck/confidence.py` assigns `confidence` and `confidence_reasons` to every finding after the checks run. It never changes a verdict.
+- `Criterion.basis` (printed or derived) is set where the sill criterion is built, and replaces a string check on "frame sill".
+- `Finding.unresolved` lists documents not provided that could reverse a Fail:
+  - for the height, only footnotes that point to *exceptions*, so footnote a counts and footnote h (the 903.2.8 sprinkler requirement) does not;
+  - for a room Fail, Exception 2 and the floor plans.
+- The report shows confidence on each correction in §1, with its reasons, and gives one paragraph of guidance there. There is a header count, a line in §4, and a column in §5, §6 and §7.
+- The eval scorer checks `confidence` where the eval set gives one. It is given for the 6 Fails and W-4, typed by hand from the rule.
+
+**Considered and rejected:**
+- A numeric score: the brief asks for a level.
+- Lowering confidence for OCR on numbers: POL-GEN-OCR already turns such a Fail into CNE.
+- Lowering it for the R-3 to R reading: the brief itself gives that rule.
+- A margin threshold on derived sills: any number would be tuned to these fixtures. A derived-only Fail is Medium whatever its margin.
+
+**Result on the fixtures:**
+- W-10 and W-13 are High.
+- H-1, R-203 and W-20 are Medium.
+- R-301 is Low: a derived sill and an unseen exit door.
+- W-4 is Low: an office read as not a sleeping room.
+- R-205 and W-12 are Medium: BEDRROM.
+
+Status: planCheck 87, codeStore 38, htmlParser 85 (8 skipped); eval 24/24.
+
 ### Input: Check 1 requirements, and what they change in the store contract, phase 1d (2026-11-08)
 
 Check 1 asks for one finding for the building. It reads the project's occupancy, construction type, sprinklers and height, looks up the matching 504.3 cell, and compares the two heights. The finding cites the cell, as in this example: *row `A, B, E, F, M, S, U` / `NS` / column `II-B` = 55*.
@@ -492,6 +520,7 @@ What this changes:
 | 2026-11-08 | Deliverables (REPORT.md, NOTES.md, findings.json) live at the repo root | User | First written to `src/deliverables/` because of the session scope; the user approved the move |
 | 2026-11-08 | Code files are a fixed IBC 2018 library; only project files must generalise | User | Brief, line 92 ("these two particular files", "another project's tables") and line 167 (inputs are code analysis + window schedule); edition fixed at lines 53 and 72. Noted in the root NOTES.md under "How it works" |
 | 2026-11-08 | Report redesign (Phase 5): corrections first, then checks, requests and evidence tables; R-203/R-301 stay Fail with Exception 2 stated; W-7 stays CNE flagged 'expect a Fail' | User | Three reviews; both calls 2-1 for the current verdicts |
+| 2026-11-08 | Confidence levels (Phase 6, `POL-GEN-CONFIDENCE`): High by default; down one for a derived-only Fail, for a Fail an unprovided exception could reverse, and for a repaired room name; Low for a guessed room use; a room's Fail takes on its failing windows' drops | Opus (stretch goal); open for user review | Brief secondary objective; levels are typed by hand into the eval set, not spot-checked |
 
 ## Edge cases recorded for review
 
@@ -525,7 +554,7 @@ These are cases where the parser can't be certain. Each stays in the data with a
 
 - Parser: 85 tests pass, and 8 known gaps (M05, M06, M09, M11, M12, M16, M17, M18) are verified to fail for their recorded reason.
 - Store: 38 tests pass (29 before, with 4 inverted for phase 2, plus 9 new notes tests).
-- planCheck: 86 tests pass (`cd tests/services/planCheck && python -m unittest`). The eval scorer passes 24/24.
+- planCheck: 87 tests pass (`cd tests/services/planCheck && python -m unittest`). The eval scorer passes 24/24, now including confidence.
 - Report: `cd src && python -m services.planCheck ../tests/fixtures/code-analysis.html ../tests/fixtures/window-schedule.html -o ../REPORT.md --json ../findings.json`. A test fails if the committed report is stale.
 - Remaining gaps are code-table shapes and value parsing; no project-table gap is open except P09 (dropped cell), which needs value-type checks.
 - Run them with `cd tests/services/htmlParser && python -m unittest` and `cd tests/services/codeStore && python -m unittest`.

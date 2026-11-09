@@ -239,6 +239,34 @@ class Policies(unittest.TestCase):
         self.assertEqual([f.verdict for f in res.all if f.id in ("W-1", "R-201")],
                          [f.verdict for f in res2.all if f.id in ("W-1", "R-201")])
 
+    def test_pol_gen_confidence(self):
+        def run(rows, ca=None):
+            res = run_checks(S, ca or code_analysis(), schedule(rows))
+            return {f.id: f for f in res.all}
+        # a Fail on printed values is High; its room's Fail drops one for Exception 2, which can't be ruled out
+        f = run([win(op="FIXED")])
+        self.assertEqual((f["W-1"].verdict, f["W-1"].confidence), (FAIL, "High"))
+        self.assertEqual((f["R-201"].verdict, f["R-201"].confidence), (FAIL, "Medium"))
+        # a Fail resting only on a derived sill is Medium, and the room compounds it to Low
+        f = run([win(head="8' - 0\"")])
+        self.assertEqual([c.basis for c in f["W-1"].criteria if c.verdict == FAIL], ["derived"])
+        self.assertEqual((f["W-1"].confidence, f["R-201"].confidence), ("Medium", "Low"))
+        self.assertIn("derived", f["W-1"].confidence_reasons[0])
+        # a printed ground alongside the derived one keeps it High
+        f = run([win(w="2' - 0\"", h="2' - 6\"")])
+        self.assertEqual((f["W-1"].verdict, f["W-1"].confidence), (FAIL, "High"))
+        # a guessed room use is Low; a repaired room name drops one
+        f = run([win(room="OFFICE 202", egress=""), win("2", room="BEDRROM 201")])
+        self.assertEqual((f["W-1"].verdict, f["W-1"].confidence), (NA, "Low"))
+        self.assertEqual(f["R-201"].confidence, "Medium")
+        # a height Fail whose cell points to exceptions we don't have is Medium
+        h = run([win()], code_analysis(BUILDING_HEIGHT="50' - 0\""))["H-1"]
+        self.assertEqual((h.verdict, h.confidence), (FAIL, "Medium"))
+        self.assertTrue(h.unresolved)
+        # a Could Not Evaluate with nothing doubtful is High
+        f = run([win()])
+        self.assertEqual((f["W-1"].verdict, f["W-1"].confidence), (CNE, "High"))
+
     def test_pol_e_operation_unknown(self):
         f, _ = egress([win(op="TILT-TURN")])
         self.assertEqual(crit(f["W-1"], "Opens").verdict, CNE)
