@@ -409,6 +409,13 @@ This is the brief's secondary objective: "a confidence level on each finding, an
 
 Status: planCheck 87, codeStore 38, htmlParser 85 (8 skipped); eval 24/24.
 
+### Phase 6b: report as a standalone document (2026-11-09)
+
+The user viewed REPORT.md in Notion. The `<a id>` anchors showed as raw HTML, and the `[W-1](#w-1)` links pointed to pages that don't exist. A report must read the same in any Markdown viewer, so:
+- IDs are now plain text, and the report has no HTML and no in-page links. §1 says where each kind of ID is listed: H-1 in §4, rooms in §5, windows in §6 or §7.
+- Quoted feet-inch values no longer show a stray backslash (`'41' - 6"'` from Python repr).
+- Appendix C lists POL-GEN-CONFIDENCE as used. It had been wrongly listed under "not needed".
+
 ### Input: Check 1 requirements, and what they change in the store contract, phase 1d (2026-11-08)
 
 Check 1 asks for one finding for the building. It reads the project's occupancy, construction type, sprinklers and height, looks up the matching 504.3 cell, and compares the two heights. The finding cites the cell, as in this example: *row `A, B, E, F, M, S, U` / `NS` / column `II-B` = 55*.

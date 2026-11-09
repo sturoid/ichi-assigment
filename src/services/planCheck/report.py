@@ -49,7 +49,7 @@ def _plain(text: str) -> str:
     text = re.sub(r"\s*\(POL-[A-Z0-9-]+\)", "", text)
     text = re.sub(r"\s*\(resolver rule [^)]*\)", "", text)
     text = re.sub(r"\s*\(authority: [^)]*\)", "", text)
-    return text
+    return text.replace("\\'", "'")   # repr escapes a quote inside a quoted feet-inch value; viewers may show the slash
 
 
 def _sections(*refs: str) -> str:
@@ -59,7 +59,8 @@ def _sections(*refs: str) -> str:
 
 
 def _link(fid: str) -> str:
-    return f"[{fid}](#{fid.lower()})"
+    """IDs are plain text: the report must read the same in any Markdown viewer, with no in-page anchors."""
+    return fid
 
 
 def _room(f: Finding) -> str:
@@ -172,7 +173,7 @@ def _corrections(results: Results, by_id: dict, out: list[str]) -> None:
     out.append("## 1. Corrections")
     out.append("")
     out.append("Raw material for the correction letter: the problem, the arithmetic and the deciding code section. "
-               "Each ID links to its evidence.")
+               "Each ID points to its evidence: H-1 in §4, rooms (R-) in §5, windows (W-) in §6 or §7.")
     out.append("")
     out.append("**Confidence** says how likely a correction is to stand once the full drawing set is seen. "
                "**High:** send it as written. **Medium:** one thing could overturn it; confirm that first, or send "
@@ -340,7 +341,6 @@ def _requests(results: Results, out: list[str]) -> None:
 def _height(h: Finding, out: list[str]) -> None:
     out.append("## 4. Building height (IBC Table 504.3)")
     out.append("")
-    out.append(f'<a id="{h.id.lower()}"></a>')
     out.append(f"### {h.id} · Building height · **{h.verdict}**")
     out.append("")
     out.append(_plain(h.summary))
@@ -395,7 +395,7 @@ def _rooms(results: Results, by_id: dict, out: list[str]) -> None:
         for fl in r.flags:
             if fl["code"] == "room_name_variants":
                 why += " The schedule spells this room more than one way; windows are grouped by room number."
-        out.append(f'| <a id="{r.id.lower()}"></a>{r.id} | {_md(_room(r))} | {story} | {v} | {r.confidence} | {", ".join(wins)} | '
+        out.append(f'| {r.id} | {_md(_room(r))} | {story} | {v} | {r.confidence} | {", ".join(wins)} | '
                    f"{_md(why)} | {_md(_sections(*r.code_refs))} |")
     out.append("")
 
@@ -425,7 +425,7 @@ def _windows(results: Results, out: list[str]) -> None:
     for w in egress:
         tm = _type_mark(w)
         v = f"**{w.verdict}**" if w.verdict == FAIL else w.verdict
-        out.append(f'| <a id="{w.id.lower()}"></a>{w.id} | {_md(w.subject.split(", ", 1)[1])} | '
+        out.append(f'| {w.id} | {_md(w.subject.split(", ", 1)[1])} | '
                    f"{_md(_ev(w, 'operation'))}" + (f" (type {_md(tm)})" if tm else "") + " | "
                    f"{_md(_ev(w, 'width'))} × {_md(_ev(w, 'height'))} | {_md(_ev(w, 'head height'))} | "
                    f"{_cell(_crit(w, 'Opens'))} | {_cell(_crit(w, 'Net clear opening'))} | "
@@ -457,7 +457,7 @@ def _not_applicable(results: Results, out: list[str]) -> None:
         else:
             why = _plain(w.summary)
         egress_cell = _ev(w, "egress").strip() or "(blank)"
-        out.append(f'| <a id="{w.id.lower()}"></a>{w.id} | {_md(w.subject.split(", ", 1)[1])} | {_md(egress_cell)} | '
+        out.append(f'| {w.id} | {_md(w.subject.split(", ", 1)[1])} | {_md(egress_cell)} | '
                    f"{w.verdict} | {w.confidence} | {_md(why)} | {_md(_sections(*w.code_refs))} |")
     out.append("")
 
@@ -509,6 +509,8 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
             used.setdefault(p, []).append(f.id)
     if results.unavailable_amendments:
         used.setdefault("POL-GEN-AMENDMENTS", [])
+    if any(f.confidence for f in fs):
+        used.setdefault("POL-GEN-CONFIDENCE", [])
     for a in results.attention:
         for p in re.findall(r"POL-[A-Z0-9-]+", a.detail):
             used.setdefault(p, [])
