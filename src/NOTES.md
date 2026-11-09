@@ -334,6 +334,53 @@ Also from the review: the fixture example `BEDRROM 205` was removed from the pol
 - `ONLY` in the partial-coverage guard can over-trigger, but it is safe (it gives Could Not Evaluate).
 - IBC 1030 stays `not_loaded` in the store; its limits are cited constants by design.
 
+### Phase 5: REPORT.md redesign after three reviews (2026-11-08)
+
+The work moved to the `ichi-assignment` repo, where the phases are recorded as git commits. The report was reviewed three times:
+- Sonnet, round 1;
+- Opus, round 2, written down before reading Sonnet's second review (`report-review-round2-opus.md` in the session notes folder);
+- a fresh Sonnet, round 2, which had seen neither earlier review.
+
+**What all three agreed on:**
+- every verdict and number is right;
+- the report was 585 lines and repeated each finding four or five times;
+- internal ids and file paths leaked into the body;
+- Fails should read as correction items, grouped by room;
+- the CNE items should become requests to the architect;
+- the window blocks should collapse into one table, with the always-unseen requirements (hardware, screens, public way) stated once.
+
+**Found by both Sonnet reviews:** the schedule skips window numbers 9 and 15–19. Opus missed this.
+
+**Judgement calls, decided 2 to 1 for the current verdicts:**
+- R-203 and R-301 stay Fail, with Exception 2 stated. Sonnet round 1 preferred Could Not Evaluate.
+- W-7 stays Could Not Evaluate and is raised as "expect a Fail". Sonnet round 1 preferred Fail.
+
+**Built. These are generic rules, not fixture-specific:**
+
+| Change | Where |
+|---|---|
+| `POL-GEN-SCHEDULE-GAPS`: missing numbers in an all-numeric schedule are listed | `checks.schedule_gaps`, attention `schedule_number_gaps` |
+| `POL-E-AT-LIMIT`: a frame sill exactly at 44 in, or a partial-opening note at or below a minimum, is flagged `sill_at_limit` / `partial_opening_at_minimum` and listed first as `likely_fails`. Verdicts don't change. | `checks.evaluate_window` |
+| Rows are counted from 1, header rows included (they were 0-based grid rows) | `checks._row` |
+| The "Opens" criterion cites 1030.2.1 (normal operation), not 1030.1.1 (keys or tools) | `evaluate_window` |
+| `Criterion.brief` (a short plain statement) and `Criterion.flags` | `findings.py` |
+| The architect's-height message names the sub-rows (`S` and `S13R`) instead of a garbled list of cells | `check_height` |
+| The report is rewritten in this order: corrections, checks, requests, height, rooms table, egress-window table, NA table, appendix (code lines, source rows, rules, inputs). 238 lines. | `report.py` |
+| The scorer reads verdicts from headings and table rows anywhere, and flags an id shown with two verdicts | `evals.report_verdicts` |
+
+Tests: planCheck 86, adding `test_pol_e_at_limit` and `test_pol_gen_schedule_gaps`. The eval set gained the W-7 and W-12 flags and two attention items, all marked `spot_checked: false`. The scorer passes 24/24.
+
+**Verification review (fresh Sonnet, old vs new report against the sources):** no factual errors, and every anchor resolves. Its brief-compliance gaps were fixed:
+- the result line now says the 6 Fails are 4 correction items;
+- the details request covers operating hardware (1030.1.1) and screen release (1030.5), which the §6 legend promises;
+- §5 states the scope (occupancy in 1030.1 item 2, story from room number), gains a Story column, and notes the room whose name is spelled two ways;
+- §7 is renamed "Windows: Not Applicable" and shows each window's EGRESS cell and code section;
+- Appendix C lists every finding that uses each rule, untruncated;
+- W-12 reads "exactly the 24 in minimum, leaving nothing for the frame" instead of "at or below";
+- W-13's area cell gives its basis: "Fail (does not open)".
+
+Status: planCheck 86, codeStore 38, htmlParser 85 (8 skipped) pass; eval 24/24; REPORT.md 241 lines.
+
 ### Input: Check 1 requirements, and what they change in the store contract, phase 1d (2026-11-08)
 
 Check 1 asks for one finding for the building. It reads the project's occupancy, construction type, sprinklers and height, looks up the matching 504.3 cell, and compares the two heights. The finding cites the cell, as in this example: *row `A, B, E, F, M, S, U` / `NS` / column `II-B` = 55*.
@@ -444,6 +491,7 @@ What this changes:
 | 2026-11-08 | Requirements that no schedule shows keep a window at Could Not Evaluate (`POL-E-UNSEEN`) | Opus; **Sonnet disagrees** (would Pass on the measurable criteria) | A wrong Pass is worse than an honest Could Not Evaluate. **User to decide.** |
 | 2026-11-08 | Deliverables (REPORT.md, NOTES.md, findings.json) live at the repo root | User | First written to `src/deliverables/` because of the session scope; the user approved the move |
 | 2026-11-08 | Code files are a fixed IBC 2018 library; only project files must generalise | User | Brief, line 92 ("these two particular files", "another project's tables") and line 167 (inputs are code analysis + window schedule); edition fixed at lines 53 and 72. Noted in the root NOTES.md under "How it works" |
+| 2026-11-08 | Report redesign (Phase 5): corrections first, then checks, requests and evidence tables; R-203/R-301 stay Fail with Exception 2 stated; W-7 stays CNE flagged 'expect a Fail' | User | Three reviews; both calls 2-1 for the current verdicts |
 
 ## Edge cases recorded for review
 
@@ -477,7 +525,7 @@ These are cases where the parser can't be certain. Each stays in the data with a
 
 - Parser: 85 tests pass, and 8 known gaps (M05, M06, M09, M11, M12, M16, M17, M18) are verified to fail for their recorded reason.
 - Store: 38 tests pass (29 before, with 4 inverted for phase 2, plus 9 new notes tests).
-- planCheck: 84 tests pass (`cd tests/services/planCheck && python -m unittest`). The eval scorer passes 24/24.
+- planCheck: 86 tests pass (`cd tests/services/planCheck && python -m unittest`). The eval scorer passes 24/24.
 - Report: `cd src && python -m services.planCheck ../tests/fixtures/code-analysis.html ../tests/fixtures/window-schedule.html -o ../REPORT.md --json ../findings.json`. A test fails if the committed report is stale.
 - Remaining gaps are code-table shapes and value parsing; no project-table gap is open except P09 (dropped cell), which needs value-type checks.
 - Run them with `cd tests/services/htmlParser && python -m unittest` and `cd tests/services/codeStore && python -m unittest`.

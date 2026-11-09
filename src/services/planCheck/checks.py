@@ -33,8 +33,13 @@ def _ev(label: str, value, source: str) -> dict:
     return {"label": label, "value": value, "source": source}
 
 
+def _row(src: dict) -> int:
+    """Table row counted from 1 at the top of the table, header rows included."""
+    return src["grid_row"] + 1
+
+
 def _src(fact) -> str:
-    return f"{fact.src['file']} row {fact.src['grid_row']}, label '{fact.label}'"
+    return f"{fact.src['file']} table row {_row(fact.src)}, label '{fact.label}'"
 
 
 # =========================================================================== #
@@ -56,7 +61,7 @@ def check_height(store: Store, ca: CodeAnalysis) -> tuple[Finding, list[Attentio
             flags += f.flags
         for dup in ca.conflicts.get(name, [])[1:]:
             flags.append({"code": "field_conflict", "message": f"{name} is given twice: {dup.value!r} "
-                          f"(row {dup.src['grid_row']}) and {facts[name].value!r}; the first is used"})
+                          f"(table row {_row(dup.src)}) and {facts[name].value!r}; the first is used"})
 
     def cne(summary, extra_settle=()):
         return Finding("H-1", "height", "Building height", CNE, summary, code_refs, evidence, [], working, flags,
@@ -153,8 +158,10 @@ def check_height(store: Store, ca: CodeAnalysis) -> tuple[Finding, list[Attentio
             msg = (f"The code analysis states an allowable height of {fmt_in(a.inches)} ({af.value!r}); "
                    f"{cite} gives {res.value_text} ft.")
             if matches:
-                msg += (f" {arch_ft:g} ft is the value of " + ", ".join(matches) +
-                        f", so the architect may have read a sprinkler sub-row other than `{dims['sprinkler']}`.")
+                subs = " and ".join(f"`{m}`" for m in matches)
+                msg += (f" {arch_ft:g} ft is the value of the {subs} sub-row{'s' if len(matches) > 1 else ''} in the "
+                        f"same row and column, so the architect may have read the wrong sprinkler sub-row (this "
+                        f"building resolves to `{dims['sprinkler']}`).")
             flags.append({"code": "architect_allowable_mismatch", "message": msg})
             attn.append(Attention("architect_allowable_mismatch", "Architect's allowable height disagrees with "
                                   "Table 504.3", msg, ["H-1"]))
@@ -175,8 +182,8 @@ def check_height(store: Store, ca: CodeAnalysis) -> tuple[Finding, list[Attentio
 
 
 def _cells_holding(store: Store, dims: dict, value_ft: float) -> list[str]:
-    """Cells in the same row group (other sprinkler sub-rows) or the same sub-row (other
-    columns) that hold value_ft: a likely explanation for an architect's figure."""
+    """Other sprinkler sub-rows in the same row and column that hold value_ft: a likely
+    explanation for an architect's figure."""
     out = []
     vals = store.provisions[T504]["dimensions"]["values"]
     for spr in vals["sprinkler"]:
@@ -184,7 +191,7 @@ def _cells_holding(store: Store, dims: dict, value_ft: float) -> list[str]:
             continue
         r = store.lookup(T504, occupancy=dims["occupancy"], sprinkler=spr, construction=dims["construction"])
         if r.found and r.numeric_limit == value_ft:
-            out.append(r.citation["text"].replace("Table 504.3, ", ""))
+            out.append(spr)
     return out
 
 
@@ -278,11 +285,11 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
     elif w.operation == "fixed":
         crit.append(Criterion("Opens by normal operation", f"{C.OPERABLE.ref()}; {C.NORMAL_OPERATION.ref()}",
                               f"type {w.operation_text!r} (fixed)", FAIL, "a fixed window does not open",
-                              ["POL-E-FIXED"]))
+                              ["POL-E-FIXED"], brief=f"scheduled as {w.operation_text!r}, which does not open"))
     else:
-        crit.append(Criterion("Opens by normal operation", C.OPERABLE.ref(),
+        crit.append(Criterion("Opens by normal operation", C.NORMAL_OPERATION.ref(),
                               f"type {w.operation_text!r} ({w.operation.replace('_', ' ')})", PASS,
-                              "the scheduled type opens"))
+                              "the scheduled type opens", brief=w.operation.replace('_', ' ')))
     fixed = w.operation == "fixed"
     half_note = {"single_hung": "only the bottom sash opens", "double_hung": "each sash opens about half",
                  "slider": "a slider opens about half its width"}.get(w.operation)
@@ -292,8 +299,9 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
     aref = f"{C.MIN_AREA_CITE.ref()}; {C.MIN_AREA_GRADE_CITE.ref()}"
     nca = _number(w.net_clear_area)
     if fixed:
-        crit.append(Criterion(areq, f"{aref}; {C.NORMAL_OPERATION.ref()}", "fixed: no opening", FAIL,
-                              "no net clear opening results from normal operation", ["POL-E-FIXED"]))
+        crit.append(Criterion(areq, aref, "fixed: no opening", FAIL,
+                              "no net clear opening results from normal operation", ["POL-E-FIXED"],
+                              brief="no clear opening"))
     elif nca is not None:
         if nca >= C.MIN_AREA.value:
             v, why = PASS, f"scheduled net clear opening {nca:g} sq ft >= {C.MIN_AREA.value:g}"
@@ -313,7 +321,10 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
             cr = Criterion(areq, aref, read, FAIL,
                            f"the net clear opening is smaller than {nominal:.2f} sq ft, so below "
                            f"{C.MIN_AREA_GRADE.value:g} and {C.MIN_AREA.value:g} sq ft whether or not it is a "
-                           "grade-floor opening", pol)
+                           "grade-floor opening", pol,
+                           brief=f"nominal {fmt_in(W['inches'])} × {fmt_in(H['inches'])} = {nominal:.2f} sq ft; the "
+                                 f"clear opening is smaller, so under both {C.MIN_AREA_GRADE.value:g} and "
+                                 f"{C.MIN_AREA.value:g} sq ft")
         elif nominal <= C.MIN_AREA.value:
             cr = Criterion(areq, aref, read, CNE,
                            f"below {C.MIN_AREA.value:g} sq ft, but could meet the grade-floor "
@@ -327,6 +338,14 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
             frac = nominal / 2
             cr.reason += f". Note only: {half_note}, roughly {frac:.2f} sq ft (POL-E-PARTIAL-OPENING)"
             cr.policies.append("POL-E-PARTIAL-OPENING")
+            if frac <= C.MIN_AREA.value:
+                cr.policies.append("POL-E-AT-LIMIT")
+                at = (f"exactly the {C.MIN_AREA.value:g} sq ft minimum, leaving nothing for the frame"
+                      if frac == C.MIN_AREA.value else f"below the {C.MIN_AREA.value:g} sq ft minimum")
+                cr.flags.append({"code": "partial_opening_at_minimum",
+                                 "message": f"expect a Fail on net clear area: {half_note}, about {frac:.2f} sq ft "
+                                            f"before the frame, {at}. Ask for "
+                                            "the sash split and the manufacturer's clear opening."})
         crit.append(_guard_ocr(cr, W, H))
     else:
         crit.append(Criterion(areq, aref, f"width {_len_desc(W)}, height {_len_desc(H)}", CNE,
@@ -351,7 +370,9 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
             if nom["inches"] <= lim.value:
                 cr = Criterion(req, cite.ref(), f"nominal {dim} {_len_desc(nom)} (upper bound)", FAIL,
                                f"the clear {dim} is less than the nominal {nom['inches']:g} in, so below "
-                               f"{lim.value:g} in", ["POL-E-NOMINAL-UPPER"])
+                               f"{lim.value:g} in", ["POL-E-NOMINAL-UPPER"],
+                               brief=f"nominal {dim} {fmt_in(nom['inches'])}, so the clear {dim} is under "
+                                     f"{lim.value:g} in")
             else:
                 cr = Criterion(req, cite.ref(), f"nominal {dim} {_len_desc(nom)} (upper bound)", CNE,
                                f"nominal {nom['inches']:g} in exceeds {lim.value:g} in; the clear {dim} is smaller "
@@ -362,6 +383,15 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
                     cr.reason += (f". Note only: {half_note}, roughly {nom['inches'] / 2:g} in "
                                   "(POL-E-PARTIAL-OPENING)")
                     cr.policies.append("POL-E-PARTIAL-OPENING")
+                    if nom["inches"] / 2 <= lim.value:
+                        cr.policies.append("POL-E-AT-LIMIT")
+                        at = (f"exactly the {lim.value:g} in minimum, leaving nothing for the frame"
+                              if nom["inches"] / 2 == lim.value else f"below the {lim.value:g} in minimum")
+                        cr.flags.append({"code": "partial_opening_at_minimum",
+                                         "message": f"expect a Fail on clear {dim}: {half_note}, about "
+                                                    f"{nom['inches'] / 2:g} in before the frame, {at}. "
+                                                    f"Ask for the sash split and the "
+                                                    "manufacturer's clear opening."})
             crit.append(_guard_ocr(cr, nom))
 
     # sill --------------------------------------------------------------------------------
@@ -383,13 +413,25 @@ def evaluate_window(w: Window, store: Store) -> list[Criterion]:
     elif sill > C.MAX_SILL.value:
         crit.append(_guard_ocr(Criterion(sreq, sref, read, FAIL,
                                          f"the clear opening's bottom is at or above the {sill:g} in frame sill, "
-                                         f"more than {C.MAX_SILL.value:g} in", ["POL-E-SILL-LOWER"]), *used))
+                                         f"more than {C.MAX_SILL.value:g} in", ["POL-E-SILL-LOWER"],
+                                         brief=(f"frame sill = {fmt_in(HH['inches'])} head − "
+                                                f"{fmt_in(H['inches'])} height = {sill:g} in, above "
+                                                f"{C.MAX_SILL.value:g} in" if used == (HH, H) else
+                                                f"scheduled sill {sill:g} in, above {C.MAX_SILL.value:g} in")),
+                               *used))
     else:
-        crit.append(_guard_ocr(Criterion(sreq, sref, read, CNE,
-                                         f"the frame sill is {sill:g} in ({C.MAX_SILL.value - sill:g} in below the "
-                                         f"limit), but the clear opening's bottom sits higher by the bottom frame, "
-                                         "which is not given", ["POL-E-SILL-LOWER"],
-                                         f"{wd} or {_settle(store, 'PROJECT:ELEVATIONS')[0]}"), *used))
+        cr = _guard_ocr(Criterion(sreq, sref, read, CNE,
+                                  f"the frame sill is {sill:g} in ({C.MAX_SILL.value - sill:g} in below the "
+                                  f"limit), but the clear opening's bottom sits higher by the bottom frame, "
+                                  "which is not given", ["POL-E-SILL-LOWER"],
+                                  f"{wd} or {_settle(store, 'PROJECT:ELEVATIONS')[0]}"), *used)
+        if cr.verdict == CNE and C.MAX_SILL.value - sill <= 1e-9:
+            cr.policies.append("POL-E-AT-LIMIT")
+            cr.flags.append({"code": "sill_at_limit",
+                             "message": f"expect a Fail on sill height: the frame sill is exactly "
+                                        f"{C.MAX_SILL.value:g} in, so any bottom frame puts the clear opening above "
+                                        "the limit. Confirm with the manufacturer's clear-opening dimensions."})
+        crit.append(cr)
 
     # what no schedule shows --------------------------------------------------------------------
     if not fixed:
@@ -425,7 +467,7 @@ def _number(text: str | None) -> float | None:
 
 
 def _window_evidence(w: Window, schedule: Schedule) -> list[dict]:
-    src = f"{w.src['file']} row {w.src['grid_row']}"
+    src = f"{w.src['file']} table row {_row(w.src)}"
     labels = schedule.columns.labels
     roles = schedule.columns.roles
     ev = []
@@ -553,6 +595,7 @@ def check_egress(store: Store, ca: CodeAnalysis, schedule: Schedule) -> tuple[li
                 fl.append({"code": "egress_designation_unknown",
                            "message": "no EGRESS column" if not has_egress_col else
                            f"EGRESS cell {w.egress_text!r} is neither yes nor no"})
+            fl += [f for c in crit for f in c.flags]
             pols = list(dict.fromkeys(p for c in crit for p in c.policies)) + ["POL-E-SCOPE"]
             summary = _summary(crit, v) if v != NA else f"1030 does not apply: {occ.reason}; {story.reason}."
             if scope_notes:
@@ -646,22 +689,49 @@ class Results:
     windows: list[Finding]
     attention: list[Attention]
     unavailable_amendments: list[str] = field(default_factory=list)  # titles from the manifest
+    project: str = ""                                                # the code analysis project description
 
     @property
     def all(self) -> list[Finding]:
         return [self.height, *self.rooms, *self.windows]
 
 
+def schedule_gaps(marks: list[str]) -> str:
+    """'9, 15-19' for whole-number marks with numbers missing between the lowest and highest; '' otherwise."""
+    if not marks or not all(re.fullmatch(r"\d+", m.strip()) for m in marks):
+        return ""
+    have = {int(m) for m in marks}
+    runs: list[list[int]] = []
+    for n in range(min(have), max(have) + 1):
+        if n in have:
+            continue
+        if runs and n == runs[-1][1] + 1:
+            runs[-1][1] = n
+        else:
+            runs.append([n, n])
+    return ", ".join(str(a) if a == b else f"{a}–{b}" for a, b in runs)
+
+
 def run_checks(store: Store, ca: CodeAnalysis, schedule: Schedule) -> Results:
     height, a1 = check_height(store, ca)
     rooms, windows, a2 = check_egress(store, ca, schedule)
     attn = a1 + a2
+    likely = [(f.id, fl["message"]) for f in windows for fl in f.flags
+              if fl["code"] in ("sill_at_limit", "partial_opening_at_minimum")]
+    if likely:
+        attn.insert(0, Attention("likely_fails", "Likely Fails the schedule can't prove",
+                                 " | ".join(f"{i}: {m}" for i, m in likely), list(dict.fromkeys(i for i, _ in likely))))
+    gaps = schedule_gaps([w.mark for w in schedule.windows])
+    if gaps:
+        attn.append(Attention("schedule_number_gaps", "Window numbers skip",
+                              f"The schedule has no window {gaps}. Rows may have been lost in scanning, or the windows "
+                              "renumbered; check the schedule sheet (POL-GEN-SCHEDULE-GAPS).", []))
     claim = ca.facts.get("egress_claim")
     bad = [r for r in rooms if r.verdict in (FAIL, CNE)]
     if claim and bad:
         attn.append(Attention(
             "egress_claim_not_supported", "Code analysis claim about escape openings is not supported",
-            f"The code analysis says {claim.value!r} (row {claim.src['grid_row']}). The schedule does not show a "
+            f"The code analysis says {claim.value!r} (table row {_row(claim.src)}). The schedule does not show a "
             f"complying opening in: " + "; ".join(f"{r.subject} ({r.verdict})" for r in bad) + ".",
             [r.id for r in bad]))
     ocr = [(f.id, fl["message"]) for f in [height, *rooms, *windows] for fl in f.flags
@@ -691,10 +761,11 @@ def run_checks(store: Store, ca: CodeAnalysis, schedule: Schedule) -> Results:
                               "No column for: " + ", ".join(schedule.columns.missing), []))
     for d in schedule.dropped_rows:
         attn.append(Attention("schedule_row_skipped", "Window schedule row skipped",
-                              f"row {d['grid_row']}: {d['reason']} ({d['texts']})", []))
+                              f"table row {d['grid_row'] + 1}: {d['reason']} ({d['texts']})", []))
     if ca.unmatched:
         attn.append(Attention("code_analysis_unread", "Code analysis rows not used",
                               "; ".join(f"{u['label']!r}" for u in ca.unmatched), []))
     amend = [d.get("title", d["id"]) for d in store.data["documents"]
              if d.get("kind") == "local_amendments" and d["status"] == "unavailable"]
-    return Results(height, rooms, windows, attn, amend)
+    proj = ca.facts.get("project")
+    return Results(height, rooms, windows, attn, amend, proj.value if proj else "")

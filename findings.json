@@ -35,27 +35,27 @@
         {
           "label": "OCCUPANCY GROUP",
           "value": "R-3",
-          "source": "code-analysis.html row 3, label 'OCCUPANCY GROUP'"
+          "source": "code-analysis.html table row 4, label 'OCCUPANCY GROUP'"
         },
         {
           "label": "CONSTRUCTION TYPE",
           "value": "V-B",
-          "source": "code-analysis.html row 4, label 'CONSTRUCTION TYPE'"
+          "source": "code-analysis.html table row 5, label 'CONSTRUCTION TYPE'"
         },
         {
           "label": "FIRE SPRINKLE RS",
           "value": "YES - AUTOMATIC SPRINKLER SYSTEM THROUGHOUT PER NFPA 13D (IBC 903.3.1.3)",
-          "source": "code-analysis.html row 5, label 'FIRE SPRINKLE RS'"
+          "source": "code-analysis.html table row 6, label 'FIRE SPRINKLE RS'"
         },
         {
           "label": "BUILDING HEIGHT ABOVE GRADE PLAN E",
           "value": "41' - 6\" (TO AVG. HT. OF HIGHEST ROOF SURFACE)",
-          "source": "code-analysis.html row 7, label 'BUILDING HEIGHT ABOVE GRADE PLAN E'"
+          "source": "code-analysis.html table row 8, label 'BUILDING HEIGHT ABOVE GRADE PLAN E'"
         },
         {
           "label": "ALLOWABLE HEIGHT",
           "value": "60' - 0\" PER TABLE 504.3",
-          "source": "code-analysis.html row 8, label 'ALLOWABLE HEIGHT'"
+          "source": "code-analysis.html table row 9, label 'ALLOWABLE HEIGHT'"
         }
       ],
       "criteria": [],
@@ -80,7 +80,7 @@
         },
         {
           "code": "architect_allowable_mismatch",
-          "message": "The code analysis states an allowable height of 60'-0\" ('60\\' - 0\" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of row `R` / `S`, column `V-B`, row `R` / `S13R`, column `V-B`, so the architect may have read a sprinkler sub-row other than `S13D`."
+          "message": "The code analysis states an allowable height of 60'-0\" ('60\\' - 0\" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of the `S` and `S13R` sub-rows in the same row and column, so the architect may have read the wrong sprinkler sub-row (this building resolves to `S13D`)."
         }
       ],
       "policies": [
@@ -355,10 +355,10 @@
       "verdict": "Could Not Evaluate",
       "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
-        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
-        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
         "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -366,58 +366,60 @@
         {
           "label": "SYMBOL (mark)",
           "value": "1",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDROOM 101",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 6\"",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "4' - 0\"",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "TYPE (operation)",
           "value": "L.H. CASM'T",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "TYPE (type mark)",
           "value": "A",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "EGRESS (egress)",
           "value": "Y",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 3"
+          "source": "window-schedule.html table row 4"
         }
       ],
       "criteria": [
         {
           "requirement": "Opens by normal operation",
-          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
           "read": "type \"L.H. CASM'T\" (casement)",
           "verdict": "Pass",
           "reason": "the scheduled type opens",
           "policies": [],
-          "settle": ""
+          "settle": "",
+          "brief": "casement",
+          "flags": []
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -430,7 +432,9 @@
             "POL-E-GRADE-FLOOR",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -442,7 +446,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -454,7 +460,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -465,7 +473,9 @@
           "policies": [
             "POL-E-SILL-LOWER"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -476,7 +486,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -487,7 +499,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -498,7 +512,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
+          "brief": "",
+          "flags": []
         }
       ],
       "working": [
@@ -536,47 +552,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "2",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDROOM 101",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "4' - 0\"",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "TYPE (operation)",
           "value": "FIXED",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "TYPE (type mark)",
           "value": "B",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         },
         {
           "label": "SCREE N (screen)",
           "value": "",
-          "source": "window-schedule.html row 4"
+          "source": "window-schedule.html table row 5"
         }
       ],
       "criteria": [],
@@ -598,10 +614,10 @@
       "verdict": "Could Not Evaluate",
       "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
-        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
-        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
         "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -609,58 +625,60 @@
         {
           "label": "SYMBOL (mark)",
           "value": "3",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDROOM 101",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 6\"",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "4' - 0\"",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "TYPE (operation)",
           "value": "R.H. CASM'T",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "TYPE (type mark)",
           "value": "A",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "EGRESS (egress)",
           "value": "Y",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 5"
+          "source": "window-schedule.html table row 6"
         }
       ],
       "criteria": [
         {
           "requirement": "Opens by normal operation",
-          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
           "read": "type \"R.H. CASM'T\" (casement)",
           "verdict": "Pass",
           "reason": "the scheduled type opens",
           "policies": [],
-          "settle": ""
+          "settle": "",
+          "brief": "casement",
+          "flags": []
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -673,7 +691,9 @@
             "POL-E-GRADE-FLOOR",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -685,7 +705,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -697,7 +719,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -708,7 +732,9 @@
           "policies": [
             "POL-E-SILL-LOWER"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -719,7 +745,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -730,7 +758,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -741,7 +771,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
+          "brief": "",
+          "flags": []
         }
       ],
       "working": [
@@ -779,47 +811,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "4",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "LOCATION (room)",
           "value": "OFFICE 102",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "3' - O\"",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "5' - 0\"",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "TYPE (operation)",
           "value": "L.H. CASM'T",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "TYPE (type mark)",
           "value": "C",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "7' - 0\"",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 6"
+          "source": "window-schedule.html table row 7"
         }
       ],
       "criteria": [],
@@ -854,47 +886,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "5",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "LOCATION (room)",
           "value": "LIVING 103",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "6' - 0\"",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "5' - 0\"",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "TYPE (operation)",
           "value": "FIXED",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "TYPE (type mark)",
           "value": "D",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "7' - 0\"",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         },
         {
           "label": "SCREE N (screen)",
           "value": "",
-          "source": "window-schedule.html row 7"
+          "source": "window-schedule.html table row 8"
         }
       ],
       "criteria": [],
@@ -920,47 +952,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "6",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "LOCATION (room)",
           "value": "KITCHEN 104",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "TYPE (operation)",
           "value": "AWNING",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "TYPE (type mark)",
           "value": "E",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "7' - 0\"",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 8"
+          "source": "window-schedule.html table row 9"
         }
       ],
       "criteria": [],
@@ -980,10 +1012,10 @@
       "verdict": "Could Not Evaluate",
       "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 7.50 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 44 in (3'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
-        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
-        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
         "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -991,58 +1023,60 @@
         {
           "label": "SYMBOL (mark)",
           "value": "7",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "LOCATION (room)",
           "value": "ADU BEDROOM 107",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2'-6\"",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "TYPE (operation)",
           "value": "L.H. CASM'T",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "TYPE (type mark)",
           "value": "F",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "EGRESS (egress)",
           "value": "Y",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 9"
+          "source": "window-schedule.html table row 10"
         }
       ],
       "criteria": [
         {
           "requirement": "Opens by normal operation",
-          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
           "read": "type \"L.H. CASM'T\" (casement)",
           "verdict": "Pass",
           "reason": "the scheduled type opens",
           "policies": [],
-          "settle": ""
+          "settle": "",
+          "brief": "casement",
+          "flags": []
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1055,7 +1089,9 @@
             "POL-E-GRADE-FLOOR",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -1067,7 +1103,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -1079,7 +1117,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1088,9 +1128,17 @@
           "verdict": "Could Not Evaluate",
           "reason": "the frame sill is 44 in (0 in below the limit), but the clear opening's bottom sits higher by the bottom frame, which is not given",
           "policies": [
-            "POL-E-SILL-LOWER"
+            "POL-E-SILL-LOWER",
+            "POL-E-AT-LIMIT"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+          "brief": "",
+          "flags": [
+            {
+              "code": "sill_at_limit",
+              "message": "expect a Fail on sill height: the frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions."
+            }
+          ]
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1101,7 +1149,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1112,7 +1162,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1123,18 +1175,26 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
+          "brief": "",
+          "flags": []
         }
       ],
       "working": [
         "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 107 is on floor 1 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
       ],
-      "flags": [],
+      "flags": [
+        {
+          "code": "sill_at_limit",
+          "message": "expect a Fail on sill height: the frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions."
+        }
+      ],
       "policies": [
         "POL-E-NOMINAL-UPPER",
         "POL-E-GRADE-FLOOR",
         "POL-E-NO-FRAME-ASSUMPTION",
         "POL-E-SILL-LOWER",
+        "POL-E-AT-LIMIT",
         "POL-E-UNSEEN",
         "POL-E-SCOPE"
       ],
@@ -1161,47 +1221,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "8",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "LOCATION (room)",
           "value": "LAUNDRY 108",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 0\"",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "TYPE (operation)",
           "value": "SLIDER",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "TYPE (type mark)",
           "value": "G",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 10"
+          "source": "window-schedule.html table row 11"
         }
       ],
       "criteria": [],
@@ -1221,10 +1281,10 @@
       "verdict": "Fail",
       "summary": "Net clear area: nominal 24 in x 30 in = 720 sq in = 5.00 sq ft (upper bound); the net clear opening is smaller than 5.00 sq ft, so below 5 and 5.7 sq ft whether or not it is a grade-floor opening. Sill height: derived frame sill = head height 80 in - nominal height 30 in = 50 in (4'-2\"); the clear opening's bottom is at or above the 50 in frame sill, more than 44 in.",
       "code_refs": [
-        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
-        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
         "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -1232,58 +1292,60 @@
         {
           "label": "SYMBOL (mark)",
           "value": "10",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDROOM 203",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 0\"",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "2' - 6\"",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "TYPE (operation)",
           "value": "L.H. CASM'T",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "TYPE (type mark)",
           "value": "H",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "EGRESS (egress)",
           "value": "Y",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 11"
+          "source": "window-schedule.html table row 12"
         }
       ],
       "criteria": [
         {
           "requirement": "Opens by normal operation",
-          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
           "read": "type \"L.H. CASM'T\" (casement)",
           "verdict": "Pass",
           "reason": "the scheduled type opens",
           "policies": [],
-          "settle": ""
+          "settle": "",
+          "brief": "casement",
+          "flags": []
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1295,7 +1357,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-GRADE-FLOOR"
           ],
-          "settle": ""
+          "settle": "",
+          "brief": "nominal 2'-0\" × 2'-6\" = 5.00 sq ft; the clear opening is smaller, so under both 5 and 5.7 sq ft",
+          "flags": []
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -1307,7 +1371,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -1319,7 +1385,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1330,7 +1398,9 @@
           "policies": [
             "POL-E-SILL-LOWER"
           ],
-          "settle": ""
+          "settle": "",
+          "brief": "frame sill = 6'-8\" head − 2'-6\" height = 50 in, above 44 in",
+          "flags": []
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1341,7 +1411,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1352,7 +1424,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1363,7 +1437,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
+          "brief": "",
+          "flags": []
         }
       ],
       "working": [
@@ -1400,47 +1476,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "11",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDROOM 203",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "2' - 6\"",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "TYPE (operation)",
           "value": "FIXED",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "TYPE (type mark)",
           "value": "I",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         },
         {
           "label": "SCREE N (screen)",
           "value": "",
-          "source": "window-schedule.html row 12"
+          "source": "window-schedule.html table row 13"
         }
       ],
       "criteria": [],
@@ -1462,10 +1538,10 @@
       "verdict": "Could Not Evaluate",
       "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 12.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
       "code_refs": [
-        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
-        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
         "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -1473,58 +1549,60 @@
         {
           "label": "SYMBOL (mark)",
           "value": "12",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDRROM 205",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "4' - 0\"",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "TYPE (operation)",
           "value": "S.H.",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "TYPE (type mark)",
           "value": "J",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "EGRESS (egress)",
           "value": "Y",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 13"
+          "source": "window-schedule.html table row 14"
         }
       ],
       "criteria": [
         {
           "requirement": "Opens by normal operation",
-          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
           "read": "type 'S.H.' (single hung)",
           "verdict": "Pass",
           "reason": "the scheduled type opens",
           "policies": [],
-          "settle": ""
+          "settle": "",
+          "brief": "single hung",
+          "flags": []
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1538,7 +1616,9 @@
             "POL-E-NO-FRAME-ASSUMPTION",
             "POL-E-PARTIAL-OPENING"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -1549,9 +1629,17 @@
           "policies": [
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION",
-            "POL-E-PARTIAL-OPENING"
+            "POL-E-PARTIAL-OPENING",
+            "POL-E-AT-LIMIT"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": [
+            {
+              "code": "partial_opening_at_minimum",
+              "message": "expect a Fail on clear height: only the bottom sash opens, about 24 in before the frame, exactly the 24 in minimum, leaving nothing for the frame. Ask for the sash split and the manufacturer's clear opening."
+            }
+          ]
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -1563,7 +1651,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1574,7 +1664,9 @@
           "policies": [
             "POL-E-SILL-LOWER"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1585,7 +1677,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1596,7 +1690,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1607,7 +1703,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
+          "brief": "",
+          "flags": []
         }
       ],
       "working": [
@@ -1617,6 +1715,10 @@
         {
           "code": "ocr_room_name",
           "message": "room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan)"
+        },
+        {
+          "code": "partial_opening_at_minimum",
+          "message": "expect a Fail on clear height: only the bottom sash opens, about 24 in before the frame, exactly the 24 in minimum, leaving nothing for the frame. Ask for the sash split and the manufacturer's clear opening."
         }
       ],
       "policies": [
@@ -1624,6 +1726,7 @@
         "POL-E-GRADE-FLOOR",
         "POL-E-NO-FRAME-ASSUMPTION",
         "POL-E-PARTIAL-OPENING",
+        "POL-E-AT-LIMIT",
         "POL-E-SILL-LOWER",
         "POL-E-UNSEEN",
         "POL-E-SCOPE"
@@ -1646,7 +1749,7 @@
       "summary": "Opening type: type 'FIXED' (fixed); a fixed window does not open. Net clear area: fixed: no opening; no net clear opening results from normal operation.",
       "code_refs": [
         "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31); IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
-        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37); IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
         "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
@@ -1655,47 +1758,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "13",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDROOM 205",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "4' - 0\"",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "4' - 0\"",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "TYPE (operation)",
           "value": "FIXED",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "TYPE (type mark)",
           "value": "K",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "EGRESS (egress)",
           "value": "Y",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         },
         {
           "label": "SCREE N (screen)",
           "value": "",
-          "source": "window-schedule.html row 14"
+          "source": "window-schedule.html table row 15"
         }
       ],
       "criteria": [
@@ -1708,18 +1811,22 @@
           "policies": [
             "POL-E-FIXED"
           ],
-          "settle": ""
+          "settle": "",
+          "brief": "scheduled as 'FIXED', which does not open",
+          "flags": []
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
-          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37); IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
           "read": "fixed: no opening",
           "verdict": "Fail",
           "reason": "no net clear opening results from normal operation",
           "policies": [
             "POL-E-FIXED"
           ],
-          "settle": ""
+          "settle": "",
+          "brief": "no clear opening",
+          "flags": []
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1730,7 +1837,9 @@
           "policies": [
             "POL-E-SILL-LOWER"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1741,7 +1850,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1752,7 +1863,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
+          "brief": "",
+          "flags": []
         }
       ],
       "working": [
@@ -1788,47 +1901,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "14",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "LOCATION (room)",
           "value": "BATH 206",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 0\"",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "2' - 0\"",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "TYPE (operation)",
           "value": "AWNING",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "TYPE (type mark)",
           "value": "L",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "7' - 0\"",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 15"
+          "source": "window-schedule.html table row 16"
         }
       ],
       "criteria": [],
@@ -1848,10 +1961,10 @@
       "verdict": "Fail",
       "summary": "Sill height: derived frame sill = head height 96 in - nominal height 36 in = 60 in (5'-0\"); the clear opening's bottom is at or above the 60 in frame sill, more than 44 in.",
       "code_refs": [
-        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
-        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
         "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
         "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
         "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
       ],
@@ -1859,58 +1972,60 @@
         {
           "label": "SYMBOL (mark)",
           "value": "20",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "LOCATION (room)",
           "value": "BEDROOM 301",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 6\"",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "3' - 0\"",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "TYPE (operation)",
           "value": "L.H. CASM'T",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "TYPE (type mark)",
           "value": "F",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "8' - 0\"",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "EGRESS (egress)",
           "value": "Y",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 16"
+          "source": "window-schedule.html table row 17"
         }
       ],
       "criteria": [
         {
           "requirement": "Opens by normal operation",
-          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
           "read": "type \"L.H. CASM'T\" (casement)",
           "verdict": "Pass",
           "reason": "the scheduled type opens",
           "policies": [],
-          "settle": ""
+          "settle": "",
+          "brief": "casement",
+          "flags": []
         },
         {
           "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
@@ -1923,7 +2038,9 @@
             "POL-E-GRADE-FLOOR",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear height >= 24 in",
@@ -1935,7 +2052,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Net clear width >= 20 in",
@@ -1947,7 +2066,9 @@
             "POL-E-NOMINAL-UPPER",
             "POL-E-NO-FRAME-ASSUMPTION"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Bottom of clear opening <= 44 in above the floor",
@@ -1958,7 +2079,9 @@
           "policies": [
             "POL-E-SILL-LOWER"
           ],
-          "settle": ""
+          "settle": "",
+          "brief": "frame sill = 8'-0\" head − 3'-0\" height = 60 in, above 44 in",
+          "flags": []
         },
         {
           "requirement": "Operable from inside without keys or tools",
@@ -1969,7 +2092,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Screens, bars or grilles release from inside",
@@ -1980,7 +2105,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+          "brief": "",
+          "flags": []
         },
         {
           "requirement": "Opens onto a public way, yard or court",
@@ -1991,7 +2118,9 @@
           "policies": [
             "POL-E-UNSEEN"
           ],
-          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan",
+          "brief": "",
+          "flags": []
         }
       ],
       "working": [
@@ -2028,47 +2157,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "21",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "LOCATION (room)",
           "value": "GUEST BED 303",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 6\"",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "4' - 0\"",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "TYPE (operation)",
           "value": "L.H. CASM'T",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "TYPE (type mark)",
           "value": "A",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "6' - 8\"",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         },
         {
           "label": "SCREE N (screen)",
           "value": "Y",
-          "source": "window-schedule.html row 17"
+          "source": "window-schedule.html table row 18"
         }
       ],
       "criteria": [],
@@ -2096,47 +2225,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "22",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "LOCATION (room)",
           "value": "HALL 302",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 0\"",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "6' - 0\"",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "TYPE (operation)",
           "value": "FIXED",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "TYPE (type mark)",
           "value": "M",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "7' - 0\"",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         },
         {
           "label": "SCREE N (screen)",
           "value": "",
-          "source": "window-schedule.html row 18"
+          "source": "window-schedule.html table row 19"
         }
       ],
       "criteria": [],
@@ -2162,47 +2291,47 @@
         {
           "label": "SYMBOL (mark)",
           "value": "23",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "LOCATION (room)",
           "value": "STAIR S1",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "NOMINAL SIZE / WIDTH (width)",
           "value": "2' - 0\"",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "NOMINAL SIZE / HEIGHT (height)",
           "value": "6' - 0\"",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "TYPE (operation)",
           "value": "FIXED",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "TYPE (type mark)",
           "value": "M",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "HEAD HEIGHT (head height)",
           "value": "9' - 0\"",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "EGRESS (egress)",
           "value": "",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         },
         {
           "label": "SCREE N (screen)",
           "value": "",
-          "source": "window-schedule.html row 19"
+          "source": "window-schedule.html table row 20"
         }
       ],
       "criteria": [],
@@ -2218,17 +2347,32 @@
   ],
   "attention": [
     {
+      "code": "likely_fails",
+      "title": "Likely Fails the schedule can't prove",
+      "detail": "W-7: expect a Fail on sill height: the frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions. | W-12: expect a Fail on clear height: only the bottom sash opens, about 24 in before the frame, exactly the 24 in minimum, leaving nothing for the frame. Ask for the sash split and the manufacturer's clear opening.",
+      "related": [
+        "W-7",
+        "W-12"
+      ]
+    },
+    {
       "code": "architect_allowable_mismatch",
       "title": "Architect's allowable height disagrees with Table 504.3",
-      "detail": "The code analysis states an allowable height of 60'-0\" ('60\\' - 0\" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of row `R` / `S`, column `V-B`, row `R` / `S13R`, column `V-B`, so the architect may have read a sprinkler sub-row other than `S13D`.",
+      "detail": "The code analysis states an allowable height of 60'-0\" ('60\\' - 0\" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of the `S` and `S13R` sub-rows in the same row and column, so the architect may have read the wrong sprinkler sub-row (this building resolves to `S13D`).",
       "related": [
         "H-1"
       ]
     },
     {
+      "code": "schedule_number_gaps",
+      "title": "Window numbers skip",
+      "detail": "The schedule has no window 9, 15–19. Rows may have been lost in scanning, or the windows renumbered; check the schedule sheet (POL-GEN-SCHEDULE-GAPS).",
+      "related": []
+    },
+    {
       "code": "egress_claim_not_supported",
       "title": "Code analysis claim about escape openings is not supported",
-      "detail": "The code analysis says 'PROVIDED AT ALL SLEEPING ROOMS PER IBC 1030. SEE WINDOW SCHEDULE, SHEET A6.1' (row 12). The schedule does not show a complying opening in: BEDROOM 101 (room 101) (Could Not Evaluate); ADU BEDROOM 107 (room 107) (Could Not Evaluate); BEDROOM 203 (room 203) (Fail); BEDROOM 205 (room 205) (Could Not Evaluate); BEDROOM 301 (room 301) (Fail); GUEST BED 303 (room 303) (Could Not Evaluate).",
+      "detail": "The code analysis says 'PROVIDED AT ALL SLEEPING ROOMS PER IBC 1030. SEE WINDOW SCHEDULE, SHEET A6.1' (table row 13). The schedule does not show a complying opening in: BEDROOM 101 (room 101) (Could Not Evaluate); ADU BEDROOM 107 (room 107) (Could Not Evaluate); BEDROOM 203 (room 203) (Fail); BEDROOM 205 (room 205) (Could Not Evaluate); BEDROOM 301 (room 301) (Fail); GUEST BED 303 (room 303) (Could Not Evaluate).",
       "related": [
         "R-101",
         "R-107",
@@ -2289,6 +2433,15 @@
       "rule": "A situation no policy covers is Could Not Evaluate with 'needs a policy decision'.",
       "rests_on": [
         "src/NOTES.md decision: judgement calls are named policy rules"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-GEN-SCHEDULE-GAPS": {
+      "id": "POL-GEN-SCHEDULE-GAPS",
+      "title": "Gaps in a numbered schedule are reported",
+      "rule": "When every window mark is a whole number, numbers missing between the lowest and highest are listed for the plan checker: rows may have been lost in scanning, or windows renumbered. No verdict changes.",
+      "rests_on": [
+        "src/NOTES.md decision: report review rounds, 2026-11-08"
       ],
       "authority": "project_decision"
     },
@@ -2454,6 +2607,17 @@
         "src/NOTES.md, Plan from here: open decisions #5"
       ],
       "authority": "challenge_brief"
+    },
+    "POL-E-AT-LIMIT": {
+      "id": "POL-E-AT-LIMIT",
+      "title": "A bound sitting exactly at a limit is flagged as a likely Fail",
+      "rule": "A frame sill exactly at the 44 in maximum, or a partial-opening note (bottom sash, half a slider) at or below a minimum, cannot prove a Fail from the schedule, so the verdict stays Could Not Evaluate. The window is flagged 'expect a Fail' and listed first among the items to check, because any frame deduction tips it over.",
+      "rests_on": [
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "src/NOTES.md decision: report review rounds, 2026-11-08"
+      ],
+      "authority": "project_decision"
     },
     "POL-E-OPERATION-UNKNOWN": {
       "id": "POL-E-OPERATION-UNKNOWN",

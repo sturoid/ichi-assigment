@@ -25,6 +25,8 @@ class Criterion:
     reason: str
     policies: list[str] = field(default_factory=list)
     settle: str = ""               # what document would settle a Could Not Evaluate
+    brief: str = ""                # short plain statement for the report ("frame sill 50 in, above 44")
+    flags: list[dict] = field(default_factory=list)   # raised onto the window finding
 
 
 @dataclass

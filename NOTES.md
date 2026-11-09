@@ -9,7 +9,7 @@ python -m services.planCheck ../tests/fixtures/code-analysis.html ../tests/fixtu
 python -m services.planCheck.evals ../tests/fixtures/expected/verdicts.json ../findings.json --report ../REPORT.md
 ```
 
-To run the tests, use `python -m unittest` in each of `tests/services/htmlParser`, `tests/services/codeStore` and `tests/services/planCheck`. That is 85 + 38 + 84 tests. Eight parser tests are known gaps and are skipped on purpose.
+To run the tests, use `python -m unittest` in each of `tests/services/htmlParser`, `tests/services/codeStore` and `tests/services/planCheck`. That is 85 + 38 + 86 tests. Eight parser tests are known gaps and are skipped on purpose.
 
 ## How it works
 
@@ -42,6 +42,15 @@ There are no model calls at run time. Every step is plain, tested Python.
    - The key rules: nominal size is an upper bound, so it can prove a Fail but never a Pass. A sill derived as head height minus window height is the *frame* sill, a lower bound on the clear opening's bottom.
 6. **Report.** `REPORT.md` and `findings.json` render from one list of findings. A test checks that the committed files are byte-for-byte what the tool writes.
 
+**Why the report is laid out this way.** It follows the plan checker's job, in order:
+1. **Corrections.** These are worded like correction-letter comments and grouped by room, so Bedroom 203 and its failing window are one item. Each states the arithmetic and only the code sections that decide it.
+2. **Check these before relying on the report.** This is where the tool could be wrong or the drawings could hide something: likely Fails the schedule can't prove, missing window numbers, OCR repairs, an ambiguous room, interpretations.
+3. **Information to request.** The Could Not Evaluate findings, rewritten as requests to the architect.
+4. **Evidence.** Compact tables follow. The egress-window table shows, for each window, what was read and each requirement's result, with the code section in the column header. Rules shared by every window, such as nominal size being an upper bound, are stated once above it.
+5. **Appendix.** It holds what a reviewer needs but a plan checker doesn't: code file lines, source rows, the named rules and input hashes.
+
+The report went from 585 lines to about 240 after three independent reviews: two from Sonnet and one from me.
+
 **What varies and what doesn't.** The project files are inputs. Another project's code analysis and window schedule, with different values, column names, order and OCR damage, are read the same way (brief, line 92). The code files are a fixed library: IBC 2018 Table 504.3, its notes and Section 1030 (brief, lines 13, 53 and 72). They are curated once with line-cited quotes, not re-read per project. Swapping in another edition means updating `planCheck/citations.py`. If a code file changes without that update, the startup quote check stops the run rather than apply stale limits.
 
 ## How I used AI and checked it
@@ -60,6 +69,7 @@ There are no model calls at run time. Every step is plain, tested Python.
     - an unnumbered `BEDRROM 2` split from `BEDROOM 2`;
     - `BEDROOM BATH` read as a bedroom;
     - a bare `840` read as 840 sq ft.
+  - Three reviews of the report agreed on every verdict. Two Sonnet reviews independently found something I had missed: the schedule skips window numbers 9 and 15–19. The report now flags gaps like that for any numbered schedule.
 
 ## What I couldn't verify, and what would settle it
 
@@ -79,6 +89,8 @@ There are no model calls at run time. Every step is plain, tested Python.
 
 - **A window cannot get a Pass from a schedule like this one.** Three requirements (hardware, screens, public way) never appear on a schedule, so I count them as Could Not Evaluate on every egress window (`POL-E-UNSEEN`). The Sonnet reviewer argued for a Pass on the measurable criteria, with those three listed as unverified. I kept the stricter reading, because a wrong Pass is worse than an honest Could Not Evaluate. It is one rule to change. On these fixtures it changes nothing, because no window has a net clear opening.
 - **Guest Bed 303 is Could Not Evaluate, not Fail.** No window is marked egress, but 1030.1 requires a complying opening to *exist*, and window 21 could comply at nominal size. So the finding is flagged "ask the architect to designate one" instead.
+- **Bedrooms 203 and 301 are Fail, although Exception 2 can't be ruled out.** Their only designated windows fail, and no other window could comply. Exception 2 (an exit door to the outside) is something the applicant claims. Here, the code analysis claims the openings are provided "per IBC 1030, see window schedule". Each Fail says "unless Exception 2 applies" and asks for the floor plans. One Sonnet review preferred Could Not Evaluate; the other agreed with Fail.
+- **Window 7 is Could Not Evaluate, flagged "expect a Fail".** Its frame sill is exactly 44 in, so any bottom frame puts the clear opening over the limit. That figure rests on head height being measured to the top of the unit. Windows 10 and 20 fail on sill with 6 in and 16 in to spare, which covers that uncertainty. Window 7 has no margin, so it is listed first among the items to check, not reported as a Fail (`POL-E-AT-LIMIT`). Window 12 is handled the same way: its bottom sash gives about 24 in, exactly the minimum.
 - **Height is a Fail, despite footnote a's unavailable exceptions.** The code analysis claims no exception, so a Fail stands unless an exception is claimed. The architect's 60 ft equals the R / S and R / S13R cells, so they probably read the wrong sprinkler sub-row. The report says so.
 
 ## With another day

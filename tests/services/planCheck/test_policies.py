@@ -109,8 +109,8 @@ class Policies(unittest.TestCase):
     def test_pol_h_architect(self):
         h, attn = check_height(S, code_analysis(ALLOWABLE_HEIGHT="60' - 0\" PER TABLE 504.3"))
         fl = next(f for f in h.flags if f["code"] == "architect_allowable_mismatch")
-        self.assertIn("`R` / `S`", fl["message"])
-        self.assertIn("`R` / `S13R`", fl["message"])
+        self.assertIn("the `S` and `S13R` sub-rows", fl["message"])  # R / V-B holds 60 in both
+        self.assertIn("resolves to `S13D`", fl["message"])
         self.assertEqual(attn[0].code, "architect_allowable_mismatch")
         h, attn = check_height(S, code_analysis(ALLOWABLE_HEIGHT="40' - 0\""))
         self.assertEqual(attn, [])
@@ -211,6 +211,33 @@ class Policies(unittest.TestCase):
         f, _ = egress([win(w="3' - 0\"", h="4' - 0\"", op="SLIDER")])
         self.assertIn("Note only", crit(f["W-1"], "width").reason)
         self.assertEqual(f["W-1"].verdict, CNE)
+
+    def test_pol_e_at_limit(self):
+        f, attn = egress([win(h="3' - 0\"", head="6' - 8\"")])  # frame sill 80 - 36 = 44, exactly the limit
+        self.assertEqual(f["W-1"].verdict, CNE)  # still not proof
+        self.assertIn("sill_at_limit", [x["code"] for x in f["W-1"].flags])
+        f, _ = egress([win(h="3' - 0\"", head="6' - 7\"")])  # 43 in: margin, no flag
+        self.assertNotIn("sill_at_limit", [x["code"] for x in f["W-1"].flags])
+        f, _ = egress([win(w="3' - 0\"", h="4' - 0\"", op="S.H.")])  # bottom sash ~24 in: at the minimum
+        self.assertEqual(f["W-1"].verdict, CNE)
+        self.assertIn("partial_opening_at_minimum", [x["code"] for x in f["W-1"].flags])
+        f, _ = egress([win(w="3' - 0\"", h="5' - 0\"", op="S.H.", head="7' - 6\"")])  # ~30 in: above it
+        self.assertNotIn("partial_opening_at_minimum", [x["code"] for x in f["W-1"].flags])
+        res = run_checks(S, code_analysis(), schedule([win(h="3' - 0\"", head="6' - 8\"")]))
+        self.assertEqual(res.attention[0].code, "likely_fails")
+        self.assertEqual(res.attention[0].related, ["W-1"])
+
+    def test_pol_gen_schedule_gaps(self):
+        from services.planCheck.checks import schedule_gaps
+        self.assertEqual(schedule_gaps(["1", "2", "4", "8", "9"]), "3, 5–7")
+        self.assertEqual(schedule_gaps(["1", "2", "3"]), "")
+        self.assertEqual(schedule_gaps(["A", "B", "D"]), "")  # lettered marks: no sequence to check
+        res = run_checks(S, code_analysis(), schedule([win("1"), win("4", room="BEDROOM 202")]))
+        gap = next(a for a in res.attention if a.code == "schedule_number_gaps")
+        self.assertIn("2–3", gap.detail)
+        res2 =run_checks(S, code_analysis(), schedule([win("1"), win("2", room="BEDROOM 202")]))
+        self.assertEqual([f.verdict for f in res.all if f.id in ("W-1", "R-201")],
+                         [f.verdict for f in res2.all if f.id in ("W-1", "R-201")])
 
     def test_pol_e_operation_unknown(self):
         f, _ = egress([win(op="TILT-TURN")])

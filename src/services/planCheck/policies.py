@@ -44,6 +44,10 @@ POLICIES: dict[str, Policy] = {p.id: p for p in [
     Policy("POL-GEN-UNCOVERED", "No rule, no verdict",
            "A situation no policy covers is Could Not Evaluate with 'needs a policy decision'.",
            ("src/NOTES.md decision: judgement calls are named policy rules",), "project_decision"),
+    Policy("POL-GEN-SCHEDULE-GAPS", "Gaps in a numbered schedule are reported",
+           "When every window mark is a whole number, numbers missing between the lowest and highest are listed for "
+           "the plan checker: rows may have been lost in scanning, or windows renumbered. No verdict changes.",
+           ("src/NOTES.md decision: report review rounds, 2026-11-08",), "project_decision"),
     # --- Check 1: height ---------------------------------------------------------
     Policy("POL-H-INTERPRETATION", "Brief rules may support a verdict, disclosed",
            "A mapping that rests on the challenge brief rather than code text (R-3 read as row R, because IBC 310 is "
@@ -126,6 +130,13 @@ POLICIES: dict[str, Policy] = {p.id: p for p in [
            "half-size figure as a labelled note, never as proof of a Fail, because panel splits vary (a three-panel "
            "slider opens two thirds; sashes can be unequal).",
            (C.BRIEF_OPERATION.ref(), f"{_DECISIONS} #5"), "challenge_brief"),
+    Policy("POL-E-AT-LIMIT", "A bound sitting exactly at a limit is flagged as a likely Fail",
+           "A frame sill exactly at the 44 in maximum, or a partial-opening note (bottom sash, half a slider) at or "
+           "below a minimum, cannot prove a Fail from the schedule, so the verdict stays Could Not Evaluate. The "
+           "window is flagged 'expect a Fail' and listed first among the items to check, because any frame "
+           "deduction tips it over.",
+           (C.MAX_SILL_CITE.ref(), C.MIN_HEIGHT_CITE.ref(), "src/NOTES.md decision: report review rounds, 2026-11-08"),
+           "project_decision"),
     Policy("POL-E-OPERATION-UNKNOWN", "Unrecognised window type",
            "If the operation isn't recognised, whether and how the window opens is Could Not Evaluate.",
            (C.OPERABLE.ref(),), "code_text"),

@@ -5,7 +5,7 @@
 
 Checks every expected verdict and flag, flags findings the eval set doesn't know
 (so a new finding can't slip in unreviewed), and, with --report, checks that every
-verdict in REPORT.md's index table agrees with findings.json. Exit 1 on any miss.
+verdict REPORT.md shows agrees with findings.json. Exit 1 on any miss.
 """
 from __future__ import annotations
 
@@ -17,11 +17,29 @@ from pathlib import Path
 
 
 def report_verdicts(md: str) -> dict[str, str]:
-    """{id: verdict} from the 'All findings' index table of REPORT.md."""
-    section = md.split("## All findings", 1)[1].split("\n## ", 1)[0]
-    out = {}
-    for m in re.finditer(r"^\| \[([A-Z]-[^\]]+)\]\([^)]*\) \| \S+ ([A-Za-z ]+?) \|", section, flags=re.M):
-        out[m.group(1)] = m.group(2).strip()
+    """{id: verdict} as REPORT.md shows them: from finding headings ('### H-1 · ... · **Fail**') and
+    from table rows whose first cell is a finding id and which have a verdict cell. An id shown with
+    two different verdicts maps to 'conflict'."""
+    verdicts = ("Pass", "Fail", "Could Not Evaluate", "Not Applicable")
+    out: dict[str, str] = {}
+
+    def put(fid, v):
+        out[fid] = v if out.get(fid, v) == v else "conflict"
+
+    for line in md.splitlines():
+        h = re.match(r"^#{2,4} ([HRW]-[\w-]+) · .* · \*\*([A-Za-z ]+)\*\*\s*$", line)
+        if h and h.group(2) in verdicts:
+            put(h.group(1), h.group(2))
+            continue
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        first = re.sub(r"<[^>]+>", "", cells[0]).strip()
+        if not re.fullmatch(r"[HRW]-[\w-]+", first):
+            continue
+        found = [c.replace("**", "").strip() for c in cells[1:] if c.replace("**", "").strip() in verdicts]
+        if found:
+            put(first, found[-1])
     return out
 
 
