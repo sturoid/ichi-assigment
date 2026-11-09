@@ -1,0 +1,2507 @@
+{
+  "schema": "plancheck-findings/1",
+  "inputs": [
+    {
+      "role": "Code analysis (CODE ANALYSIS - SHEET A0.1)",
+      "name": "code-analysis.html",
+      "sha256": "a0dc18fc9c36e8c26cb4f49332bde4b56353033cbe4b64cb505de00d0459c59c"
+    },
+    {
+      "role": "Window schedule",
+      "name": "window-schedule.html",
+      "sha256": "85de501d0b3c91f3f6322fa2da39e54482ee469b5bacd9c6342d01e4c54eb61b"
+    }
+  ],
+  "summary": {
+    "Pass": 0,
+    "Fail": 6,
+    "Could Not Evaluate": 8,
+    "Not Applicable": 10
+  },
+  "findings": [
+    {
+      "id": "H-1",
+      "check": "height",
+      "subject": "Building height",
+      "verdict": "Fail",
+      "summary": "41'-6\" exceeds the 40 ft allowed by Table 504.3, row `R` / `S13D`, column `V-B` by 1'-6\".",
+      "code_refs": [
+        "Table 504.3, row `R` / `S13D`, column `V-B` = 40 ft",
+        "IBC 504.3 (code/table-504.3-notes.md line 7)",
+        "Table 504.3 footnote a (code/table-504.3-notes.md line 19)",
+        "Table 504.3 footnote h (code/table-504.3-notes.md line 33)"
+      ],
+      "evidence": [
+        {
+          "label": "OCCUPANCY GROUP",
+          "value": "R-3",
+          "source": "code-analysis.html row 3, label 'OCCUPANCY GROUP'"
+        },
+        {
+          "label": "CONSTRUCTION TYPE",
+          "value": "V-B",
+          "source": "code-analysis.html row 4, label 'CONSTRUCTION TYPE'"
+        },
+        {
+          "label": "FIRE SPRINKLE RS",
+          "value": "YES - AUTOMATIC SPRINKLER SYSTEM THROUGHOUT PER NFPA 13D (IBC 903.3.1.3)",
+          "source": "code-analysis.html row 5, label 'FIRE SPRINKLE RS'"
+        },
+        {
+          "label": "BUILDING HEIGHT ABOVE GRADE PLAN E",
+          "value": "41' - 6\" (TO AVG. HT. OF HIGHEST ROOF SURFACE)",
+          "source": "code-analysis.html row 7, label 'BUILDING HEIGHT ABOVE GRADE PLAN E'"
+        },
+        {
+          "label": "ALLOWABLE HEIGHT",
+          "value": "60' - 0\" PER TABLE 504.3",
+          "source": "code-analysis.html row 8, label 'ALLOWABLE HEIGHT'"
+        }
+      ],
+      "criteria": [],
+      "working": [
+        "occupancy 'R-3' -> `R` (resolver rule occupancy.numbered_group)",
+        "sprinklers 'YES - AUTOMATIC SPRINKLER SYSTEM THROUGHOUT PER NFPA 13D (IBC 903.3.1.3)' -> `S13D` (resolver rule sprinkler.nfpa13d)",
+        "construction 'V-B' -> `V-B` (resolver rule construction.exact)",
+        "building height '41\\' - 6\"' = 498 in = 41.5 ft",
+        "lookup Table 504.3, row `R` / `S13D`, column `V-B` -> 40",
+        "footnote a (printed on the whole table): \"See Chapters 4 and 5 for specific exceptions to the allowable height in this chapter.\" Points to: IBC CH 4 (IBC:2018:CH4-CH5, unavailable); IBC CH 5 (IBC:2018:CH4-CH5, unavailable).",
+        "footnote h (printed on the occupancy row label): \"New Group R occupancies are required to be protected by an automatic sprinkler system in accordance with Section 903.2.8.\" Points to: IBC 903.2.8 (IBC:2018:903, unavailable).",
+        "41.5 ft > 40 ft; over by 1.5 ft = 1'-6\""
+      ],
+      "flags": [
+        {
+          "code": "label_split_word",
+          "message": "label printed as 'FIRE SPRINKLE RS' (a word split across lines); read as 'FIRE SPRINKLERS'"
+        },
+        {
+          "code": "label_split_word",
+          "message": "label printed as 'BUILDING HEIGHT ABOVE GRADE PLAN E' (a word split across lines); read as 'BUILDING HEIGHT ABOVE GRADE PLANE'"
+        },
+        {
+          "code": "architect_allowable_mismatch",
+          "message": "The code analysis states an allowable height of 60'-0\" ('60\\' - 0\" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of row `R` / `S`, column `V-B`, row `R` / `S13R`, column `V-B`, so the architect may have read a sprinkler sub-row other than `S13D`."
+        }
+      ],
+      "policies": [
+        "POL-H-STATED-HEIGHT",
+        "POL-H-INTERPRETATION",
+        "POL-H-SPRINKLER-COVERAGE",
+        "POL-H-FOOTNOTES",
+        "POL-H-ARCHITECT"
+      ],
+      "interpretations": [
+        "occupancy 'R-3' read as row `R`: IBC 310 (occupancy classification) is not provided; the brief's rule places a numbered group in its letter's row unless the table gives the numbered group its own row (as for H and I). (authority: challenge_brief, instructions/README.md line 54)"
+      ],
+      "settle": [
+        "Building sections / roof plan (PROJECT:BUILDING-SECTIONS, not provided)",
+        "Civil sheet C1.0 (grade plane) (PROJECT:C1.0:CIVIL, not provided)",
+        "Chapters 4 and 5 (height exceptions) (IBC:2018:CH4-CH5, not provided; related through footnote a)",
+        "Automatic Sprinkler Systems (903.2, 903.3.1.1-903.3.1.3) (IBC:2018:903, not provided; related through footnote h)"
+      ],
+      "related": []
+    },
+    {
+      "id": "R-101",
+      "check": "egress_room",
+      "subject": "BEDROOM 101 (room 101)",
+      "verdict": "Could Not Evaluate",
+      "summary": "W-1, W-3 could not be evaluated. The room has a complying opening only if one of them is shown to comply.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "windows",
+          "value": "1 (L.H. CASM'T, egress 'Y'), 2 (FIXED, egress ''), 3 (R.H. CASM'T, egress 'Y')",
+          "source": "window-schedule.html, LOCATION 'BEDROOM 101'"
+        }
+      ],
+      "criteria": [],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2; room 101 is on floor 1 (code analysis room numbering), below the fourth story above grade plane",
+        "windows in this room: W-1, W-2, W-3",
+        "designated egress: W-1 Could Not Evaluate, W-3 Could Not Evaluate"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-ROOM-ROLLUP",
+        "POL-E-SLEEPING",
+        "POL-E-ROOM-KEY"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "W-1",
+        "W-2",
+        "W-3"
+      ]
+    },
+    {
+      "id": "R-107",
+      "check": "egress_room",
+      "subject": "ADU BEDROOM 107 (room 107)",
+      "verdict": "Could Not Evaluate",
+      "summary": "W-7 could not be evaluated. The room has a complying opening only if it is shown to comply.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "windows",
+          "value": "7 (L.H. CASM'T, egress 'Y')",
+          "source": "window-schedule.html, LOCATION 'ADU BEDROOM 107'"
+        }
+      ],
+      "criteria": [],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2; room 107 is on floor 1 (code analysis room numbering), below the fourth story above grade plane",
+        "windows in this room: W-7",
+        "designated egress: W-7 Could Not Evaluate"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-ROOM-ROLLUP",
+        "POL-E-SLEEPING",
+        "POL-E-ROOM-KEY"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "W-7"
+      ]
+    },
+    {
+      "id": "R-203",
+      "check": "egress_room",
+      "subject": "BEDROOM 203 (room 203)",
+      "verdict": "Fail",
+      "summary": "The designated opening (W-10) fails, and no other window in the room could comply. Unless Exception 2 applies (an exit door to a public way), the room has no escape opening.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+        "IBC 1030.1 Exception 2 (code/section-1030-emergency-escape-and-rescue.md line 19)"
+      ],
+      "evidence": [
+        {
+          "label": "windows",
+          "value": "10 (L.H. CASM'T, egress 'Y'), 11 (FIXED, egress '')",
+          "source": "window-schedule.html, LOCATION 'BEDROOM 203'"
+        }
+      ],
+      "criteria": [],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2; room 203 is on floor 2 (code analysis room numbering), below the fourth story above grade plane",
+        "windows in this room: W-10, W-11",
+        "designated egress: W-10 Fail",
+        "other windows as candidates: W-11 cannot comply"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-ROOM-ROLLUP",
+        "POL-E-SLEEPING",
+        "POL-E-ROOM-KEY",
+        "POL-E-EXCEPTION-2"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) (Exception 2: exit door)"
+      ],
+      "related": [
+        "W-10",
+        "W-11"
+      ]
+    },
+    {
+      "id": "R-205",
+      "check": "egress_room",
+      "subject": "BEDROOM 205 (room 205)",
+      "verdict": "Could Not Evaluate",
+      "summary": "W-12 could not be evaluated; W-13 fails. The room has a complying opening only if it is shown to comply.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "windows",
+          "value": "12 (S.H., egress 'Y'), 13 (FIXED, egress 'Y')",
+          "source": "window-schedule.html, LOCATION 'BEDRROM 205', 'BEDROOM 205'"
+        }
+      ],
+      "criteria": [],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2; room 205 is on floor 2 (code analysis room numbering), below the fourth story above grade plane",
+        "windows in this room: W-12, W-13",
+        "designated egress: W-12 Could Not Evaluate, W-13 Fail"
+      ],
+      "flags": [
+        {
+          "code": "room_name_variants",
+          "message": "one room number, several spellings: 'BEDRROM 205', 'BEDROOM 205' (POL-E-ROOM-KEY)"
+        },
+        {
+          "code": "ocr_room_name",
+          "message": "room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan)"
+        }
+      ],
+      "policies": [
+        "POL-E-ROOM-ROLLUP",
+        "POL-E-SLEEPING",
+        "POL-E-ROOM-KEY"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "W-12",
+        "W-13"
+      ]
+    },
+    {
+      "id": "R-301",
+      "check": "egress_room",
+      "subject": "BEDROOM 301 (room 301)",
+      "verdict": "Fail",
+      "summary": "The designated opening (W-20) fails, and no other window in the room could comply. Unless Exception 2 applies (an exit door to a public way), the room has no escape opening.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+        "IBC 1030.1 Exception 2 (code/section-1030-emergency-escape-and-rescue.md line 19)"
+      ],
+      "evidence": [
+        {
+          "label": "windows",
+          "value": "20 (L.H. CASM'T, egress 'Y')",
+          "source": "window-schedule.html, LOCATION 'BEDROOM 301'"
+        }
+      ],
+      "criteria": [],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2; room 301 is on floor 3 (code analysis room numbering), below the fourth story above grade plane",
+        "windows in this room: W-20",
+        "designated egress: W-20 Fail",
+        "other windows as candidates: none"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-ROOM-ROLLUP",
+        "POL-E-SLEEPING",
+        "POL-E-ROOM-KEY",
+        "POL-E-EXCEPTION-2"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) (Exception 2: exit door)"
+      ],
+      "related": [
+        "W-20"
+      ]
+    },
+    {
+      "id": "R-303",
+      "check": "egress_room",
+      "subject": "GUEST BED 303 (room 303)",
+      "verdict": "Could Not Evaluate",
+      "summary": "No window is designated as the escape opening; W-21 could comply at nominal size but is not marked egress. Ask the architect to designate a complying opening.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "windows",
+          "value": "21 (L.H. CASM'T, egress '')",
+          "source": "window-schedule.html, LOCATION 'GUEST BED 303'"
+        }
+      ],
+      "criteria": [],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2; room 303 is on floor 3 (code analysis room numbering), below the fourth story above grade plane",
+        "windows in this room: W-21",
+        "designated egress: none",
+        "other windows as candidates: W-21 could comply"
+      ],
+      "flags": [
+        {
+          "code": "no_opening_designated",
+          "message": "No window is designated as the escape opening; W-21 could comply at nominal size but is not marked egress. Ask the architect to designate a complying opening."
+        }
+      ],
+      "policies": [
+        "POL-E-ROOM-ROLLUP",
+        "POL-E-SLEEPING",
+        "POL-E-ROOM-KEY"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+      ],
+      "related": [
+        "W-21"
+      ]
+    },
+    {
+      "id": "W-1",
+      "check": "egress_window",
+      "subject": "Window 1, BEDROOM 101",
+      "verdict": "Could Not Evaluate",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "code_refs": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "1",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDROOM 101",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 6\"",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "4' - 0\"",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "L.H. CASM'T",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "A",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "Y",
+          "source": "window-schedule.html row 3"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 3"
+        }
+      ],
+      "criteria": [
+        {
+          "requirement": "Opens by normal operation",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "type \"L.H. CASM'T\" (casement)",
+          "verdict": "Pass",
+          "reason": "the scheduled type opens",
+          "policies": [],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+          "read": "nominal 30 in x 48 in = 1440 sq in = 10.00 sq ft (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "the nominal size exceeds 5.7 sq ft, but the net clear opening is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-GRADE-FLOOR",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear height >= 24 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal height '4\\' - 0\"' = 48 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 48 in exceeds 24 in; the clear height is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear width >= 20 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal width '2\\' - 6\"' = 30 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 30 in exceeds 20 in; the clear width is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Bottom of clear opening <= 44 in above the floor",
+          "code": "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+          "read": "derived frame sill = head height 80 in - nominal height 48 in = 32 in (2'-8\")",
+          "verdict": "Could Not Evaluate",
+          "reason": "the frame sill is 32 in (12 in below the limit), but the clear opening's bottom sits higher by the bottom frame, which is not given",
+          "policies": [
+            "POL-E-SILL-LOWER"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+        },
+        {
+          "requirement": "Operable from inside without keys or tools",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "hardware not scheduled",
+          "verdict": "Could Not Evaluate",
+          "reason": "not shown on the schedule",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Screens, bars or grilles release from inside",
+          "code": "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+          "read": "SCREEN column 'Y'",
+          "verdict": "Could Not Evaluate",
+          "reason": "a screen is scheduled; whether it releases from inside is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Opens onto a public way, yard or court",
+          "code": "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+          "read": "not on the schedule",
+          "verdict": "Could Not Evaluate",
+          "reason": "the window's location on the site is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+        }
+      ],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 101 is on floor 1 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-NOMINAL-UPPER",
+        "POL-E-GRADE-FLOOR",
+        "POL-E-NO-FRAME-ASSUMPTION",
+        "POL-E-SILL-LOWER",
+        "POL-E-UNSEEN",
+        "POL-E-SCOPE"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "R-101"
+      ]
+    },
+    {
+      "id": "W-2",
+      "check": "egress_window",
+      "subject": "Window 2, BEDROOM 101",
+      "verdict": "Not Applicable",
+      "summary": "Not marked egress; 1030 needs one complying opening per sleeping room, not every window. Considered in R-101.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "2",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDROOM 101",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "4' - 0\"",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "FIXED",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "B",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 4"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "",
+          "source": "window-schedule.html row 4"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-DESIGNATED"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": [
+        "R-101"
+      ]
+    },
+    {
+      "id": "W-3",
+      "check": "egress_window",
+      "subject": "Window 3, BEDROOM 101",
+      "verdict": "Could Not Evaluate",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 10.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "code_refs": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "3",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDROOM 101",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 6\"",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "4' - 0\"",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "R.H. CASM'T",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "A",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "Y",
+          "source": "window-schedule.html row 5"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 5"
+        }
+      ],
+      "criteria": [
+        {
+          "requirement": "Opens by normal operation",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "type \"R.H. CASM'T\" (casement)",
+          "verdict": "Pass",
+          "reason": "the scheduled type opens",
+          "policies": [],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+          "read": "nominal 30 in x 48 in = 1440 sq in = 10.00 sq ft (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "the nominal size exceeds 5.7 sq ft, but the net clear opening is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-GRADE-FLOOR",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear height >= 24 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal height '4\\' - 0\"' = 48 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 48 in exceeds 24 in; the clear height is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear width >= 20 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal width '2\\' - 6\"' = 30 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 30 in exceeds 20 in; the clear width is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Bottom of clear opening <= 44 in above the floor",
+          "code": "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+          "read": "derived frame sill = head height 80 in - nominal height 48 in = 32 in (2'-8\")",
+          "verdict": "Could Not Evaluate",
+          "reason": "the frame sill is 32 in (12 in below the limit), but the clear opening's bottom sits higher by the bottom frame, which is not given",
+          "policies": [
+            "POL-E-SILL-LOWER"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+        },
+        {
+          "requirement": "Operable from inside without keys or tools",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "hardware not scheduled",
+          "verdict": "Could Not Evaluate",
+          "reason": "not shown on the schedule",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Screens, bars or grilles release from inside",
+          "code": "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+          "read": "SCREEN column 'Y'",
+          "verdict": "Could Not Evaluate",
+          "reason": "a screen is scheduled; whether it releases from inside is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Opens onto a public way, yard or court",
+          "code": "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+          "read": "not on the schedule",
+          "verdict": "Could Not Evaluate",
+          "reason": "the window's location on the site is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+        }
+      ],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 101 is on floor 1 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-NOMINAL-UPPER",
+        "POL-E-GRADE-FLOOR",
+        "POL-E-NO-FRAME-ASSUMPTION",
+        "POL-E-SILL-LOWER",
+        "POL-E-UNSEEN",
+        "POL-E-SCOPE"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "R-101"
+      ]
+    },
+    {
+      "id": "W-4",
+      "check": "egress_window",
+      "subject": "Window 4, OFFICE 102",
+      "verdict": "Not Applicable",
+      "summary": "'OFFICE 102' is not clearly a sleeping room (flagged for review); 1030.1 requires escape openings in sleeping rooms.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "4",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "OFFICE 102",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "3' - O\"",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "5' - 0\"",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "L.H. CASM'T",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "C",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "7' - 0\"",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 6"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 6"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [
+        {
+          "code": "ambiguous_room",
+          "message": "'OFFICE' rooms are sometimes used for sleeping; not treated as a sleeping room. Confirm the use on the floor plan."
+        },
+        {
+          "code": "ocr_repair",
+          "message": "inches 'O' read as '0' (a letter where a digit belongs; OCR damage)"
+        }
+      ],
+      "policies": [
+        "POL-E-SLEEPING"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": []
+    },
+    {
+      "id": "W-5",
+      "check": "egress_window",
+      "subject": "Window 5, LIVING 103",
+      "verdict": "Not Applicable",
+      "summary": "'LIVING 103' is not a sleeping room; 1030.1 requires escape openings in sleeping rooms.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "5",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "LIVING 103",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "6' - 0\"",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "5' - 0\"",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "FIXED",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "D",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "7' - 0\"",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 7"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "",
+          "source": "window-schedule.html row 7"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-SLEEPING"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": []
+    },
+    {
+      "id": "W-6",
+      "check": "egress_window",
+      "subject": "Window 6, KITCHEN 104",
+      "verdict": "Not Applicable",
+      "summary": "'KITCHEN 104' is not a sleeping room; 1030.1 requires escape openings in sleeping rooms.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "6",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "KITCHEN 104",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "AWNING",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "E",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "7' - 0\"",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 8"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 8"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-SLEEPING"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": []
+    },
+    {
+      "id": "W-7",
+      "check": "egress_window",
+      "subject": "Window 7, ADU BEDROOM 107",
+      "verdict": "Could Not Evaluate",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 7.50 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 44 in (3'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "code_refs": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "7",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "ADU BEDROOM 107",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2'-6\"",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "L.H. CASM'T",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "F",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "Y",
+          "source": "window-schedule.html row 9"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 9"
+        }
+      ],
+      "criteria": [
+        {
+          "requirement": "Opens by normal operation",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "type \"L.H. CASM'T\" (casement)",
+          "verdict": "Pass",
+          "reason": "the scheduled type opens",
+          "policies": [],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+          "read": "nominal 30 in x 36 in = 1080 sq in = 7.50 sq ft (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "the nominal size exceeds 5.7 sq ft, but the net clear opening is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-GRADE-FLOOR",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear height >= 24 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal height '3\\' - 0\"' = 36 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 36 in exceeds 24 in; the clear height is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear width >= 20 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal width '2\\'-6\"' = 30 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 30 in exceeds 20 in; the clear width is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Bottom of clear opening <= 44 in above the floor",
+          "code": "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+          "read": "derived frame sill = head height 80 in - nominal height 36 in = 44 in (3'-8\")",
+          "verdict": "Could Not Evaluate",
+          "reason": "the frame sill is 44 in (0 in below the limit), but the clear opening's bottom sits higher by the bottom frame, which is not given",
+          "policies": [
+            "POL-E-SILL-LOWER"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+        },
+        {
+          "requirement": "Operable from inside without keys or tools",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "hardware not scheduled",
+          "verdict": "Could Not Evaluate",
+          "reason": "not shown on the schedule",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Screens, bars or grilles release from inside",
+          "code": "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+          "read": "SCREEN column 'Y'",
+          "verdict": "Could Not Evaluate",
+          "reason": "a screen is scheduled; whether it releases from inside is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Opens onto a public way, yard or court",
+          "code": "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+          "read": "not on the schedule",
+          "verdict": "Could Not Evaluate",
+          "reason": "the window's location on the site is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+        }
+      ],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 107 is on floor 1 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-NOMINAL-UPPER",
+        "POL-E-GRADE-FLOOR",
+        "POL-E-NO-FRAME-ASSUMPTION",
+        "POL-E-SILL-LOWER",
+        "POL-E-UNSEEN",
+        "POL-E-SCOPE"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "R-107"
+      ]
+    },
+    {
+      "id": "W-8",
+      "check": "egress_window",
+      "subject": "Window 8, LAUNDRY 108",
+      "verdict": "Not Applicable",
+      "summary": "'LAUNDRY 108' is not a sleeping room; 1030.1 requires escape openings in sleeping rooms.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "8",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "LAUNDRY 108",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 0\"",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "SLIDER",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "G",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 10"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 10"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-SLEEPING"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": []
+    },
+    {
+      "id": "W-10",
+      "check": "egress_window",
+      "subject": "Window 10, BEDROOM 203",
+      "verdict": "Fail",
+      "summary": "Net clear area: nominal 24 in x 30 in = 720 sq in = 5.00 sq ft (upper bound); the net clear opening is smaller than 5.00 sq ft, so below 5 and 5.7 sq ft whether or not it is a grade-floor opening. Sill height: derived frame sill = head height 80 in - nominal height 30 in = 50 in (4'-2\"); the clear opening's bottom is at or above the 50 in frame sill, more than 44 in.",
+      "code_refs": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "10",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDROOM 203",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 0\"",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "2' - 6\"",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "L.H. CASM'T",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "H",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "Y",
+          "source": "window-schedule.html row 11"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 11"
+        }
+      ],
+      "criteria": [
+        {
+          "requirement": "Opens by normal operation",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "type \"L.H. CASM'T\" (casement)",
+          "verdict": "Pass",
+          "reason": "the scheduled type opens",
+          "policies": [],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+          "read": "nominal 24 in x 30 in = 720 sq in = 5.00 sq ft (upper bound)",
+          "verdict": "Fail",
+          "reason": "the net clear opening is smaller than 5.00 sq ft, so below 5 and 5.7 sq ft whether or not it is a grade-floor opening",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-GRADE-FLOOR"
+          ],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear height >= 24 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal height '2\\' - 6\"' = 30 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 30 in exceeds 24 in; the clear height is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear width >= 20 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal width '2\\' - 0\"' = 24 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 24 in exceeds 20 in; the clear width is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Bottom of clear opening <= 44 in above the floor",
+          "code": "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+          "read": "derived frame sill = head height 80 in - nominal height 30 in = 50 in (4'-2\")",
+          "verdict": "Fail",
+          "reason": "the clear opening's bottom is at or above the 50 in frame sill, more than 44 in",
+          "policies": [
+            "POL-E-SILL-LOWER"
+          ],
+          "settle": ""
+        },
+        {
+          "requirement": "Operable from inside without keys or tools",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "hardware not scheduled",
+          "verdict": "Could Not Evaluate",
+          "reason": "not shown on the schedule",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Screens, bars or grilles release from inside",
+          "code": "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+          "read": "SCREEN column 'Y'",
+          "verdict": "Could Not Evaluate",
+          "reason": "a screen is scheduled; whether it releases from inside is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Opens onto a public way, yard or court",
+          "code": "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+          "read": "not on the schedule",
+          "verdict": "Could Not Evaluate",
+          "reason": "the window's location on the site is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+        }
+      ],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 203 is on floor 2 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-NOMINAL-UPPER",
+        "POL-E-GRADE-FLOOR",
+        "POL-E-NO-FRAME-ASSUMPTION",
+        "POL-E-SILL-LOWER",
+        "POL-E-UNSEEN",
+        "POL-E-SCOPE"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "R-203"
+      ]
+    },
+    {
+      "id": "W-11",
+      "check": "egress_window",
+      "subject": "Window 11, BEDROOM 203",
+      "verdict": "Not Applicable",
+      "summary": "Not marked egress; 1030 needs one complying opening per sleeping room, not every window. Considered in R-203.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "11",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDROOM 203",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "2' - 6\"",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "FIXED",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "I",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 12"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "",
+          "source": "window-schedule.html row 12"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-DESIGNATED"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": [
+        "R-203"
+      ]
+    },
+    {
+      "id": "W-12",
+      "check": "egress_window",
+      "subject": "Window 12, BEDRROM 205",
+      "verdict": "Could Not Evaluate",
+      "summary": "Nothing fails at nominal size. Not settled by the schedule: net clear area (nominal 12.00 sq ft is only an upper bound); clear height; clear width; sill height (frame sill 32 in (2'-8\")). Also unverified (never on a schedule): hardware, screens, public way.",
+      "code_refs": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "12",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDRROM 205",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "4' - 0\"",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "S.H.",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "J",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "Y",
+          "source": "window-schedule.html row 13"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 13"
+        }
+      ],
+      "criteria": [
+        {
+          "requirement": "Opens by normal operation",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "type 'S.H.' (single hung)",
+          "verdict": "Pass",
+          "reason": "the scheduled type opens",
+          "policies": [],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+          "read": "nominal 36 in x 48 in = 1728 sq in = 12.00 sq ft (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "the nominal size exceeds 5.7 sq ft, but the net clear opening is smaller by the frame and is not given. Note only: only the bottom sash opens, roughly 6.00 sq ft (POL-E-PARTIAL-OPENING)",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-GRADE-FLOOR",
+            "POL-E-NO-FRAME-ASSUMPTION",
+            "POL-E-PARTIAL-OPENING"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear height >= 24 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal height '4\\' - 0\"' = 48 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 48 in exceeds 24 in; the clear height is smaller by the frame and is not given. Note only: only the bottom sash opens, roughly 24 in (POL-E-PARTIAL-OPENING)",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION",
+            "POL-E-PARTIAL-OPENING"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear width >= 20 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal width '3\\' - 0\"' = 36 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 36 in exceeds 20 in; the clear width is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Bottom of clear opening <= 44 in above the floor",
+          "code": "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+          "read": "derived frame sill = head height 80 in - nominal height 48 in = 32 in (2'-8\")",
+          "verdict": "Could Not Evaluate",
+          "reason": "the frame sill is 32 in (12 in below the limit), but the clear opening's bottom sits higher by the bottom frame, which is not given",
+          "policies": [
+            "POL-E-SILL-LOWER"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+        },
+        {
+          "requirement": "Operable from inside without keys or tools",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "hardware not scheduled",
+          "verdict": "Could Not Evaluate",
+          "reason": "not shown on the schedule",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Screens, bars or grilles release from inside",
+          "code": "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+          "read": "SCREEN column 'Y'",
+          "verdict": "Could Not Evaluate",
+          "reason": "a screen is scheduled; whether it releases from inside is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Opens onto a public way, yard or court",
+          "code": "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+          "read": "not on the schedule",
+          "verdict": "Could Not Evaluate",
+          "reason": "the window's location on the site is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+        }
+      ],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 205 is on floor 2 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
+      ],
+      "flags": [
+        {
+          "code": "ocr_room_name",
+          "message": "room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan)"
+        }
+      ],
+      "policies": [
+        "POL-E-NOMINAL-UPPER",
+        "POL-E-GRADE-FLOOR",
+        "POL-E-NO-FRAME-ASSUMPTION",
+        "POL-E-PARTIAL-OPENING",
+        "POL-E-SILL-LOWER",
+        "POL-E-UNSEEN",
+        "POL-E-SCOPE"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "R-205"
+      ]
+    },
+    {
+      "id": "W-13",
+      "check": "egress_window",
+      "subject": "Window 13, BEDROOM 205",
+      "verdict": "Fail",
+      "summary": "Opening type: type 'FIXED' (fixed); a fixed window does not open. Net clear area: fixed: no opening; no net clear opening results from normal operation.",
+      "code_refs": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31); IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37); IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "13",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDROOM 205",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "4' - 0\"",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "4' - 0\"",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "FIXED",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "K",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "Y",
+          "source": "window-schedule.html row 14"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "",
+          "source": "window-schedule.html row 14"
+        }
+      ],
+      "criteria": [
+        {
+          "requirement": "Opens by normal operation",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31); IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "type 'FIXED' (fixed)",
+          "verdict": "Fail",
+          "reason": "a fixed window does not open",
+          "policies": [
+            "POL-E-FIXED"
+          ],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37); IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "fixed: no opening",
+          "verdict": "Fail",
+          "reason": "no net clear opening results from normal operation",
+          "policies": [
+            "POL-E-FIXED"
+          ],
+          "settle": ""
+        },
+        {
+          "requirement": "Bottom of clear opening <= 44 in above the floor",
+          "code": "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+          "read": "derived frame sill = head height 80 in - nominal height 48 in = 32 in (2'-8\")",
+          "verdict": "Could Not Evaluate",
+          "reason": "the frame sill is 32 in (12 in below the limit), but the clear opening's bottom sits higher by the bottom frame, which is not given",
+          "policies": [
+            "POL-E-SILL-LOWER"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)"
+        },
+        {
+          "requirement": "Screens, bars or grilles release from inside",
+          "code": "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+          "read": "SCREEN column ''",
+          "verdict": "Could Not Evaluate",
+          "reason": "no screen scheduled; any device fitted must release from inside",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Opens onto a public way, yard or court",
+          "code": "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+          "read": "not on the schedule",
+          "verdict": "Could Not Evaluate",
+          "reason": "the window's location on the site is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+        }
+      ],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 205 is on floor 2 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-FIXED",
+        "POL-E-SILL-LOWER",
+        "POL-E-UNSEEN",
+        "POL-E-SCOPE"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided) or Elevations (PROJECT:ELEVATIONS, not provided)",
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "R-205"
+      ]
+    },
+    {
+      "id": "W-14",
+      "check": "egress_window",
+      "subject": "Window 14, BATH 206",
+      "verdict": "Not Applicable",
+      "summary": "'BATH 206' is not a sleeping room; 1030.1 requires escape openings in sleeping rooms.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "14",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BATH 206",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 0\"",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "2' - 0\"",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "AWNING",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "L",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "7' - 0\"",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 15"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 15"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-SLEEPING"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": []
+    },
+    {
+      "id": "W-20",
+      "check": "egress_window",
+      "subject": "Window 20, BEDROOM 301",
+      "verdict": "Fail",
+      "summary": "Sill height: derived frame sill = head height 96 in - nominal height 36 in = 60 in (5'-0\"); the clear opening's bottom is at or above the 60 in frame sill, more than 44 in.",
+      "code_refs": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "20",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "BEDROOM 301",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 6\"",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "3' - 0\"",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "L.H. CASM'T",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "F",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "8' - 0\"",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "Y",
+          "source": "window-schedule.html row 16"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 16"
+        }
+      ],
+      "criteria": [
+        {
+          "requirement": "Opens by normal operation",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "type \"L.H. CASM'T\" (casement)",
+          "verdict": "Pass",
+          "reason": "the scheduled type opens",
+          "policies": [],
+          "settle": ""
+        },
+        {
+          "requirement": "Net clear opening >= 5.7 sq ft (5 if grade-floor)",
+          "code": "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35); IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+          "read": "nominal 30 in x 36 in = 1080 sq in = 7.50 sq ft (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "the nominal size exceeds 5.7 sq ft, but the net clear opening is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-GRADE-FLOOR",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear height >= 24 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal height '3\\' - 0\"' = 36 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 36 in exceeds 24 in; the clear height is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Net clear width >= 20 in",
+          "code": "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)",
+          "read": "nominal width '2\\' - 6\"' = 30 in (upper bound)",
+          "verdict": "Could Not Evaluate",
+          "reason": "nominal 30 in exceeds 20 in; the clear width is smaller by the frame and is not given",
+          "policies": [
+            "POL-E-NOMINAL-UPPER",
+            "POL-E-NO-FRAME-ASSUMPTION"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Bottom of clear opening <= 44 in above the floor",
+          "code": "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+          "read": "derived frame sill = head height 96 in - nominal height 36 in = 60 in (5'-0\")",
+          "verdict": "Fail",
+          "reason": "the clear opening's bottom is at or above the 60 in frame sill, more than 44 in",
+          "policies": [
+            "POL-E-SILL-LOWER"
+          ],
+          "settle": ""
+        },
+        {
+          "requirement": "Operable from inside without keys or tools",
+          "code": "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+          "read": "hardware not scheduled",
+          "verdict": "Could Not Evaluate",
+          "reason": "not shown on the schedule",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Screens, bars or grilles release from inside",
+          "code": "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+          "read": "SCREEN column 'Y'",
+          "verdict": "Could Not Evaluate",
+          "reason": "a screen is scheduled; whether it releases from inside is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Window type details (PROJECT:WINDOW-DETAILS, not provided)"
+        },
+        {
+          "requirement": "Opens onto a public way, yard or court",
+          "code": "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+          "read": "not on the schedule",
+          "verdict": "Could Not Evaluate",
+          "reason": "the window's location on the site is not shown",
+          "policies": [
+            "POL-E-UNSEEN"
+          ],
+          "settle": "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+        }
+      ],
+      "working": [
+        "scope: occupancy 'R-3' is listed in 1030.1 item 2 (IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)); room 301 is on floor 3 (code analysis room numbering), below the fourth story above grade plane (IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13))"
+      ],
+      "flags": [],
+      "policies": [
+        "POL-E-NOMINAL-UPPER",
+        "POL-E-GRADE-FLOOR",
+        "POL-E-NO-FRAME-ASSUMPTION",
+        "POL-E-SILL-LOWER",
+        "POL-E-UNSEEN",
+        "POL-E-SCOPE"
+      ],
+      "interpretations": [],
+      "settle": [
+        "Window type details (PROJECT:WINDOW-DETAILS, not provided)",
+        "Floor plans (PROJECT:FLOOR-PLANS, not provided) or site plan"
+      ],
+      "related": [
+        "R-301"
+      ]
+    },
+    {
+      "id": "W-21",
+      "check": "egress_window",
+      "subject": "Window 21, GUEST BED 303",
+      "verdict": "Not Applicable",
+      "summary": "Not marked egress; 1030 needs one complying opening per sleeping room, not every window. Considered in R-303.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "21",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "GUEST BED 303",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 6\"",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "4' - 0\"",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "L.H. CASM'T",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "A",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "6' - 8\"",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 17"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "Y",
+          "source": "window-schedule.html row 17"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-DESIGNATED"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": [
+        "R-303"
+      ]
+    },
+    {
+      "id": "W-22",
+      "check": "egress_window",
+      "subject": "Window 22, HALL 302",
+      "verdict": "Not Applicable",
+      "summary": "'HALL 302' is not a sleeping room; 1030.1 requires escape openings in sleeping rooms.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "22",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "HALL 302",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 0\"",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "6' - 0\"",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "FIXED",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "M",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "7' - 0\"",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 18"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "",
+          "source": "window-schedule.html row 18"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-SLEEPING"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": []
+    },
+    {
+      "id": "W-23",
+      "check": "egress_window",
+      "subject": "Window 23, STAIR S1",
+      "verdict": "Not Applicable",
+      "summary": "'STAIR S1' is not a sleeping room; 1030.1 requires escape openings in sleeping rooms.",
+      "code_refs": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "evidence": [
+        {
+          "label": "SYMBOL (mark)",
+          "value": "23",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "LOCATION (room)",
+          "value": "STAIR S1",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "NOMINAL SIZE / WIDTH (width)",
+          "value": "2' - 0\"",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "NOMINAL SIZE / HEIGHT (height)",
+          "value": "6' - 0\"",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "TYPE (operation)",
+          "value": "FIXED",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "TYPE (type mark)",
+          "value": "M",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "HEAD HEIGHT (head height)",
+          "value": "9' - 0\"",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "EGRESS (egress)",
+          "value": "",
+          "source": "window-schedule.html row 19"
+        },
+        {
+          "label": "SCREE N (screen)",
+          "value": "",
+          "source": "window-schedule.html row 19"
+        }
+      ],
+      "criteria": [],
+      "working": [],
+      "flags": [],
+      "policies": [
+        "POL-E-NOT-SLEEPING"
+      ],
+      "interpretations": [],
+      "settle": [],
+      "related": []
+    }
+  ],
+  "attention": [
+    {
+      "code": "architect_allowable_mismatch",
+      "title": "Architect's allowable height disagrees with Table 504.3",
+      "detail": "The code analysis states an allowable height of 60'-0\" ('60\\' - 0\" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of row `R` / `S`, column `V-B`, row `R` / `S13R`, column `V-B`, so the architect may have read a sprinkler sub-row other than `S13D`.",
+      "related": [
+        "H-1"
+      ]
+    },
+    {
+      "code": "egress_claim_not_supported",
+      "title": "Code analysis claim about escape openings is not supported",
+      "detail": "The code analysis says 'PROVIDED AT ALL SLEEPING ROOMS PER IBC 1030. SEE WINDOW SCHEDULE, SHEET A6.1' (row 12). The schedule does not show a complying opening in: BEDROOM 101 (room 101) (Could Not Evaluate); ADU BEDROOM 107 (room 107) (Could Not Evaluate); BEDROOM 203 (room 203) (Fail); BEDROOM 205 (room 205) (Could Not Evaluate); BEDROOM 301 (room 301) (Fail); GUEST BED 303 (room 303) (Could Not Evaluate).",
+      "related": [
+        "R-101",
+        "R-107",
+        "R-203",
+        "R-205",
+        "R-301",
+        "R-303"
+      ]
+    },
+    {
+      "code": "ocr_readings",
+      "title": "OCR damage the tool read through",
+      "detail": "Confirm these on the sheets: H-1: label printed as 'FIRE SPRINKLE RS' (a word split across lines); read as 'FIRE SPRINKLERS' | H-1: label printed as 'BUILDING HEIGHT ABOVE GRADE PLAN E' (a word split across lines); read as 'BUILDING HEIGHT ABOVE GRADE PLANE' | R-205: room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan) | W-4: inches 'O' read as '0' (a letter where a digit belongs; OCR damage) | W-12: room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan) | schedule: header 'SCREE N' read as 'SCREEN' (a word split across lines)",
+      "related": [
+        "H-1",
+        "R-205",
+        "W-4",
+        "W-12"
+      ]
+    },
+    {
+      "code": "ambiguous_rooms",
+      "title": "Rooms that may be used for sleeping",
+      "detail": "Not treated as sleeping rooms: OFFICE 102. If any is a sleeping room, it needs an escape opening (IBC 1030.1).",
+      "related": [
+        "W-4"
+      ]
+    },
+    {
+      "code": "unscheduled_rooms",
+      "title": "Sleeping rooms with no window are invisible to this tool",
+      "detail": "The tool only knows rooms that appear in the window schedule. A bedroom with no scheduled window would need an escape opening too; check the floor plans (Floor plans, not provided).",
+      "related": []
+    }
+  ],
+  "policies": {
+    "POL-GEN-AMENDMENTS": {
+      "id": "POL-GEN-AMENDMENTS",
+      "title": "Local amendments not provided",
+      "rule": "The project is reviewed against the 2018 IBC as printed. If the manifest lists local amendments as not provided, every verdict is conditional on them and the report says so once, at the top.",
+      "rests_on": [
+        "the local-amendments document listed in the manifest (unavailable)"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-GEN-OCR": {
+      "id": "POL-GEN-OCR",
+      "title": "OCR-repaired values never decide a verdict alone",
+      "rule": "A value the reader had to repair (a letter read as a digit, a word one character off) is shown with the repair. If a Pass or Fail would rest on it, the line is Could Not Evaluate until the sheet is checked.",
+      "rests_on": [
+        "src/NOTES.md decision: keep raw OCR text; record repairs, never fix silently"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-GEN-UNCOVERED": {
+      "id": "POL-GEN-UNCOVERED",
+      "title": "No rule, no verdict",
+      "rule": "A situation no policy covers is Could Not Evaluate with 'needs a policy decision'.",
+      "rests_on": [
+        "src/NOTES.md decision: judgement calls are named policy rules"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-H-INTERPRETATION": {
+      "id": "POL-H-INTERPRETATION",
+      "title": "Brief rules may support a verdict, disclosed",
+      "rule": "A mapping that rests on the challenge brief rather than code text (R-3 read as row R, because IBC 310 is not provided) may support a Pass or Fail, but the finding names it as an interpretation. The limit value itself always comes from code text.",
+      "rests_on": [
+        "Challenge brief (instructions/README.md line 54)"
+      ],
+      "authority": "challenge_brief"
+    },
+    "POL-H-FOOTNOTES": {
+      "id": "POL-H-FOOTNOTES",
+      "title": "Footnotes are cited; pointed-to documents are listed, not assumed",
+      "rule": "Every footnote on the looked-up cell is quoted in the finding. Where a footnote points to a document we don't have (Chapters 4 and 5 exceptions, IBC 903.2.8), the finding lists it as not provided. It does not block the verdict: an exception has to be claimed by the applicant, and the finding says which claims the code analysis makes.",
+      "rests_on": [
+        "Table 504.3 footnotes (code/table-504.3-notes.md lines 19-33)"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-H-NS-NEW": {
+      "id": "POL-H-NS-NEW",
+      "title": "NS limits are for existing buildings",
+      "rule": "If the building resolves to the NS sub-row and the code analysis describes new work, the NS limit is not a basis for a verdict (footnote d): Could Not Evaluate, with the sprinkler status to be confirmed.",
+      "rests_on": [
+        "Table 504.3 footnote d (code/table-504.3-notes.md line 25)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-H-STATED-HEIGHT": {
+      "id": "POL-H-STATED-HEIGHT",
+      "title": "The stated height is used as submitted",
+      "rule": "The building height is the architect's figure. The tool compares it with the table; it cannot check the measurement (grade plane and roof heights are on sheets not provided), and says so.",
+      "rests_on": [
+        "IBC 202 HEIGHT, BUILDING (code/section-1030-emergency-escape-and-rescue.md line 59)"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-H-ARCHITECT": {
+      "id": "POL-H-ARCHITECT",
+      "title": "The architect's allowable height is checked, not trusted",
+      "rule": "If the code analysis states an allowable height that differs from the looked-up cell, the finding flags it and lists the cells in the same row and column that hold the architect's figure, as a likely explanation. The verdict uses the looked-up cell.",
+      "rests_on": [
+        "brief: the allowable height 'is worth checking against the table rather than trusting'"
+      ],
+      "authority": "challenge_brief"
+    },
+    "POL-H-SPRINKLER-COVERAGE": {
+      "id": "POL-H-SPRINKLER-COVERAGE",
+      "title": "Sprinkler coverage must be 'throughout'",
+      "rule": "S, S13R and S13D are for buildings 'equipped throughout'. Wording that says partial coverage resolves to no sub-row (Could Not Evaluate). Wording that names a standard but not 'throughout' is resolved and flagged.",
+      "rests_on": [
+        "Table 504.3 legend (code/table-504.3-notes.md line 15)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-SCOPE": {
+      "id": "POL-E-SCOPE",
+      "title": "Which buildings and floors 1030 covers",
+      "rule": "R-3 and R-4: applies. R-2: Could Not Evaluate unless the exits per story are known. Other groups: Not Applicable. Sleeping rooms must be below the fourth story above grade plane; the story comes from the code analysis room numbering (floor n read as story n above grade plane), else from the number of stories. Unknown story: Could Not Evaluate.",
+      "rests_on": [
+        "IBC 1030.1 item 2 (code/section-1030-emergency-escape-and-rescue.md line 11)",
+        "IBC 1030.1 item 1 (code/section-1030-emergency-escape-and-rescue.md line 9)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-SLEEPING": {
+      "id": "POL-E-SLEEPING",
+      "title": "What counts as a sleeping room",
+      "rule": "Room names with a bedroom word (BEDROOM, BED, BDRM, GUEST BED ...) are sleeping rooms, including a word one character from BEDROOM (OCR), which is flagged. Dens, offices, lofts and unrecognised names are ambiguous: not treated as sleeping rooms, but listed for the plan checker to confirm.",
+      "rests_on": [
+        "Challenge brief (instructions/README.md line 60)",
+        "Challenge brief (instructions/README.md line 60)"
+      ],
+      "authority": "challenge_brief"
+    },
+    "POL-E-ROOM-KEY": {
+      "id": "POL-E-ROOM-KEY",
+      "title": "Room identity",
+      "rule": "Windows belong to the same room when their location has the same room number ('BEDROM 12' and 'BEDROOM 12'); without a number, when the names match. Different spellings under one number are flagged.",
+      "rests_on": [
+        "window schedule LOCATION column"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-E-NOT-SLEEPING": {
+      "id": "POL-E-NOT-SLEEPING",
+      "title": "Windows outside sleeping rooms",
+      "rule": "Windows in rooms that are not sleeping rooms are Not Applicable. A window in such a room that is marked egress is noted.",
+      "rests_on": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-NOT-DESIGNATED": {
+      "id": "POL-E-NOT-DESIGNATED",
+      "title": "Sleeping-room windows not marked egress",
+      "rule": "Not Applicable as a window finding: 1030 needs one complying opening per sleeping room, not every window. They are still considered in the room finding.",
+      "rests_on": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-NOMINAL-UPPER": {
+      "id": "POL-E-NOMINAL-UPPER",
+      "title": "Nominal size is an upper bound",
+      "rule": "The net clear opening (area, width and height) is always smaller than the nominal size. A nominal value at or below a minimum proves a Fail; a nominal value above it proves nothing.",
+      "rests_on": [
+        "Challenge brief (instructions/README.md line 63)",
+        "IBC 1030.2 (code/section-1030-emergency-escape-and-rescue.md line 35)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)"
+      ],
+      "authority": "challenge_brief"
+    },
+    "POL-E-NO-FRAME-ASSUMPTION": {
+      "id": "POL-E-NO-FRAME-ASSUMPTION",
+      "title": "No frame-deduction assumption (decision 2)",
+      "rule": "The tool assumes no frame size, so nominal size never proves a Pass. Without a net clear opening (from the schedule or manufacturer data) a minimum is Could Not Evaluate, with the nominal upper bound shown.",
+      "rests_on": [
+        "src/NOTES.md, Plan from here: open decisions #2"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-E-SILL-LOWER": {
+      "id": "POL-E-SILL-LOWER",
+      "title": "A derived sill is a lower bound",
+      "rule": "Sill = head height - nominal height (head height is floor to top of window). The bottom of the clear opening is at or above that frame sill. A frame sill above 44 in proves a Fail; at or below 44 in it proves nothing, because the bottom frame depth is unknown. A scheduled sill height is treated the same way unless the column says it is to the clear opening.",
+      "rests_on": [
+        "IBC 1030.3 (code/section-1030-emergency-escape-and-rescue.md line 45)",
+        "Challenge brief (instructions/README.md line 64)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-GRADE-FLOOR": {
+      "id": "POL-E-GRADE-FLOOR",
+      "title": "Grade-floor limit (decision 4)",
+      "rule": "Whether an opening is a grade-floor opening needs the finished ground level, which these sheets don't give. The area is decided only when the 5.0 and 5.7 sq ft limits give the same result.",
+      "rests_on": [
+        "IBC 1030.2 Exception (code/section-1030-emergency-escape-and-rescue.md line 37)",
+        "IBC 202 GRADE FLOOR OPENING (code/section-1030-emergency-escape-and-rescue.md line 55)",
+        "src/NOTES.md, Plan from here: open decisions #4"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-FIXED": {
+      "id": "POL-E-FIXED",
+      "title": "A fixed window is not an escape opening",
+      "rule": "A window scheduled as fixed does not open, so it can't be operated from inside and has no net clear opening by normal operation: Fail.",
+      "rests_on": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.2.1 (code/section-1030-emergency-escape-and-rescue.md line 41)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-PARTIAL-OPENING": {
+      "id": "POL-E-PARTIAL-OPENING",
+      "title": "Single hung and slider bounds are notes only (decision 5)",
+      "rule": "A single hung opens only its bottom sash and a slider about half its width. The tool shows the half-size figure as a labelled note, never as proof of a Fail, because panel splits vary (a three-panel slider opens two thirds; sashes can be unequal).",
+      "rests_on": [
+        "Challenge brief (instructions/README.md line 66)",
+        "src/NOTES.md, Plan from here: open decisions #5"
+      ],
+      "authority": "challenge_brief"
+    },
+    "POL-E-OPERATION-UNKNOWN": {
+      "id": "POL-E-OPERATION-UNKNOWN",
+      "title": "Unrecognised window type",
+      "rule": "If the operation isn't recognised, whether and how the window opens is Could Not Evaluate.",
+      "rests_on": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-UNSEEN": {
+      "id": "POL-E-UNSEEN",
+      "title": "Requirements no schedule shows",
+      "rule": "Operation without keys or tools, releasable screens and opening onto a public way, yard or court are each a Could Not Evaluate line on every egress window, naming the document that would settle it. They never cause a Fail; they do keep a window from a Pass.",
+      "rests_on": [
+        "IBC 1030.1.1 (code/section-1030-emergency-escape-and-rescue.md line 31)",
+        "IBC 1030.5 (code/section-1030-emergency-escape-and-rescue.md line 49)",
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-ROOM-ROLLUP": {
+      "id": "POL-E-ROOM-ROLLUP",
+      "title": "Room verdict (decision 3)",
+      "rule": "A sleeping room Passes if a designated egress window Passes, and is Could Not Evaluate if one is Could Not Evaluate. If none is designated, or every designated one Fails, the room's other windows are evaluated as candidates: if any could comply the room is Could Not Evaluate, flagged 'no complying opening designated'; if none could, the room Fails.",
+      "rests_on": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)",
+        "src/NOTES.md, Plan from here: open decisions #3"
+      ],
+      "authority": "project_decision"
+    },
+    "POL-E-EXCEPTION-2": {
+      "id": "POL-E-EXCEPTION-2",
+      "title": "Exit-door exception is not assumed",
+      "rule": "A room Fail says 'unless Exception 2 applies (an exit door to a public way)'. The floor plans would settle it; the tool does not assume a door it can't see.",
+      "rests_on": [
+        "IBC 1030.1 Exception 2 (code/section-1030-emergency-escape-and-rescue.md line 19)"
+      ],
+      "authority": "code_text"
+    },
+    "POL-E-NO-EGRESS-COLUMN": {
+      "id": "POL-E-NO-EGRESS-COLUMN",
+      "title": "Schedule without an egress column",
+      "rule": "If the schedule has no egress column, no window is designated. Every sleeping room is then decided by POL-E-ROOM-ROLLUP from its windows as candidates, and the missing column is reported.",
+      "rests_on": [
+        "IBC 1030.1 (code/section-1030-emergency-escape-and-rescue.md line 13)"
+      ],
+      "authority": "project_decision"
+    }
+  }
+}

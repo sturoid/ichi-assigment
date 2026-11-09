@@ -1,0 +1,36 @@
+{
+  "_about": "Eval set: expected verdicts for the fixture project, hand-typed (never generated from tool output). 'spot_checked' entries come from the expected-verdicts table in src/NOTES.md, which the user spot-checked against the sheet images on 2026-11-08. Entries with spot_checked false follow directly from a brief rule (Not Applicable for non-sleeping rooms, non-designated windows) and were typed by Opus; they have not been spot-checked. 'flags' are flag codes the finding must carry.",
+  "project": "challenge fixtures: code-analysis.html + window-schedule.html",
+  "expected": [
+    {"id": "H-1", "verdict": "Fail", "flags": ["architect_allowable_mismatch"], "spot_checked": true,
+     "why": "R / S13D / V-B = 40 ft; claimed 41'-6\"; over by 1'-6\". Architect's 60 = R/S and R/S13R."},
+    {"id": "W-1", "verdict": "Could Not Evaluate", "flags": [], "spot_checked": true, "why": "casement 2'-6\" x 4'-0\" = 10 sq ft nominal; net unknown"},
+    {"id": "W-3", "verdict": "Could Not Evaluate", "flags": [], "spot_checked": true, "why": "same as window 1"},
+    {"id": "R-101", "verdict": "Could Not Evaluate", "flags": [], "spot_checked": true, "why": "windows 1 and 3 undetermined"},
+    {"id": "W-7", "verdict": "Could Not Evaluate", "flags": [], "spot_checked": true, "why": "frame sill 80-36 = 44 in exactly; clear-opening bottom can't be shown <= 44"},
+    {"id": "R-107", "verdict": "Could Not Evaluate", "flags": [], "spot_checked": false, "why": "its only egress window (7) is undetermined"},
+    {"id": "W-10", "verdict": "Fail", "flags": [], "spot_checked": true, "why": "2'-0\" x 2'-6\" = 5.0 sq ft nominal; net < 5.0 at either limit"},
+    {"id": "R-203", "verdict": "Fail", "flags": [], "spot_checked": true, "why": "window 10 fails; window 11 is fixed"},
+    {"id": "W-12", "verdict": "Could Not Evaluate", "flags": ["ocr_room_name"], "spot_checked": true, "why": "single hung 3'-0\" x 4'-0\"; BEDRROM matched as bedroom, noted"},
+    {"id": "W-13", "verdict": "Fail", "flags": [], "spot_checked": true, "why": "FIXED but marked egress: doesn't open (1030.1.1 / 1030.2)"},
+    {"id": "R-205", "verdict": "Could Not Evaluate", "flags": ["room_name_variants"], "spot_checked": true, "why": "window 12 undetermined, window 13 fails"},
+    {"id": "W-20", "verdict": "Fail", "flags": [], "spot_checked": true, "why": "head 8'-0\" - 3'-0\" = 60 in frame sill > 44 (1030.3)"},
+    {"id": "R-301", "verdict": "Fail", "flags": [], "spot_checked": true, "why": "its only window (20) fails"},
+    {"id": "R-303", "verdict": "Could Not Evaluate", "flags": ["no_opening_designated"], "spot_checked": true, "why": "decision 3: window 21 not marked egress but could comply at nominal size"},
+    {"id": "W-21", "verdict": "Not Applicable", "flags": [], "spot_checked": false, "why": "not marked egress (Y is under SCREEN); considered in the room finding"},
+    {"id": "W-4", "verdict": "Not Applicable", "flags": ["ambiguous_room", "ocr_repair"], "spot_checked": true, "why": "OFFICE: possibly a sleeping room, flagged; 3' - O\" OCR damage flagged"},
+    {"id": "W-2", "verdict": "Not Applicable", "flags": [], "spot_checked": false, "why": "fixed, not marked egress, in a bedroom"},
+    {"id": "W-11", "verdict": "Not Applicable", "flags": [], "spot_checked": false, "why": "fixed, not marked egress, in a bedroom"},
+    {"id": "W-5", "verdict": "Not Applicable", "flags": [], "spot_checked": true, "why": "living room"},
+    {"id": "W-6", "verdict": "Not Applicable", "flags": [], "spot_checked": true, "why": "kitchen"},
+    {"id": "W-8", "verdict": "Not Applicable", "flags": [], "spot_checked": true, "why": "laundry"},
+    {"id": "W-14", "verdict": "Not Applicable", "flags": [], "spot_checked": true, "why": "bath"},
+    {"id": "W-22", "verdict": "Not Applicable", "flags": [], "spot_checked": true, "why": "hall"},
+    {"id": "W-23", "verdict": "Not Applicable", "flags": [], "spot_checked": true, "why": "stair"}
+  ],
+  "attention": [
+    {"code": "egress_claim_not_supported", "spot_checked": true, "why": "A0.1 says egress PROVIDED AT ALL SLEEPING ROOMS"},
+    {"code": "architect_allowable_mismatch", "spot_checked": true, "why": "decision 1: also listed at the top"},
+    {"code": "unscheduled_rooms", "spot_checked": true, "why": "bedrooms with no schedule row are invisible"}
+  ]
+}
