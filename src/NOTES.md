@@ -425,6 +425,26 @@ The user viewed REPORT.md in Notion. The `<a id>` anchors showed as raw HTML, an
 
 Left as is: the 12-column §6 table (it is the core evidence), and Appendix C's long cells (appendix only).
 
+### Phase 6c: layperson report layout (2026-11-09, uncommitted for user review)
+
+The user asked for the report to be as simple to follow as the spot-check checklist. A Sonnet layperson review found five problems:
+- the summary was dense;
+- the correction bullets were crammed;
+- there was jargon and symbols (nominal, frame sill, head, designated, ≤ ≥);
+- §5 and §6 were wide tables;
+- each finding appeared three or four times.
+
+The fixes were in `report.py` only. Verdicts, flags, confidence and findings.json are unchanged.
+- The summary has a bottom-line sentence and a short "How to read this report" key.
+- Corrections are numbered items with fixed labels: Problem, Why, Unless, Code, Confidence before sending.
+- Findings are `####` blocks under four group headings in one §4.
+- Each escape window has a four-column table (requirement · code · what the schedule shows · result), with plain values such as "80 in head − 48 in height = 32 in, at the frame".
+- Not Applicable windows are grouped by reason.
+- The old "where each ID is" list and Appendix B (where read) are dropped. The source row now sits on each finding.
+- "designated" becomes "marked", and "nominal" becomes "listed size" in reader-facing text. The appendix keeps the rule wording.
+
+The eval scorer still parses every verdict (headings `#{2,4}`), and test_cli is unchanged and passes.
+
 ### Input: Check 1 requirements, and what they change in the store contract, phase 1d (2026-11-08)
 
 Check 1 asks for one finding for the building. It reads the project's occupancy, construction type, sprinklers and height, looks up the matching 504.3 cell, and compares the two heights. The finding cites the cell, as in this example: *row `A, B, E, F, M, S, U` / `NS` / column `II-B` = 55*.

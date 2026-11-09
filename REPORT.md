@@ -2,95 +2,106 @@
 
 **Project:** NEW 3-STORY SINGLE-FAMILY DWELLING WITH ATTACHED ACCESSORY DWELLING UNIT (ADU). SLEEPING ROOMS ON ALL FLOORS
 
-Checked against IBC 2018 Table 504.3 (allowable building height) and Section 1030 (emergency escape and rescue openings), as printed. City of Meridian Falls amendments to the 2018 IBC were not provided, so every verdict is subject to them.
+## Summary
 
-**Result: 6 Fail, 8 Could Not Evaluate, 0 Pass, 10 Not Applicable.**
-The 6 Fails are 4 correction items (§1): a room and its failing window are one problem.
-Confidence in the 4 corrections: 1 High, 2 Medium, 1 Low. §1 says what to confirm before sending any that is not High.
-Nothing passes because a window schedule gives nominal sizes, which include the frame, and the code regulates the net clear opening, which is always smaller. A nominal size can prove a Fail, never a Pass.
+- **Bottom line:** 4 corrections for the letter, 8 findings these sheets can't settle, and nothing passes.
+- **Verdicts:** 6 Fail · 8 Could Not Evaluate · 0 Pass · 10 Not Applicable. The 6 Fails are 4 corrections, because a bedroom and its failing window count as one problem.
+- **Why nothing passes:** the window schedule gives frame sizes. The real opening is always smaller, so a frame size can prove a window too small but never big enough.
+- **What this is:** an automated check of the code analysis sheet and the window schedule. It checks two things only: building height and bedroom escape windows. Everything else on the code analysis (stories, floor area and so on) was not checked.
+- **Checked against:** the 2018 IBC as printed: Table 504.3 (building height) and Section 1030 (emergency escape openings). City of Meridian Falls amendments to the 2018 IBC were not provided, so every verdict is subject to them.
 
-## 1. Corrections
+**How to read this report**
 
-Raw material for the correction letter: the problem, the arithmetic and the deciding code section. Each ID's evidence is in a later section, found by searching for the ID.
+- **Verdicts.** **Fail:** breaks the rule. **Could Not Evaluate:** the rule applies, but these sheets can't settle it. **Pass:** meets the rule. **Not Applicable:** the rule doesn't apply here.
+- **Confidence** says how likely a verdict is to stand once the full drawing set is seen. **High:** send the correction as written. **Medium:** one thing could change it; confirm it first, or send the correction with that condition stated. **Low:** more than one thing could change it; confirm them first, or send a request for information instead of a correction.
+- **Sill heights are worked out,** not read: the schedule doesn't list them, so the sill is the head height minus the window height. That is the bottom of the frame; the opening itself starts a little higher.
+- **Terms.** R-3 is the occupancy group (houses), V-B the construction type, and S13D a house-type sprinkler system (NFPA 13D). Head height is the floor to the top of the window. A casement opens on a side hinge; a single hung window opens only its bottom half. Scanning errors are letters or spaces the scan got wrong.
+- **IDs.** H- is the building height, R- a bedroom, W- a window. Search for an ID to find its full entry in section 4.
 
-*Where each ID is:* §4: H-1; §5: R-101, R-107, R-203, R-205, R-301, R-303; §6: W-1, W-3, W-7, W-10, W-12, W-13, W-20; §7: W-2, W-4, W-5, W-6, W-8, W-11, W-14, W-21, W-22, W-23.
+## 1. Corrections to send
 
-**Confidence** says how likely a correction is to stand once the full drawing set is seen. **High:** send it as written. **Medium:** one thing could overturn it; confirm that first, or send the correction with that condition stated. **Low:** more than one thing could overturn it; confirm them before sending, and if they can't be confirmed, send it as a request for information instead of a correction. A wrong correction costs the applicant a redesign.
+Each item is worded as raw material for the correction letter.
 
-1. **Building height exceeds Table 504.3** (H-1)
-   - 41'-6" exceeds the 40 ft allowed by Table 504.3, row `R` / `S13D`, column `V-B` by 1'-6".
-   - Also revise the code analysis: it states an allowable height of 60'-0" ('60' - 0" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of the `S` and `S13R` sub-rows in the same row and column, so the architect may have read the wrong sprinkler sub-row (this building resolves to `S13D`).
-   - *Code:* Table 504.3, row `R` / `S13D`, column `V-B`
-   - *Confidence:* **Medium**. It could be reversed by an exception in IBC CH 4 and IBC CH 5 (Table 504.3 footnote a), not provided.
-2. **BEDROOM 203 has no complying escape opening** (R-203)
-   - W-10, the designated escape window: nominal 2'-0" × 2'-6" = 5.00 sq ft; the clear opening is smaller, so under both 5 and 5.7 sq ft (IBC 1030.2; IBC 1030.2 Exception); frame sill = 6'-8" head − 2'-6" height = 50 in, above 44 in (IBC 1030.3).
-   - Other windows in the room: W-11 cannot comply.
-   - This stands unless the room has an exit door that opens directly to a public way, yard or court (IBC 1030.1 Exception 2); the floor plans would show it.
-   - *Code:* IBC 1030.1; IBC 1030.2; IBC 1030.2 Exception; IBC 1030.3
-   - *Confidence:* **Medium**. It could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show.
-3. **BEDROOM 301 has no complying escape opening** (R-301)
-   - W-20, the designated escape window: frame sill = 8'-0" head − 3'-0" height = 60 in, above 44 in (IBC 1030.3).
-   - This stands unless the room has an exit door that opens directly to a public way, yard or court (IBC 1030.1 Exception 2); the floor plans would show it.
-   - *Code:* IBC 1030.1; IBC 1030.3
-   - *Confidence:* **Low**, for 2 reasons:
-     - It could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show.
-     - W-20: it rests only on a derived value (frame sill = 8'-0" head − 3'-0" height = 60 in, above 44 in); confirm on the elevations that head height is measured to the top of the window.
-4. **Window 13 in BEDROOM 205 is designated as the escape opening but cannot be one** (W-13)
-   - Scheduled as 'FIXED', which does not open; no clear opening.
-   - The room (R-205) is Could Not Evaluate: W-12 could not be evaluated; W-13 fails. The room has a complying opening only if W-12 is shown to comply.
-   - *Code:* IBC 1030.1.1; IBC 1030.2.1; IBC 1030.2; IBC 1030.2 Exception
-   - *Confidence:* **High**. It rests on printed values only.
+**1. Building height is over the limit** (H-1)
 
-## 2. Check these before relying on the report
+- **Problem:** 41'-6" exceeds the 40 ft allowed by Table 504.3, row `R` / `S13D`, column `V-B` by 1'-6".
+- **Also correct the code analysis:** it states an allowable height of 60'-0" ('60' - 0" PER TABLE 504.3'); Table 504.3, row `R` / `S13D`, column `V-B` gives 40 ft. 60 ft is the value of the `S` and `S13R` sub-rows in the same row and column, so the architect may have read the wrong sprinkler sub-row (this building resolves to `S13D`).
+- **Code:** Table 504.3, row `R` / `S13D`, column `V-B`
+- **Confidence before sending:** Medium. It could be reversed by an exception in IBC CH 4 and IBC CH 5 (Table 504.3 footnote a), not provided.
+
+**2. BEDROOM 203 has no working escape window** (R-203)
+
+- **Problem:** BEDROOM 203 needs at least one window a person can escape through, and has none that works.
+- **Why:** W-10, its escape window: listed size 2'-0" × 2'-6" = 5.00 sq ft; the clear opening is smaller, so under both 5 and 5.7 sq ft; frame sill = 6'-8" head − 2'-6" height = 50 in, above 44 in. Other windows in the room: W-11 cannot comply.
+- **Unless:** the room has a door that opens straight to a public way, yard or court (IBC 1030.1 Exception 2). The floor plans would show it.
+- **Code:** IBC 1030.1; IBC 1030.2; IBC 1030.2 Exception; IBC 1030.3; IBC 1030.1 Exception 2
+- **Confidence before sending:** Medium. It could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show.
+
+**3. BEDROOM 301 has no working escape window** (R-301)
+
+- **Problem:** BEDROOM 301 needs at least one window a person can escape through, and has none that works.
+- **Why:** W-20, its escape window: frame sill = 8'-0" head − 3'-0" height = 60 in, above 44 in.
+- **Unless:** the room has a door that opens straight to a public way, yard or court (IBC 1030.1 Exception 2). The floor plans would show it.
+- **Code:** IBC 1030.1; IBC 1030.3; IBC 1030.1 Exception 2
+- **Confidence before sending:** Low, for 2 reasons:
+  - It could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show.
+  - W-20: it rests only on a worked-out sill height (frame sill = 8'-0" head − 3'-0" height = 60 in, above 44 in); confirm on the elevations that head height is measured to the top of the window.
+
+**4. Window 13 in BEDROOM 205 is marked as the escape window but can't be one** (W-13)
+
+- **Problem:** Scheduled as 'FIXED', which does not open; no clear opening.
+- **The room (R-205):** Could Not Evaluate. W-12 could not be evaluated; W-13 fails. The room has a complying opening only if W-12 is shown to comply.
+- **Code:** IBC 1030.1.1; IBC 1030.2.1; IBC 1030.2; IBC 1030.2 Exception
+- **Confidence before sending:** High. It rests on values printed on the sheets.
+
+## 2. Look at these yourself
 
 Places where the tool may be wrong, or where the drawings may hide a problem.
 
-- **W-7 is a likely Fail on sill height.** The frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions.
-- **W-12 is a likely Fail on clear height.** Only the bottom sash opens, about 24 in before the frame, exactly the 24 in minimum, leaving nothing for the frame. Ask for the sash split and the manufacturer's clear opening.
+- **W-7 is likely to fail on sill height.** The frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions.
+- **W-12 is likely to fail on clear height.** Only the bottom sash opens, about 24 in before the frame, exactly the 24 in minimum, leaving nothing for the frame. Ask for the sash split and the manufacturer's clear opening.
 - **Window numbers skip.** The schedule has no window 9, 15–19. Rows may have been lost in scanning, or the windows renumbered; check the schedule sheet.
-- **The code analysis claim is not supported.** It says 'PROVIDED AT ALL SLEEPING ROOMS PER IBC 1030. SEE WINDOW SCHEDULE, SHEET A6.1' (table row 13); the schedule proves a complying opening in none of the sleeping rooms (4 Could Not Evaluate, 2 Fail).
+- **The code analysis claim is not supported.** It says 'PROVIDED AT ALL SLEEPING ROOMS PER IBC 1030. SEE WINDOW SCHEDULE, SHEET A6.1' (table row 13). The schedule does not show a working escape window in any bedroom (4 Could Not Evaluate, 2 Fail).
 - **Rooms that may be used for sleeping.** Not treated as sleeping rooms: OFFICE 102. If any is a sleeping room, it needs an escape opening (IBC 1030.1). (W-4)
 - **Sleeping rooms with no window are invisible to this tool.** The tool only knows rooms that appear in the window schedule. A bedroom with no scheduled window would need an escape opening too; check the floor plans (not provided).
-- **Interpretation in H-1.** Occupancy 'R-3' read as row `R`: IBC 310 (occupancy classification) is not provided; the brief's rule places a numbered group in its letter's row unless the table gives the numbered group its own row (as for H and I).
+- **A reading the brief decides (H-1).** Occupancy 'R-3' read as row `R`: IBC 310 (occupancy classification) is not provided; the brief's rule places a numbered group in its letter's row unless the table gives the numbered group its own row (as for H and I).
+- **Scanning errors the tool read through.** Confirm each on the sheets:
+  - H-1: label printed as 'FIRE SPRINKLE RS' (a word split across lines); read as 'FIRE SPRINKLERS'
+  - H-1: label printed as 'BUILDING HEIGHT ABOVE GRADE PLAN E' (a word split across lines); read as 'BUILDING HEIGHT ABOVE GRADE PLANE'
+  - R-205, W-12: room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan)
+  - W-4: inches 'O' read as '0' (a letter where a digit belongs; OCR damage)
+  - schedule header: header 'SCREE N' read as 'SCREEN' (a word split across lines)
 
-**OCR damage the tool read through.** Confirm on the sheets:
+## 3. What to ask the architect
 
-| Where | What was printed, and how it was read |
-|---|---|
-| H-1 | label printed as 'FIRE SPRINKLE RS' (a word split across lines); read as 'FIRE SPRINKLERS' |
-| H-1 | label printed as 'BUILDING HEIGHT ABOVE GRADE PLAN E' (a word split across lines); read as 'BUILDING HEIGHT ABOVE GRADE PLANE' |
-| R-205, W-12 | room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan) |
-| W-4 | inches 'O' read as '0' (a letter where a digit belongs; OCR damage) |
-| schedule header | header 'SCREE N' read as 'SCREEN' (a word split across lines) |
+These would settle the Could Not Evaluate findings.
 
-## 3. Information to request
+1. Manufacturer data or window type details for window types A, F, J: the clear opening (width, height, and the height of its bottom above the floor), the hardware (it must open without keys or tools, IBC 1030.1.1) and whether screens release from inside (IBC 1030.5). *Settles:* R-101, R-107, R-205, R-303, W-1, W-3, W-7, W-12.
+2. Elevations or wall sections that dimension each escape window's sill and head height. *Settles:* R-101, R-107, R-205, W-1, W-3, W-7, W-12.
+3. Floor plans showing what each room is used for, any door from a bedroom straight to the outside (IBC 1030.1 Exception 2), and that each escape window opens onto a yard, court or public way. *Settles:* R-101, R-107, R-203, R-205, R-301, W-1, W-3, W-7, W-12.
+4. Building sections or a roof plan that dimension the height to the average of the highest roof surface. *Settles:* H-1.
+5. The civil sheet with the grade plane calculation. *Settles:* H-1.
+6. Mark an escape window for GUEST BED 303: none is marked egress, but W-21 could work at its listed size. *Settles:* R-303.
 
-What would settle the Could Not Evaluate findings, written as requests to the architect.
+Code text the tool was not given, which you may want to confirm: Chapters 4 and 5 (height exceptions) (footnote a) (H-1); Automatic Sprinkler Systems (903.2, 903.3.1.1-903.3.1.3) (footnote h) (H-1).
 
-| # | Request | Settles |
-|---|---|---|
-| 1 | Manufacturer data or window type details for window types A, F, J: the net clear opening (width, height, and the height of its bottom above the floor), the operating hardware (1030.1.1: no keys or tools) and screen release from inside (1030.5) | R-101, R-107, R-205, R-303, W-1, W-3, W-7, W-12 |
-| 2 | Elevations or wall sections dimensioning each escape window's sill and head | R-101, R-107, R-205, W-1, W-3, W-7, W-12 |
-| 3 | Floor plans showing room uses, any exterior door from a sleeping room (1030.1 Exception 2), and that each escape window opens onto a yard, court or public way | R-101, R-107, R-203, R-205, R-301, W-1, W-3, W-7, W-12 |
-| 4 | Building sections or roof plan dimensioning the height to the average of the highest roof surface | H-1 |
-| 5 | The civil sheet with the grade plane calculation | H-1 |
-| 6 | Designate a complying escape opening for GUEST BED 303: none is marked egress; W-21 could comply at nominal size | R-303 |
+## 4. Every finding in full
 
-Code text the tool was not given, which the plan checker may want to confirm: Chapters 4 and 5 (height exceptions) (footnote a) (H-1); Automatic Sprinkler Systems (903.2, 903.3.1.1-903.3.1.3) (footnote h) (H-1).
+Each entry gives the verdict, what was read from the sheets, any arithmetic, the code section and the confidence.
 
-## 4. Building height (IBC Table 504.3)
+### Building height
 
-### H-1 · Building height · **Fail**
+#### H-1 · Building height · **Fail**
 
-41'-6" exceeds the 40 ft allowed by Table 504.3, row `R` / `S13D`, column `V-B` by 1'-6".
+- **Result:** 41'-6" exceeds the 40 ft allowed by Table 504.3, row `R` / `S13D`, column `V-B` by 1'-6".
 
 | Read from the code analysis | Value | Where |
 |---|---|---|
-| OCCUPANCY GROUP | `R-3` | code-analysis.html table row 4 |
-| CONSTRUCTION TYPE | `V-B` | code-analysis.html table row 5 |
-| FIRE SPRINKLE RS | `YES - AUTOMATIC SPRINKLER SYSTEM THROUGHOUT PER NFPA 13D (IBC 903.3.1.3)` | code-analysis.html table row 6 |
-| BUILDING HEIGHT ABOVE GRADE PLAN E | `41' - 6" (TO AVG. HT. OF HIGHEST ROOF SURFACE)` | code-analysis.html table row 8 |
-| ALLOWABLE HEIGHT | `60' - 0" PER TABLE 504.3` | code-analysis.html table row 9 |
+| OCCUPANCY GROUP | R-3 | code-analysis.html table row 4 |
+| CONSTRUCTION TYPE | V-B | code-analysis.html table row 5 |
+| FIRE SPRINKLE RS | YES - AUTOMATIC SPRINKLER SYSTEM THROUGHOUT PER NFPA 13D (IBC 903.3.1.3) | code-analysis.html table row 6 |
+| BUILDING HEIGHT ABOVE GRADE PLAN E | 41' - 6" (TO AVG. HT. OF HIGHEST ROOF SURFACE) | code-analysis.html table row 8 |
+| ALLOWABLE HEIGHT | 60' - 0" PER TABLE 504.3 | code-analysis.html table row 9 |
 
 **How it was decided:**
 
@@ -101,69 +112,207 @@ Code text the tool was not given, which the plan checker may want to confirm: Ch
 5. Lookup Table 504.3, row `R` / `S13D`, column `V-B` → 40
 6. 41.5 ft > 40 ft; over by 1.5 ft = 1'-6"
 
-**Footnotes on this cell:**
+**Footnotes printed on this cell:**
 
-- Footnote a (printed on the whole table): "See Chapters 4 and 5 for specific exceptions to the allowable height in this chapter." It points to code text not provided (see §3).
-- Footnote h (printed on the occupancy row label): "New Group R occupancies are required to be protected by an automatic sprinkler system in accordance with Section 903.2.8." It points to code text not provided (see §3).
+- Footnote a (printed on the whole table): "See Chapters 4 and 5 for specific exceptions to the allowable height in this chapter." It points to code text that was not provided.
+- Footnote h (printed on the occupancy row label): "New Group R occupancies are required to be protected by an automatic sprinkler system in accordance with Section 903.2.8." It points to code text that was not provided.
 
-**Code:** Table 504.3, row `R` / `S13D`, column `V-B` = 40 ft; IBC 504.3; Table 504.3 footnote a; Table 504.3 footnote h
+- **Code:** Table 504.3, row `R` / `S13D`, column `V-B` = 40 ft; IBC 504.3; Table 504.3 footnote a; Table 504.3 footnote h
+- **Confidence:** Medium. It could be reversed by an exception in IBC CH 4 and IBC CH 5 (Table 504.3 footnote a), not provided.
 
-**Confidence:** Medium. It could be reversed by an exception in IBC CH 4 and IBC CH 5 (Table 504.3 footnote a), not provided.
+### Bedrooms
 
-## 5. Sleeping rooms (IBC 1030.1)
+Every bedroom needs at least one window a person can escape through (IBC 1030.1). A bedroom follows the window marked as its escape window. If none is marked, or the marked ones fail, its other windows are considered.
 
-A sleeping room needs at least one complying escape opening. The room follows its designated egress window; with none designated, or all of them failing, its other windows are considered.
+The rule covers this building because occupancy 'R-3' is listed in 1030.1 item 2. It covers bedrooms below the fourth story; each room's floor comes from its room number, using the numbering on the code analysis.
 
-Scope: occupancy 'R-3' is listed in 1030.1 item 2. Each room's story comes from its number, using the code analysis room numbering; 1030.1 covers sleeping rooms below the fourth story above grade plane.
+#### R-101 · BEDROOM 101, floor 1 · **Could Not Evaluate**
 
-| ID | Room | Story | Verdict | Confidence | Windows (EGRESS on the schedule) | Why | Code |
-|---|---|---|---|---|---|---|---|
-| R-101 | BEDROOM 101 | 1 | Could Not Evaluate | High | W-1 (egress): Could Not Evaluate, W-2 (not egress), W-3 (egress): Could Not Evaluate | W-1, W-3 could not be evaluated. The room has a complying opening only if one of them is shown to comply. | IBC 1030.1 |
-| R-107 | ADU BEDROOM 107 | 1 | Could Not Evaluate | High | W-7 (egress): Could Not Evaluate | W-7 could not be evaluated. The room has a complying opening only if W-7 is shown to comply. | IBC 1030.1 |
-| R-203 | BEDROOM 203 | 2 | **Fail** | Medium | W-10 (egress): Fail, W-11 (not egress) | The designated opening (W-10) fails, and no other window in the room could comply. Unless Exception 2 applies (an exit door to a public way), the room has no escape opening. | IBC 1030.1; IBC 1030.1 Exception 2 |
-| R-205 | BEDROOM 205 | 2 | Could Not Evaluate | Medium | W-12 (egress): Could Not Evaluate, W-13 (egress): Fail | W-12 could not be evaluated; W-13 fails. The room has a complying opening only if W-12 is shown to comply. The schedule spells this room more than one way; windows are grouped by room number. | IBC 1030.1 |
-| R-301 | BEDROOM 301 | 3 | **Fail** | Low | W-20 (egress): Fail | The designated opening (W-20) fails, and no other window in the room could comply. Unless Exception 2 applies (an exit door to a public way), the room has no escape opening. | IBC 1030.1; IBC 1030.1 Exception 2 |
-| R-303 | GUEST BED 303 | 3 | Could Not Evaluate | High | W-21 (not egress) | No window is designated as the escape opening; W-21 could comply at nominal size but is not marked egress. Ask the architect to designate a complying opening. | IBC 1030.1 |
+- **Windows:** W-1 (escape window): Could Not Evaluate; W-2 (not marked egress); W-3 (escape window): Could Not Evaluate. Read from the window-schedule, LOCATION 'BEDROOM 101'.
+- **Why:** W-1, W-3 could not be evaluated. The room has a complying opening only if one of them is shown to comply.
+- **Code:** IBC 1030.1
+- **Confidence:** High. It rests on values printed on the sheets.
 
-## 6. Egress windows (IBC 1030.2, 1030.3)
+#### R-107 · ADU BEDROOM 107, floor 1 · **Could Not Evaluate**
 
-Windows marked EGRESS on the schedule. How to read the results:
+- **Windows:** W-7 (escape window): Could Not Evaluate. Read from the window-schedule, LOCATION 'ADU BEDROOM 107'.
+- **Why:** W-7 could not be evaluated. The room has a complying opening only if W-7 is shown to comply.
+- **Code:** IBC 1030.1
+- **Confidence:** High. It rests on values printed on the sheets.
 
-- **Nominal size is an upper bound (≤).** It includes the frame, so the net clear area, height and width are at most the nominal figure. It can prove a Fail, never a Pass.
-- **The sill is a lower bound (≥).** Sill = head height − window height, which is the frame's sill. The clear opening starts higher, by the depth of the bottom frame.
-- **?** = not settled by the schedule. **⚠** = likely Fail (see §2). **Met** = satisfied as scheduled.
-- **No schedule shows these, so they are open for every window below:** opening without keys or tools (IBC 1030.1.1), screens that release from inside (IBC 1030.5), and opening onto a public way, yard or court (IBC 1030.1). §3 lists what would settle them.
+#### R-203 · BEDROOM 203, floor 2 · **Fail**
 
-| ID | Room | Type | Nominal W × H | Head | Opens (1030.2.1) | Area ≥ 5.7 sq ft (1030.2) | Clear height ≥ 24 in (1030.2.1) | Clear width ≥ 20 in (1030.2.1) | Sill ≤ 44 in (1030.3) | Verdict | Confidence |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| W-1 | BEDROOM 101 | L.H. CASM'T (type A) | 2' - 6" × 4' - 0" | 6' - 8" | Met | ? ≤ 10.00 sq ft | ? ≤ 48 in | ? ≤ 30 in | ? ≥ 32 in | Could Not Evaluate | High |
-| W-3 | BEDROOM 101 | R.H. CASM'T (type A) | 2' - 6" × 4' - 0" | 6' - 8" | Met | ? ≤ 10.00 sq ft | ? ≤ 48 in | ? ≤ 30 in | ? ≥ 32 in | Could Not Evaluate | High |
-| W-7 | ADU BEDROOM 107 | L.H. CASM'T (type F) | 2'-6" × 3' - 0" | 6' - 8" | Met | ? ≤ 7.50 sq ft | ? ≤ 36 in | ? ≤ 30 in | ? ≥ 44 in ⚠ | Could Not Evaluate | High |
-| W-10 | BEDROOM 203 | L.H. CASM'T (type H) | 2' - 0" × 2' - 6" | 6' - 8" | Met | **Fail** (≤ 5.00 sq ft) | ? ≤ 30 in | ? ≤ 24 in | **Fail** (≥ 50 in) | **Fail** | High |
-| W-12 | BEDRROM 205 | S.H. (type J) | 3' - 0" × 4' - 0" | 6' - 8" | Met | ? ≤ 12.00 sq ft | ? ≤ 48 in ⚠ | ? ≤ 36 in | ? ≥ 32 in | Could Not Evaluate | Medium |
-| W-13 | BEDROOM 205 | FIXED (type K) | 4' - 0" × 4' - 0" | 6' - 8" | **Fail** | **Fail** (does not open) | — | — | ? ≥ 32 in | **Fail** | High |
-| W-20 | BEDROOM 301 | L.H. CASM'T (type F) | 2' - 6" × 3' - 0" | 8' - 0" | Met | ? ≤ 7.50 sq ft | ? ≤ 36 in | ? ≤ 30 in | **Fail** (≥ 60 in) | **Fail** | Medium |
+- **Windows:** W-10 (escape window): Fail; W-11 (not marked egress). Read from the window-schedule, LOCATION 'BEDROOM 203'.
+- **Why:** The marked escape window (W-10) fails, and no other window in the room could comply. Unless Exception 2 applies (an exit door to a public way), the room has no escape opening.
+- **Code:** IBC 1030.1; IBC 1030.1 Exception 2
+- **Confidence:** Medium. It could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show.
 
-The area limit is 5.0 sq ft for a grade-floor opening (1030.2 Exception), and grade-floor status is not shown, so a nominal area fails only at or below 5.0. Values are as printed on the schedule; Appendix B gives each window's row.
+#### R-205 · BEDROOM 205, floor 2 · **Could Not Evaluate**
 
-## 7. Windows: Not Applicable
+- **Windows:** W-12 (escape window): Could Not Evaluate; W-13 (escape window): Fail. Read from the window-schedule, LOCATION 'BEDRROM 205', 'BEDROOM 205'.
+- **Why:** W-12 could not be evaluated; W-13 fails. The room has a complying opening only if W-12 is shown to comply. The schedule spells this room more than one way; its windows are grouped by room number.
+- **Code:** IBC 1030.1
+- **Confidence:** Medium. It rests on a room name corrected for a scanning error: room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan).
 
-| ID | Room | EGRESS cell | Verdict | Confidence | Why | Code |
-|---|---|---|---|---|---|---|
-| W-2 | BEDROOM 101 | (blank) | Not Applicable | High | Not marked egress; 1030.1 needs one escape opening per sleeping room, not every window. Considered in R-101. | IBC 1030.1 |
-| W-4 | OFFICE 102 | (blank) | Not Applicable | Low | Not clearly a sleeping room, so not evaluated. Confirm its use (see §2); if it is a sleeping room, it needs an escape opening. | IBC 1030.1 |
-| W-5 | LIVING 103 | (blank) | Not Applicable | High | Not a sleeping room (1030.1 applies to sleeping rooms). | IBC 1030.1 |
-| W-6 | KITCHEN 104 | (blank) | Not Applicable | High | Not a sleeping room (1030.1 applies to sleeping rooms). | IBC 1030.1 |
-| W-8 | LAUNDRY 108 | (blank) | Not Applicable | High | Not a sleeping room (1030.1 applies to sleeping rooms). | IBC 1030.1 |
-| W-11 | BEDROOM 203 | (blank) | Not Applicable | High | Not marked egress; 1030.1 needs one escape opening per sleeping room, not every window. Considered in R-203. | IBC 1030.1 |
-| W-14 | BATH 206 | (blank) | Not Applicable | High | Not a sleeping room (1030.1 applies to sleeping rooms). | IBC 1030.1 |
-| W-21 | GUEST BED 303 | (blank) | Not Applicable | High | Not marked egress; 1030.1 needs one escape opening per sleeping room, not every window. Considered in R-303. | IBC 1030.1 |
-| W-22 | HALL 302 | (blank) | Not Applicable | High | Not a sleeping room (1030.1 applies to sleeping rooms). | IBC 1030.1 |
-| W-23 | STAIR S1 | (blank) | Not Applicable | High | Not a sleeping room (1030.1 applies to sleeping rooms). | IBC 1030.1 |
+#### R-301 · BEDROOM 301, floor 3 · **Fail**
 
-## Appendix
+- **Windows:** W-20 (escape window): Fail. Read from the window-schedule, LOCATION 'BEDROOM 301'.
+- **Why:** The marked escape window (W-20) fails, and no other window in the room could comply. Unless Exception 2 applies (an exit door to a public way), the room has no escape opening.
+- **Code:** IBC 1030.1; IBC 1030.1 Exception 2
+- **Confidence:** Low, for 2 reasons:
+  - It could be reversed by IBC 1030.1 Exception 2 (an exit door to a public way), which the floor plans (not provided) would show.
+  - W-20: it rests only on a worked-out sill height (frame sill = 8'-0" head − 3'-0" height = 60 in, above 44 in); confirm on the elevations that head height is measured to the top of the window.
 
-For checking the tool, not for reading the verdicts. File names are the tool's input files; rule ids (`POL-…`) are the tool's named judgement calls.
+#### R-303 · GUEST BED 303, floor 3 · **Could Not Evaluate**
+
+- **Windows:** W-21 (not marked egress). Read from the window-schedule, LOCATION 'GUEST BED 303'.
+- **Why:** No window is marked as the escape window; W-21 could comply at its listed size but is not marked egress. Ask the architect to mark a window that complies.
+- **Code:** IBC 1030.1
+- **Confidence:** High. It rests on values printed on the sheets.
+
+### Escape windows
+
+Windows marked EGRESS on the schedule. Each is tested against the five requirements a schedule can show. Three more can't be shown on any schedule, so they stay open for every window: it opens without keys or tools (IBC 1030.1.1), any screen releases from inside (IBC 1030.5), and it opens onto a yard, court or public way (IBC 1030.1). Section 3 asks for them. A fixed window doesn't open, so its size tests are skipped.
+
+#### W-1 · Window 1, BEDROOM 101 · **Could Not Evaluate**
+
+- **Read from the window schedule, table row 4:** L.H. CASM'T (type A), 2' - 6" wide × 4' - 0" high, head height 6' - 8", EGRESS Y.
+
+| Requirement | Code | The schedule shows | Result |
+|---|---|---|---|
+| Opens normally | IBC 1030.2.1 | L.H. CASM'T: a casement | Met |
+| Opening area: at least 5.7 sq ft (5 on the ground floor) | IBC 1030.2; IBC 1030.2 Exception | 30 × 48 in = 10.00 sq ft, including the frame | Not settled |
+| Opening height: at least 24 in | IBC 1030.2.1 | 48 in, including the frame | Not settled |
+| Opening width: at least 20 in | IBC 1030.2.1 | 30 in, including the frame | Not settled |
+| Sill: no more than 44 in above the floor | IBC 1030.3 | 80 in head − 48 in height = 32 in, at the frame | Not settled |
+
+- **Would settle it:** window type details or elevations.
+- **Room:** BEDROOM 101 (R-101, Could Not Evaluate).
+- **Confidence:** High. It rests on values printed on the sheets.
+
+#### W-3 · Window 3, BEDROOM 101 · **Could Not Evaluate**
+
+- **Read from the window schedule, table row 6:** R.H. CASM'T (type A), 2' - 6" wide × 4' - 0" high, head height 6' - 8", EGRESS Y.
+
+| Requirement | Code | The schedule shows | Result |
+|---|---|---|---|
+| Opens normally | IBC 1030.2.1 | R.H. CASM'T: a casement | Met |
+| Opening area: at least 5.7 sq ft (5 on the ground floor) | IBC 1030.2; IBC 1030.2 Exception | 30 × 48 in = 10.00 sq ft, including the frame | Not settled |
+| Opening height: at least 24 in | IBC 1030.2.1 | 48 in, including the frame | Not settled |
+| Opening width: at least 20 in | IBC 1030.2.1 | 30 in, including the frame | Not settled |
+| Sill: no more than 44 in above the floor | IBC 1030.3 | 80 in head − 48 in height = 32 in, at the frame | Not settled |
+
+- **Would settle it:** window type details or elevations.
+- **Room:** BEDROOM 101 (R-101, Could Not Evaluate).
+- **Confidence:** High. It rests on values printed on the sheets.
+
+#### W-7 · Window 7, ADU BEDROOM 107 · **Could Not Evaluate**
+
+- **Read from the window schedule, table row 10:** L.H. CASM'T (type F), 2'-6" wide × 3' - 0" high, head height 6' - 8", EGRESS Y.
+
+| Requirement | Code | The schedule shows | Result |
+|---|---|---|---|
+| Opens normally | IBC 1030.2.1 | L.H. CASM'T: a casement | Met |
+| Opening area: at least 5.7 sq ft (5 on the ground floor) | IBC 1030.2; IBC 1030.2 Exception | 30 × 36 in = 7.50 sq ft, including the frame | Not settled |
+| Opening height: at least 24 in | IBC 1030.2.1 | 36 in, including the frame | Not settled |
+| Opening width: at least 20 in | IBC 1030.2.1 | 30 in, including the frame | Not settled |
+| Sill: no more than 44 in above the floor | IBC 1030.3 | 80 in head − 36 in height = 44 in, at the frame | Not settled, likely Fail |
+
+- **Likely to fail:** The frame sill is exactly 44 in, so any bottom frame puts the clear opening above the limit. Confirm with the manufacturer's clear-opening dimensions.
+- **Would settle it:** window type details or elevations.
+- **Room:** ADU BEDROOM 107 (R-107, Could Not Evaluate).
+- **Confidence:** High. It rests on values printed on the sheets.
+
+#### W-10 · Window 10, BEDROOM 203 · **Fail**
+
+- **Read from the window schedule, table row 12:** L.H. CASM'T (type H), 2' - 0" wide × 2' - 6" high, head height 6' - 8", EGRESS Y.
+
+| Requirement | Code | The schedule shows | Result |
+|---|---|---|---|
+| Opens normally | IBC 1030.2.1 | L.H. CASM'T: a casement | Met |
+| Opening area: at least 5.7 sq ft (5 on the ground floor) | IBC 1030.2; IBC 1030.2 Exception | 24 × 30 in = 5.00 sq ft, including the frame | **Fail** |
+| Opening height: at least 24 in | IBC 1030.2.1 | 30 in, including the frame | Not settled |
+| Opening width: at least 20 in | IBC 1030.2.1 | 24 in, including the frame | Not settled |
+| Sill: no more than 44 in above the floor | IBC 1030.3 | 80 in head − 30 in height = 50 in, at the frame | **Fail** |
+
+- **Room:** BEDROOM 203 (R-203, Fail).
+- **Confidence:** High. It rests on values printed on the sheets.
+
+#### W-12 · Window 12, BEDRROM 205 · **Could Not Evaluate**
+
+- **Read from the window schedule, table row 14:** S.H. (type J), 3' - 0" wide × 4' - 0" high, head height 6' - 8", EGRESS Y.
+
+| Requirement | Code | The schedule shows | Result |
+|---|---|---|---|
+| Opens normally | IBC 1030.2.1 | S.H.: a single hung | Met |
+| Opening area: at least 5.7 sq ft (5 on the ground floor) | IBC 1030.2; IBC 1030.2 Exception | 36 × 48 in = 12.00 sq ft, including the frame | Not settled |
+| Opening height: at least 24 in | IBC 1030.2.1 | 48 in, including the frame | Not settled, likely Fail |
+| Opening width: at least 20 in | IBC 1030.2.1 | 36 in, including the frame | Not settled |
+| Sill: no more than 44 in above the floor | IBC 1030.3 | 80 in head − 48 in height = 32 in, at the frame | Not settled |
+
+- **Likely to fail:** Only the bottom sash opens, about 24 in before the frame, exactly the 24 in minimum, leaving nothing for the frame. Ask for the sash split and the manufacturer's clear opening.
+- **Would settle it:** window type details or elevations.
+- **Room:** BEDROOM 205 (R-205, Could Not Evaluate).
+- **Confidence:** Medium. It rests on a room name corrected for a scanning error: room name 'BEDRROM' is one character from 'BEDROOM'; read as a sleeping room (likely OCR damage; confirm on the floor plan).
+
+#### W-13 · Window 13, BEDROOM 205 · **Fail**
+
+- **Read from the window schedule, table row 15:** FIXED (type K), 4' - 0" wide × 4' - 0" high, head height 6' - 8", EGRESS Y.
+
+| Requirement | Code | The schedule shows | Result |
+|---|---|---|---|
+| Opens normally | IBC 1030.1.1; IBC 1030.2.1 | FIXED: does not open | **Fail** |
+| Opening area: at least 5.7 sq ft (5 on the ground floor) | IBC 1030.2; IBC 1030.2 Exception | no opening (fixed) | **Fail** |
+| Sill: no more than 44 in above the floor | IBC 1030.3 | 80 in head − 48 in height = 32 in, at the frame | Not settled |
+
+- **Room:** BEDROOM 205 (R-205, Could Not Evaluate).
+- **Confidence:** High. It rests on values printed on the sheets.
+
+#### W-20 · Window 20, BEDROOM 301 · **Fail**
+
+- **Read from the window schedule, table row 17:** L.H. CASM'T (type F), 2' - 6" wide × 3' - 0" high, head height 8' - 0", EGRESS Y.
+
+| Requirement | Code | The schedule shows | Result |
+|---|---|---|---|
+| Opens normally | IBC 1030.2.1 | L.H. CASM'T: a casement | Met |
+| Opening area: at least 5.7 sq ft (5 on the ground floor) | IBC 1030.2; IBC 1030.2 Exception | 30 × 36 in = 7.50 sq ft, including the frame | Not settled |
+| Opening height: at least 24 in | IBC 1030.2.1 | 36 in, including the frame | Not settled |
+| Opening width: at least 20 in | IBC 1030.2.1 | 30 in, including the frame | Not settled |
+| Sill: no more than 44 in above the floor | IBC 1030.3 | 96 in head − 36 in height = 60 in, at the frame | **Fail** |
+
+- **Room:** BEDROOM 301 (R-301, Fail).
+- **Confidence:** Medium. It rests only on a worked-out sill height (frame sill = 8'-0" head − 3'-0" height = 60 in, above 44 in); confirm on the elevations that head height is measured to the top of the window.
+
+### Windows the rule doesn't apply to
+
+**Not in a bedroom.** The escape-window rule applies to sleeping rooms only (IBC 1030.1).
+
+| ID | Room | EGRESS cell | Schedule row | Verdict | Confidence |
+|---|---|---|---|---|---|
+| W-5 | LIVING 103 | (blank) | 8 | Not Applicable | High |
+| W-6 | KITCHEN 104 | (blank) | 9 | Not Applicable | High |
+| W-8 | LAUNDRY 108 | (blank) | 11 | Not Applicable | High |
+| W-14 | BATH 206 | (blank) | 16 | Not Applicable | High |
+| W-22 | HALL 302 | (blank) | 19 | Not Applicable | High |
+| W-23 | STAIR S1 | (blank) | 20 | Not Applicable | High |
+
+**In a bedroom, but not marked egress.** A bedroom needs one escape window, not every window to be one (IBC 1030.1). Each is still considered in its bedroom's entry.
+
+| ID | Room | EGRESS cell | Schedule row | Verdict | Confidence |
+|---|---|---|---|---|---|
+| W-2 | BEDROOM 101 | (blank) | 5 | Not Applicable | High |
+| W-11 | BEDROOM 203 | (blank) | 13 | Not Applicable | High |
+| W-21 | GUEST BED 303 | (blank) | 18 | Not Applicable | High |
+
+**Room use unclear.** The name isn't clearly a bedroom, so the rule wasn't applied. If people sleep there, it needs an escape window (IBC 1030.1). Confirm the room's use.
+
+| ID | Room | EGRESS cell | Schedule row | Verdict | Confidence |
+|---|---|---|---|---|---|
+| W-4 | OFFICE 102 | (blank) | 7 | Not Applicable | Low |
+
+## Appendix: for checking the tool
+
+Not needed to read the verdicts. File names are the tool's input files; rule ids (`POL-…`) are the tool's named judgement calls. Table rows are counted from 1 at the top of each table, header rows included.
 
 ### A. Code text cited
 
@@ -183,38 +332,7 @@ Every code limit the checks use is quoted word for word from these lines; the to
 | Table 504.3 footnote a | `code/table-504.3-notes.md` line 19 |
 | Table 504.3 footnote h | `code/table-504.3-notes.md` line 33 |
 
-### B. Where each value was read
-
-Rows are counted from 1 at the top of each table, header rows included.
-
-| ID | In section | Source |
-|---|---|---|
-| H-1 | §4 | code-analysis.html table rows 4, 5, 6, 8, 9 |
-| R-101 | §5 | window-schedule.html, LOCATION 'BEDROOM 101' |
-| R-107 | §5 | window-schedule.html, LOCATION 'ADU BEDROOM 107' |
-| R-203 | §5 | window-schedule.html, LOCATION 'BEDROOM 203' |
-| R-205 | §5 | window-schedule.html, LOCATION 'BEDRROM 205', 'BEDROOM 205' |
-| R-301 | §5 | window-schedule.html, LOCATION 'BEDROOM 301' |
-| R-303 | §5 | window-schedule.html, LOCATION 'GUEST BED 303' |
-| W-1 | §6 | window-schedule.html table row 4 |
-| W-2 | §7 | window-schedule.html table row 5 |
-| W-3 | §6 | window-schedule.html table row 6 |
-| W-4 | §7 | window-schedule.html table row 7 |
-| W-5 | §7 | window-schedule.html table row 8 |
-| W-6 | §7 | window-schedule.html table row 9 |
-| W-7 | §6 | window-schedule.html table row 10 |
-| W-8 | §7 | window-schedule.html table row 11 |
-| W-10 | §6 | window-schedule.html table row 12 |
-| W-11 | §7 | window-schedule.html table row 13 |
-| W-12 | §6 | window-schedule.html table row 14 |
-| W-13 | §6 | window-schedule.html table row 15 |
-| W-14 | §7 | window-schedule.html table row 16 |
-| W-20 | §6 | window-schedule.html table row 17 |
-| W-21 | §7 | window-schedule.html table row 18 |
-| W-22 | §7 | window-schedule.html table row 19 |
-| W-23 | §7 | window-schedule.html table row 20 |
-
-### C. Rules the tool applied
+### B. Rules the tool applied
 
 Judgement calls are named rules, the same for every project, each with a test.
 
@@ -246,7 +364,7 @@ Judgement calls are named rules, the same for every project, each with a test.
 
 Not needed for this project: `POL-GEN-OCR` (OCR-repaired values never decide a verdict alone), `POL-GEN-UNCOVERED` (No rule, no verdict), `POL-H-NS-NEW` (NS limits are for existing buildings), `POL-E-OPERATION-UNKNOWN` (Unrecognised window type), `POL-E-NO-EGRESS-COLUMN` (Schedule without an egress column).
 
-### D. Inputs
+### C. Inputs
 
 | Input | File | sha256 (first 12) |
 |---|---|---|

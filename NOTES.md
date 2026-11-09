@@ -42,14 +42,15 @@ There are no model calls at run time. Every step is plain, tested Python.
    - The key rules: nominal size is an upper bound, so it can prove a Fail but never a Pass. A sill derived as head height minus window height is the *frame* sill, a lower bound on the clear opening's bottom.
 6. **Report.** `REPORT.md` and `findings.json` render from one list of findings. A test checks that the committed files are byte-for-byte what the tool writes.
 
-**Why the report is laid out this way.** It follows the plan checker's job, in order:
-1. **Corrections.** These are worded like correction-letter comments and grouped by room, so Bedroom 203 and its failing window are one item. Each states the arithmetic and only the code sections that decide it.
-2. **Check these before relying on the report.** This is where the tool could be wrong or the drawings could hide something: likely Fails the schedule can't prove, missing window numbers, OCR repairs, an ambiguous room, interpretations.
-3. **Information to request.** The Could Not Evaluate findings, rewritten as requests to the architect.
-4. **Evidence.** Compact tables follow. The egress-window table shows, for each window, what was read and each requirement's result, with the code section in the column header. Rules shared by every window, such as nominal size being an upper bound, are stated once above it.
-5. **Appendix.** It holds what a reviewer needs but a plan checker doesn't: code file lines, source rows, the named rules and input hashes.
+**Why the report is laid out this way.** It is written for a plan checker without code training, and follows their job in order:
+1. **Summary and a short key.** The bottom line in one sentence, the verdict counts, why nothing passes, and what the verdicts, confidence levels and IDs mean.
+2. **Corrections to send.** One numbered item per problem, so Bedroom 203 and its failing window are one item. Each has the same labelled lines: Problem, Why, Unless, Code, and Confidence before sending.
+3. **Look at these yourself.** Where the tool could be wrong or the drawings could hide something: likely Fails the schedule can't prove, missing window numbers, the unsupported code-analysis claim, an ambiguous room, an interpretation and the scanning repairs.
+4. **What to ask the architect.** The Could Not Evaluate findings, as numbered requests, each naming the findings it would settle.
+5. **Every finding in full.** One short block per finding with the same labelled lines. Each escape window gets a small four-column table: requirement, code, what the schedule shows and result. Windows the rule doesn't apply to are grouped by reason.
+6. **Appendix.** It holds what a reviewer of the tool needs but a plan checker doesn't: code file lines, the named rules and input hashes.
 
-The report went from 585 lines to about 240 after three independent reviews: two from Sonnet and one from me.
+Two rounds of review shaped it. The Phase 5 round cut it from 585 lines to about 240 with dense tables. The layperson round traded those wide tables (8 and 12 columns) for labelled blocks. That made the report longer (about 370 lines), but each part is now easy to read on its own.
 
 **What varies and what doesn't.** The project files are inputs. Another project's code analysis and window schedule, with different values, column names, order and OCR damage, are read the same way (brief, line 92). The code files are a fixed library: IBC 2018 Table 504.3, its notes and Section 1030 (brief, lines 13, 53 and 72). They are curated once with line-cited quotes, not re-read per project. Swapping in another edition means updating `planCheck/citations.py`. If a code file changes without that update, the startup quote check stops the run rather than apply stale limits.
 

@@ -1,11 +1,19 @@
 """Render REPORT.md and findings.json from the findings.
 
-The report is for a plan checker writing a correction letter. Order: what fails (worded
-as correction items), what to check before relying on the tool, what to ask the
-architect for, then the evidence tables, then an appendix with the rules, code lines
-and inputs. Every finding keeps its verdict, code section and evidence; internal ids
-and file paths stay in the appendix and in findings.json.
+The report is for a plan checker writing a correction letter, and is written so a reader
+without code training can follow it. Order:
 
+1. Summary, with a short key to the verdicts, confidence and IDs.
+2. Corrections to send: one short labelled item per problem (a room and its failing
+   window are one problem).
+3. Look at these yourself: where the tool may be wrong or the drawings may hide something.
+4. What to ask the architect: the Could Not Evaluate findings as numbered requests.
+5. Every finding in full, one block each with the same labelled lines: what was read,
+   the arithmetic, the code section and the confidence. Windows the rule doesn't apply
+   to are grouped by reason.
+6. Appendix: code lines, named rules and input files, for checking the tool.
+
+Standalone Markdown: no HTML, no in-page links, so it reads the same in any viewer.
 Deterministic: no timestamps, fixed ordering, input files named by basename and sha256.
 """
 from __future__ import annotations
@@ -19,21 +27,30 @@ from .policies import POLICIES
 
 _LINE = re.compile(r"\s*\(([^()]*?\.(?:md|html)) lines? ([\d-]+)\)")
 _DOC = re.compile(r"\(([A-Z][A-Z0-9]*(?::[A-Z0-9.\-]+)+), not provided(?:; related through footnote (\w))?\)")
-_ID = re.compile(r"(?<![\[#\w-])([HRW]-\d+)\b")
 _OCR_CODES = ("ocr_repair", "ocr_room_name", "label_split_word")
 
 # What to ask for, by manifest document id. Anything else falls back to the manifest title.
 _REQUEST = {
-    "PROJECT:WINDOW-DETAILS": "Manufacturer data or window type details{types}: the net clear opening (width, "
-                              "height, and the height of its bottom above the floor), the operating hardware "
-                              "(1030.1.1: no keys or tools) and screen release from inside (1030.5)",
-    "PROJECT:ELEVATIONS": "Elevations or wall sections dimensioning each escape window's sill and head",
-    "PROJECT:FLOOR-PLANS": "Floor plans showing room uses, any exterior door from a sleeping room (1030.1 Exception "
-                           "2), and that each escape window opens onto a yard, court or public way",
-    "PROJECT:BUILDING-SECTIONS": "Building sections or roof plan dimensioning the height to the average of the "
-                                 "highest roof surface",
-    "PROJECT:C1.0:CIVIL": "The civil sheet with the grade plane calculation",
+    "PROJECT:WINDOW-DETAILS": "Manufacturer data or window type details{types}: the clear opening (width, height, "
+                              "and the height of its bottom above the floor), the hardware (it must open without "
+                              "keys or tools, IBC 1030.1.1) and whether screens release from inside (IBC 1030.5).",
+    "PROJECT:ELEVATIONS": "Elevations or wall sections that dimension each escape window's sill and head height.",
+    "PROJECT:FLOOR-PLANS": "Floor plans showing what each room is used for, any door from a bedroom straight to "
+                           "the outside (IBC 1030.1 Exception 2), and that each escape window opens onto a yard, "
+                           "court or public way.",
+    "PROJECT:BUILDING-SECTIONS": "Building sections or a roof plan that dimension the height to the average of the "
+                                 "highest roof surface.",
+    "PROJECT:C1.0:CIVIL": "The civil sheet with the grade plane calculation.",
 }
+
+# The measurable window requirements, in table order: requirement prefix -> plain label.
+_TESTS = [
+    ("Opens by normal operation", "Opens normally"),
+    ("Net clear opening", "Opening area: at least {a} sq ft ({b} on the ground floor)"),
+    ("Net clear height", "Opening height: at least {n} in"),
+    ("Net clear width", "Opening width: at least {n} in"),
+    ("Bottom of clear opening", "Sill: no more than {n} in above the floor"),
+]
 
 
 # --------------------------------------------------------------------------- helpers
@@ -58,13 +75,13 @@ def _sections(*refs: str) -> str:
     return "; ".join(dict.fromkeys(parts))
 
 
-def _link(fid: str) -> str:
-    """IDs are plain text: the report must read the same in any Markdown viewer, with no in-page anchors."""
-    return fid
-
-
 def _room(f: Finding) -> str:
     return f.subject.split(" (room ")[0]
+
+
+def _where(f: Finding) -> str:
+    """'BEDROOM 203' from 'Window 10, BEDROOM 203'."""
+    return f.subject.split(", ", 1)[1] if ", " in f.subject else f.subject
 
 
 def _brief(c: Criterion) -> str:
@@ -81,75 +98,38 @@ def _docs(settle: str) -> list[tuple[str, str, str]]:
     return out
 
 
-def _linkify(text: str) -> str:
-    """Link bare finding ids (W-11) in running text."""
-    return _ID.sub(lambda m: _link(m.group(1)), text)
-
-
 def _cap(text: str) -> str:
     return text[:1].upper() + text[1:]
-
-
-def _type_mark(f: Finding) -> str:
-    return next((e["value"] for e in f.evidence if "(type mark)" in e["label"]), "") or ""
 
 
 def _ev(f: Finding, role: str) -> str:
     return next((e["value"] for e in f.evidence if e["label"].endswith(f"({role})")), "") or ""
 
 
-def _bound(c: Criterion) -> str:
-    """The number a schedule-derived criterion rests on, as a bound: '≤ 10.00 sq ft', '≥ 32 in'."""
-    if c.requirement.startswith("Net clear opening"):
-        m = re.search(r"= ([\d.]+) sq ft", c.read)
-        return f"≤ {m.group(1)} sq ft" if m else ""
-    if c.requirement.startswith("Net clear"):
-        m = re.search(r"= ([\d.]+) in", c.read)
-        return f"≤ {m.group(1)} in" if m else ""
-    if c.requirement.startswith("Bottom"):
-        m = re.search(r"= ([\d.]+) in \(", c.read)
-        if m:
-            return f"≥ {m.group(1)} in" if "frame sill" in c.read else f"{m.group(1)} in"
-    return ""
-
-
-def _cell(c: Criterion | None) -> str:
-    if c is None:
-        return "—"
-    b = _bound(c)
-    if c.verdict == FAIL:
-        if not b and c.read.startswith("fixed"):
-            b = "does not open"
-        return "**Fail**" + (f" ({b})" if b else "")
-    if c.verdict == PASS:
-        return "Met" + (f" ({b})" if b else "")
-    return f"? {b}".strip() + (" ⚠" if c.flags else "")
+def _row(f: Finding) -> str:
+    """The source table row a window was read from, or ''."""
+    return next((m.group(1) for e in f.evidence for m in [re.search(r"table row (\d+)", e["source"])] if m), "")
 
 
 def _crit(f: Finding, prefix: str) -> Criterion | None:
     return next((c for c in f.criteria if c.requirement.startswith(prefix)), None)
 
 
-# --------------------------------------------------------------------------- sections
-
-def _rests(x: str) -> str:
-    """'src/NOTES.md decision: X' -> 'project decision: X' (the reader has no repo)."""
-    return re.sub(r"^src/NOTES\.md(?: decision)?[:,]\s*", "project decision: ", x)
-
-
-def _section_of(f: Finding) -> str:
-    if f.check == "height":
-        return "§4"
-    if f.check == "egress_room":
-        return "§5"
-    return "§7" if f.verdict == NA else "§6"
+def _confidence(f: Finding, lead: str = "**Confidence:**") -> list[str]:
+    """The confidence line, with its reasons as sub-bullets when there is more than one."""
+    rs = [_cap(_plain(x).replace("rests only on a derived value", "rests only on a worked-out sill height")
+               .replace("rests on a repaired room name", "rests on a room name corrected for a scanning error"))
+          for x in f.confidence_reasons]
+    if not rs:
+        return [f"- {lead} {f.confidence}. It rests on values printed on the sheets."]
+    if len(rs) == 1:
+        return [f"- {lead} {f.confidence}. {rs[0]}."]
+    return [f"- {lead} {f.confidence}, for {len(rs)} reasons:"] + [f"  - {x}." for x in rs]
 
 
-def _where_ids(results: Results) -> str:
-    groups: dict[str, list[str]] = {}
-    for f in [results.height, *results.rooms, *results.windows]:
-        groups.setdefault(_section_of(f), []).append(f.id)
-    return "; ".join(f"{sec}: {', '.join(ids)}" for sec, ids in sorted(groups.items()))
+def _heading(f: Finding, title: str) -> str:
+    """The finding heading the eval scorer reads: '### ID · title · **Verdict**'."""
+    return f"#### {f.id} · {title} · **{f.verdict}**"
 
 
 def _correction_findings(results: Results) -> list[Finding]:
@@ -160,142 +140,196 @@ def _correction_findings(results: Results) -> list[Finding]:
         w for w in results.windows if w.verdict == FAIL and w.id not in in_rooms]
 
 
-def _header(results: Results, counts: dict, out: list[str]) -> None:
+def _rests(x: str) -> str:
+    """'src/NOTES.md decision: X' -> 'project decision: X' (the reader has no repo)."""
+    return re.sub(r"^src/NOTES\.md(?: decision)?[:,]\s*", "project decision: ", x)
+
+
+# --------------------------------------------------------------------------- window wording
+
+def _shows(c: Criterion) -> str:
+    """What the schedule shows for one requirement, in plain words."""
+    r = _plain(c.read)
+    if c.requirement.startswith("Opens"):
+        m = re.match(r"type ['\"](.+?)['\"] \((.+?)\)", r)
+        if m:
+            return f"{m.group(1)}: {'does not open' if m.group(2) == 'fixed' else 'a ' + m.group(2)}"
+        return r
+    if r.startswith("fixed"):
+        return "no opening (fixed)"
+    m = re.search(r"nominal ([\d.]+) in x ([\d.]+) in = [\d.]+ sq in = ([\d.]+) sq ft", r)
+    if m:
+        return f"{m.group(1)} × {m.group(2)} in = {m.group(3)} sq ft, including the frame"
+    m = re.search(r"head height ([\d.]+) in - nominal height ([\d.]+) in = ([\d.]+) in", r)
+    if m:
+        return f"{m.group(1)} in head − {m.group(2)} in height = {m.group(3)} in, at the frame"
+    m = re.search(r"nominal (?:height|width) .*= ([\d.]+) in", r)
+    if m:
+        return f"{m.group(1)} in, including the frame"
+    m = re.search(r"scheduled sill .*?([\d.]+) in", r)
+    if m:
+        return f"{m.group(1)} in, as scheduled"
+    return r
+
+
+def _result(c: Criterion | None) -> str:
+    if c is None:
+        return "—"
+    if c.verdict == FAIL:
+        return "**Fail**"
+    if c.verdict == PASS:
+        return "Met"
+    return "Not settled, likely Fail" if c.flags else "Not settled"
+
+
+def _label(prefix: str, label: str, c: Criterion) -> str:
+    nums = re.findall(r"[\d.]+", c.requirement)
+    if prefix == "Net clear opening" and len(nums) >= 2:
+        return label.format(a=nums[0], b=nums[1])
+    return label.format(n=nums[0] if nums else "")
+
+
+# --------------------------------------------------------------------------- sections
+
+def _summary(results: Results, counts: dict, out: list[str]) -> None:
     out.append("# Plan check report: building height and emergency escape openings")
     out.append("")
     if results.project:
         out.append(f"**Project:** {_md(results.project)}")
         out.append("")
+    out.append("## Summary")
+    out.append("")
+    items = _correction_findings(results)
+    unsettled = counts[CNE]
+    bottom = (f"{len(items)} correction{'s' if len(items) != 1 else ''} for the letter, {unsettled} finding"
+              f"{'s' if unsettled != 1 else ''} these sheets can't settle, and "
+              + ("nothing passes." if counts[PASS] == 0 else f"{counts[PASS]} pass."))
+    out.append(f"- **Bottom line:** {bottom}")
+    line = "- **Verdicts:** " + " · ".join(f"{counts[v]} {v}" for v in (FAIL, CNE, PASS, NA)) + "."
+    if counts[FAIL] and len(items) != counts[FAIL]:
+        line += (f" The {counts[FAIL]} Fails are {len(items)} corrections, because a bedroom and its failing window "
+                 "count as one problem.")
+    out.append(line)
+    if counts[PASS] == 0 and any(f.verdict == CNE for f in results.windows):
+        out.append("- **Why nothing passes:** the window schedule gives frame sizes. The real opening is always "
+                   "smaller, so a frame size can prove a window too small but never big enough.")
     amend = (f" {'; '.join(results.unavailable_amendments)} were not provided, so every verdict is subject to them."
              if results.unavailable_amendments else "")
-    out.append("Checked against IBC 2018 Table 504.3 (allowable building height) and Section 1030 (emergency escape "
-               "and rescue openings), as printed." + amend)
+    out.append("- **What this is:** an automated check of the code analysis sheet and the window schedule. It "
+               "checks two things only: building height and bedroom escape windows. Everything else on the code "
+               "analysis (stories, floor area and so on) was not checked.")
+    out.append("- **Checked against:** the 2018 IBC as printed: Table 504.3 (building height) and Section 1030 "
+               "(emergency escape openings)." + amend)
     out.append("")
-    out.append("**Result: " + ", ".join(f"{counts[v]} {v}" for v in (FAIL, CNE, PASS, NA)) + ".**")
-    items = _correction_findings(results)
-    n_items = len(items)
-    if counts[FAIL] and n_items != counts[FAIL]:
-        out.append(f"The {counts[FAIL]} Fails are {n_items} correction items (§1): a room and its failing window are "
-                   "one problem.")
-    if items:
-        lv = {lvl: sum(1 for f in items if f.confidence == lvl) for lvl in ("High", "Medium", "Low")}
-        out.append(f"Confidence in the {n_items} corrections: " + ", ".join(f"{n} {k}" for k, n in lv.items() if n)
-                   + ". §1 says what to confirm before sending any that is not High.")
-    if counts[PASS] == 0 and any(f.verdict == CNE for f in results.windows):
-        out.append("Nothing passes because a window schedule gives nominal sizes, which include the frame, and the "
-                   "code regulates the net clear opening, which is always smaller. A nominal size can prove a Fail, "
-                   "never a Pass.")
+    out.append("**How to read this report**")
+    out.append("")
+    out.append("- **Verdicts.** **Fail:** breaks the rule. **Could Not Evaluate:** the rule applies, but these sheets "
+               "can't settle it. **Pass:** meets the rule. **Not Applicable:** the rule doesn't apply here.")
+    out.append("- **Confidence** says how likely a verdict is to stand once the full drawing set is seen. **High:** "
+               "send the correction as written. **Medium:** one thing could change it; confirm it first, or send "
+               "the correction with that condition stated. **Low:** more than one thing could change it; confirm "
+               "them first, or send a request for information instead of a correction.")
+    if any(c.basis == "derived" for w in results.windows for c in w.criteria):
+        out.append("- **Sill heights are worked out,** not read: the schedule doesn't list them, so the sill is the "
+                   "head height minus the window height. That is the bottom of the frame; the opening itself starts "
+                   "a little higher.")
+    out.append("- **Terms.** R-3 is the occupancy group (houses), V-B the construction type, and S13D a house-type "
+               "sprinkler system (NFPA 13D). Head height is the floor to the top of the window. A casement opens on "
+               "a side hinge; a single hung window opens only its bottom half. Scanning errors are letters or "
+               "spaces the scan got wrong.")
+    out.append("- **IDs.** H- is the building height, R- a bedroom, W- a window. Search for an ID to find its full "
+               "entry in section 4.")
     out.append("")
 
 
 def _corrections(results: Results, by_id: dict, out: list[str]) -> None:
-    """Numbered correction items, grouped by room."""
-    out.append("## 1. Corrections")
+    out.append("## 1. Corrections to send")
     out.append("")
-    out.append("Raw material for the correction letter: the problem, the arithmetic and the deciding code section. "
-               "Each ID's evidence is in a later section, found by searching for the ID.")
-    out.append("")
-    out.append(f"*Where each ID is:* {_where_ids(results)}.")
-    out.append("")
-    out.append("**Confidence** says how likely a correction is to stand once the full drawing set is seen. "
-               "**High:** send it as written. **Medium:** one thing could overturn it; confirm that first, or send "
-               "the correction with that condition stated. **Low:** more than one thing could overturn it; confirm "
-               "them before sending, and if they can't be confirmed, send it as a request for information instead of "
-               "a correction. A wrong correction costs the applicant a redesign.")
-    out.append("")
-    items, covered = [], []
-    h = results.height
-    if h.verdict == FAIL:
-        body = [_plain(h.summary)]
-        for fl in h.flags:
-            if fl["code"] == "architect_allowable_mismatch":
-                body.append("Also revise the code analysis: " + _plain(fl["message"]).replace(
-                    "The code analysis states", "it states", 1))
-        items.append((f"**Building height exceeds Table 504.3** ({_link(h.id)})", body,
-                      _sections(h.code_refs[0].split(" = ")[0]), h))
-        covered.append(h.id)
-    for r in results.rooms:
-        if r.verdict != FAIL:
-            continue
-        body, codes = [], []
-        for wid in r.related:
-            w = by_id[wid]
-            if w.verdict == FAIL:
-                fails = [c for c in w.criteria if c.verdict == FAIL]
-                body.append(f"{_link(w.id)}, the designated escape window: " +
-                            "; ".join(f"{_brief(c)} ({_sections(c.code)})" for c in fails) + ".")
-                codes += [c.code for c in fails]
-                covered.append(w.id)
-        others = next((x.split(": ", 1)[1] for x in r.working if x.startswith("other windows as candidates")), "")
-        if others and others != "none":
-            body.append(_linkify(f"Other windows in the room: {others}."))
-        if "POL-E-EXCEPTION-2" in r.policies:
-            body.append("This stands unless the room has an exit door that opens directly to a public way, yard or "
-                        "court (IBC 1030.1 Exception 2); the floor plans would show it.")
-        items.append((f"**{_room(r)} has no complying escape opening** ({_link(r.id)})", body,
-                      _sections(*r.code_refs[:1], *codes), r))
-        covered.append(r.id)
-    for w in results.windows:
-        if w.verdict != FAIL or w.id in covered:
-            continue
-        fails = [c for c in w.criteria if c.verdict == FAIL]
-        body = [_cap("; ".join(_brief(c) for c in fails)) + "."]
-        room = next((r for r in results.rooms if w.id in r.related), None)
-        if room is not None and room.verdict != FAIL:
-            body.append(f"The room ({_link(room.id)}) is {room.verdict}: {_linkify(_plain(room.summary))}")
-        win, where = w.subject.split(", ", 1)
-        items.append((f"**{win} in {where} is designated as the escape opening but cannot be one** ({_link(w.id)})",
-                      body, _sections(*[c.code for c in fails]), w))
-        covered.append(w.id)
+    items = _correction_findings(results)
     if not items:
         out.append("None.")
-    for n, (title, body, code, f) in enumerate(items, 1):
-        out.append(f"{n}. {title}")
-        for b in body:
-            out.append(f"   - {b}")
-        out.append(f"   - *Code:* {code}")
-        rs = [_cap(_linkify(_plain(x))) for x in f.confidence_reasons]
-        if len(rs) > 1:
-            out.append(f"   - *Confidence:* **{f.confidence}**, for {len(rs)} reasons:")
-            out += [f"     - {x}." for x in rs]
-        else:
-            out.append(f"   - *Confidence:* **{f.confidence}**. " + (f"{rs[0]}." if rs else
-                                                                     "It rests on printed values only."))
+        out.append("")
+        return
+    out.append("Each item is worded as raw material for the correction letter.")
     out.append("")
+    for n, f in enumerate(items, 1):
+        body: list[str] = []
+        if f.check == "height":
+            title = "Building height is over the limit"
+            body.append(f"- **Problem:** {_plain(f.summary)}")
+            for fl in f.flags:
+                if fl["code"] == "architect_allowable_mismatch":
+                    body.append("- **Also correct the code analysis:** " + _plain(fl["message"]).replace(
+                        "The code analysis states", "it states", 1))
+            body.append(f"- **Code:** {_sections(f.code_refs[0].split(' = ')[0])}")
+        elif f.check == "egress_room":
+            title = f"{_room(f)} has no working escape window"
+            codes = list(f.code_refs[:1])
+            why = []
+            for wid in f.related:
+                w = by_id[wid]
+                if w.verdict == FAIL:
+                    fails = [c for c in w.criteria if c.verdict == FAIL]
+                    why.append(f"{w.id}, its escape window: " + "; ".join(_brief(c) for c in fails) + ".")
+                    codes += [c.code for c in fails]
+            others = next((x.split(": ", 1)[1] for x in f.working if x.startswith("other windows as candidates")), "")
+            if others and others != "none":
+                why.append(f"Other windows in the room: {others}.")
+            body.append(f"- **Problem:** {_room(f)} needs at least one window a person can escape through, and has "
+                        "none that works.")
+            body.append("- **Why:** " + " ".join(why).replace("nominal ", "listed size "))
+            if "POL-E-EXCEPTION-2" in f.policies:
+                codes.append("IBC 1030.1 Exception 2")
+                body.append("- **Unless:** the room has a door that opens straight to a public way, yard or court "
+                            "(IBC 1030.1 Exception 2). The floor plans would show it.")
+            body.append(f"- **Code:** {_sections(*codes)}")
+        else:
+            win = f.subject.split(", ", 1)[0]
+            title = f"{win} in {_where(f)} is marked as the escape window but can't be one"
+            fails = [c for c in f.criteria if c.verdict == FAIL]
+            body.append(f"- **Problem:** {_cap('; '.join(_brief(c) for c in fails))}.")
+            room = next((r for r in results.rooms if f.id in r.related), None)
+            if room is not None and room.verdict != FAIL:
+                body.append(f"- **The room ({room.id}):** {room.verdict}. {_plain(room.summary)}")
+            body.append(f"- **Code:** {_sections(*[c.code for c in fails])}")
+        out.append(f"**{n}. {title}** ({f.id})")
+        out.append("")
+        out += body
+        out += _confidence(f, "**Confidence before sending:**")
+        out.append("")
 
 
-def _checks(results: Results, by_id: dict, out: list[str]) -> None:
-    out.append("## 2. Check these before relying on the report")
+def _look(results: Results, by_id: dict, out: list[str]) -> None:
+    out.append("## 2. Look at these yourself")
     out.append("")
     out.append("Places where the tool may be wrong, or where the drawings may hide a problem.")
     out.append("")
     bullets = []
     for a in results.attention:
-        rel = (" (" + ", ".join(_link(r) for r in a.related) + ")") if a.related else ""
+        rel = (" (" + ", ".join(a.related) + ")") if a.related else ""
         if a.code == "likely_fails":
             for part in a.detail.split(" | "):
                 fid, msg = part.split(": ", 1)
                 m = re.match(r"expect a Fail on ([^:]+): (.*)", msg)
                 head, rest = (m.group(1), m.group(2)) if m else ("a requirement", msg)
-                bullets.append(f"**{_link(fid)} is a likely Fail on {head}.** {_cap(rest)}")
+                bullets.append(f"**{fid} is likely to fail on {head}.** {_cap(rest)}")
         elif a.code in ("architect_allowable_mismatch", "ocr_readings"):
-            continue  # in Corrections item 1 / the OCR table below
+            continue  # in Corrections item 1 / the scanning list below
         elif a.code == "egress_claim_not_supported":
             tally: dict[str, int] = {}
             for rid in a.related:
                 tally[by_id[rid].verdict] = tally.get(by_id[rid].verdict, 0) + 1
             claim = re.search(r"says ('.*?') \((table row \d+)\)", a.detail)
             said = f"{claim.group(1)} ({claim.group(2)})" if claim else ""
-            bullets.append(f"**The code analysis claim is not supported.** It says {said}; "
-                           "the schedule proves a complying opening in none of the sleeping rooms (" +
+            bullets.append(f"**The code analysis claim is not supported.** It says {said}. The schedule does not "
+                           "show a working escape window in any bedroom (" +
                            ", ".join(f"{n} {v}" for v, n in tally.items()) + ").")
         else:
             bullets.append(f"**{a.title}.** {_plain(a.detail)}{rel}")
     for i in results.height.interpretations:
-        bullets.append(f"**Interpretation in {_link(results.height.id)}.** {_cap(_plain(i))}")
+        bullets.append(f"**A reading the brief decides ({results.height.id}).** {_cap(_plain(i))}")
     for b in bullets:
         out.append(f"- {b}")
-    out.append("")
     ocr: dict[str, list[str]] = {}
     for f in results.all:
         for fl in f.flags:
@@ -308,20 +342,16 @@ def _checks(results: Results, by_id: dict, out: list[str]) -> None:
             if fid == "schedule":
                 ocr.setdefault(msg, []).append("schedule header")
     if ocr:
-        out.append("**OCR damage the tool read through.** Confirm on the sheets:")
-        out.append("")
-        out.append("| Where | What was printed, and how it was read |")
-        out.append("|---|---|")
+        out.append("- **Scanning errors the tool read through.** Confirm each on the sheets:")
         for msg, ids in ocr.items():
-            where = ", ".join(_link(i) if re.fullmatch(r"[HRW]-[\w-]+", i) else i for i in dict.fromkeys(ids))
-            out.append(f"| {where} | {_md(_plain(msg))} |")
-        out.append("")
+            out.append(f"  - {', '.join(dict.fromkeys(ids))}: {_plain(msg)}")
+    out.append("")
 
 
 def _requests(results: Results, out: list[str]) -> None:
-    out.append("## 3. Information to request")
+    out.append("## 3. What to ask the architect")
     out.append("")
-    out.append("What would settle the Could Not Evaluate findings, written as requests to the architect.")
+    out.append("These would settle the Could Not Evaluate findings.")
     out.append("")
     reqs: dict[str, dict] = {}
     code_docs: dict[str, list[str]] = {}
@@ -335,47 +365,44 @@ def _requests(results: Results, out: list[str]) -> None:
                     continue
                 r = reqs.setdefault(did, {"title": title, "ids": [], "types": []})
                 r["ids"].append(f.id)
-                if f.check == "egress_window" and _type_mark(f):
-                    r["types"].append(_type_mark(f))
+                if f.check == "egress_window" and _ev(f, "type mark"):
+                    r["types"].append(_ev(f, "type mark"))
         for fl in f.flags:
             if fl["code"] in ("no_opening_designated", "no_complying_opening_designated"):
                 cands = re.findall(r"([HRW]-\d+) could comply", " ".join(f.working))
                 why = ("none is marked egress" if fl["code"] == "no_opening_designated" else
-                       "the designated one fails")
+                       "the one marked egress fails")
                 reqs.setdefault(f"designate:{f.id}", {
                     "title": "", "ids": [f.id], "types": [],
-                    "text": f"Designate a complying escape opening for {_room(f)}: {why}"
-                            + (f"; {', '.join(cands)} could comply at nominal size" if cands else "")})
-    out.append("| # | Request | Settles |")
-    out.append("|---|---|---|")
+                    "text": f"Mark an escape window for {_room(f)}: {why}"
+                            + (f", but {', '.join(cands)} could work at its listed size." if cands else ".")})
     order = [k for k in _REQUEST if k in reqs] + [k for k in reqs if k not in _REQUEST]
     for n, k in enumerate(order, 1):
         r = reqs[k]
         types = sorted(set(r["types"]))
-        text = r.get("text") or _REQUEST.get(k, "Provide: {title}").format(
+        text = r.get("text") or _REQUEST.get(k, "Provide: {title}.").format(
             title=r["title"], types=(f" for window type{'s' if len(types) > 1 else ''} {', '.join(types)}"
                                      if types else ""))
-        out.append(f"| {n} | {_md(_linkify(text))} | {', '.join(_link(i) for i in dict.fromkeys(r['ids']))} |")
+        out.append(f"{n}. {text} *Settles:* {', '.join(dict.fromkeys(r['ids']))}.")
     out.append("")
     if code_docs:
-        out.append("Code text the tool was not given, which the plan checker may want to confirm: " +
-                   "; ".join(f"{t} ({', '.join(_link(i) for i in dict.fromkeys(ids))})" for t, ids in code_docs.items())
-                   + ".")
+        out.append("Code text the tool was not given, which you may want to confirm: " +
+                   "; ".join(f"{t} ({', '.join(dict.fromkeys(ids))})" for t, ids in code_docs.items()) + ".")
         out.append("")
 
 
 def _height(h: Finding, out: list[str]) -> None:
-    out.append("## 4. Building height (IBC Table 504.3)")
+    out.append("### Building height")
     out.append("")
-    out.append(f"### {h.id} · Building height · **{h.verdict}**")
+    out.append(_heading(h, "Building height"))
     out.append("")
-    out.append(_plain(h.summary))
+    out.append(f"- **Result:** {_plain(h.summary)}")
     out.append("")
     if h.evidence:
         out.append("| Read from the code analysis | Value | Where |")
         out.append("|---|---|---|")
         for e in h.evidence:
-            out.append(f"| {_md(e['label'])} | `{_md(e['value'])}` | {_md(e['source'].split(', label')[0])} |")
+            out.append(f"| {_md(e['label'])} | {_md(e['value'])} | {_md(e['source'].split(', label')[0])} |")
         out.append("")
     steps = [w for w in h.working if not w.startswith("footnote ")]
     notes = [w for w in h.working if w.startswith("footnote ")]
@@ -385,115 +412,137 @@ def _height(h: Finding, out: list[str]) -> None:
         out += [f"{n}. {_cap(_plain(s)).replace(' -> ', ' → ')}" for n, s in enumerate(steps, 1)]
         out.append("")
     if notes:
-        out.append("**Footnotes on this cell:**")
+        out.append("**Footnotes printed on this cell:**")
         out.append("")
         for x in notes:
-            x = re.sub(r"\s*Points to: .*$", " It points to code text not provided (see §3).", _plain(x))
-            out.append("- " + x[0].upper() + x[1:])
+            x = re.sub(r"\s*Points to: .*$", " It points to code text that was not provided.", _plain(x))
+            out.append("- " + _cap(x))
         out.append("")
-    out.append(f"**Code:** {_sections(*h.code_refs)}")
-    out.append("")
-    out.append(f"**Confidence:** {h.confidence}" + (
-        ". " + _cap("; ".join(_plain(x) for x in h.confidence_reasons)) + "." if h.confidence_reasons else "."))
+    out.append(f"- **Code:** {_sections(*h.code_refs)}")
+    out += _confidence(h)
     out.append("")
 
 
 def _rooms(results: Results, by_id: dict, out: list[str]) -> None:
-    out.append("## 5. Sleeping rooms (IBC 1030.1)")
+    out.append("### Bedrooms")
     out.append("")
-    out.append("A sleeping room needs at least one complying escape opening. The room follows its designated egress "
-               "window; with none designated, or all of them failing, its other windows are considered.")
-    out.append("")
+    out.append("Every bedroom needs at least one window a person can escape through (IBC 1030.1). A bedroom follows "
+               "the window marked as its escape window. If none is marked, or the marked ones fail, its other windows "
+               "are considered.")
     scope = next((x for r in results.rooms for x in r.working if x.startswith("scope: ")), "")
     occ = scope[len("scope: "):].split("; ")[0] if scope else ""
     if occ:
-        out.append(f"Scope: {_plain(occ)}. Each room's story comes from its number, using the code analysis room "
-                   "numbering; 1030.1 covers sleeping rooms below the fourth story above grade plane.")
         out.append("")
-    out.append("| ID | Room | Story | Verdict | Confidence | Windows (EGRESS on the schedule) | Why | Code |")
-    out.append("|---|---|---|---|---|---|---|---|")
+        out.append(f"The rule covers this building because {_plain(occ)}. It covers bedrooms below the fourth story; "
+                   "each room's floor comes from its room number, using the numbering on the code analysis.")
+    out.append("")
     for r in results.rooms:
-        wins = [f"{_link(wid)} (egress): {by_id[wid].verdict}" if by_id[wid].verdict != NA else
-                f"{_link(wid)} (not egress)" for wid in r.related]
-        v = f"**{r.verdict}**" if r.verdict == FAIL else r.verdict
-        story = next((m.group(1) for x in r.working for m in [re.search(r"is on floor (\d+)", x)] if m), "?")
-        why = _linkify(_plain(r.summary))
+        story = next((m.group(1) for x in r.working for m in [re.search(r"is on floor (\d+)", x)] if m), "")
+        out.append(_heading(r, _room(r) + (f", floor {story}" if story else "")))
+        out.append("")
+        wins = [f"{wid} (escape window): {by_id[wid].verdict}" if by_id[wid].verdict != NA else
+                f"{wid} (not marked egress)" for wid in r.related]
+        src = next((e["source"] for e in r.evidence), "")
+        out.append(f"- **Windows:** {'; '.join(wins)}." + (f" Read from the {_plain(src).replace('.html,', ',')}."
+                                                          if src else ""))
+        why = (_plain(r.summary).replace("The designated opening", "The marked escape window")
+               .replace("is designated as the escape opening", "is marked as the escape window")
+               .replace("designate a complying opening", "mark a window that complies")
+               .replace("at nominal size", "at its listed size"))
         for fl in r.flags:
             if fl["code"] == "room_name_variants":
-                why += " The schedule spells this room more than one way; windows are grouped by room number."
-        out.append(f'| {r.id} | {_md(_room(r))} | {story} | {v} | {r.confidence} | {", ".join(wins)} | '
-                   f"{_md(why)} | {_md(_sections(*r.code_refs))} |")
-    out.append("")
+                why += " The schedule spells this room more than one way; its windows are grouped by room number."
+        out.append(f"- **Why:** {why}")
+        out.append(f"- **Code:** {_sections(*r.code_refs)}")
+        out += _confidence(r)
+        out.append("")
 
 
 def _windows(results: Results, out: list[str]) -> None:
     egress = [w for w in results.windows if w.verdict != NA]
     if not egress:
         return
-    out.append("## 6. Egress windows (IBC 1030.2, 1030.3)")
+    out.append("### Escape windows")
     out.append("")
-    out.append("Windows marked EGRESS on the schedule. How to read the results:")
+    out.append("Windows marked EGRESS on the schedule. Each is tested against the five requirements a schedule can "
+               "show. Three more can't be shown on any schedule, so they stay open for every window: it opens without "
+               "keys or tools (IBC 1030.1.1), any screen releases from inside (IBC 1030.5), and it opens onto a yard, "
+               "court or public way (IBC 1030.1). Section 3 asks for them. A fixed window "
+               "doesn't open, so its size tests are skipped.")
     out.append("")
-    out.append("- **Nominal size is an upper bound (≤).** It includes the frame, so the net clear area, height and "
-               "width are at most the nominal figure. It can prove a Fail, never a Pass.")
-    out.append("- **The sill is a lower bound (≥).** Sill = head height − window height, which is the frame's sill. "
-               "The clear opening starts higher, by the depth of the bottom frame.")
-    out.append("- **?** = not settled by the schedule. **⚠** = likely Fail (see §2). **Met** = satisfied as "
-               "scheduled.")
-    out.append("- **No schedule shows these, so they are open for every window below:** opening without keys or "
-               "tools (IBC 1030.1.1), screens that release from inside (IBC 1030.5), and opening onto a public way, "
-               "yard or court (IBC 1030.1). §3 lists what would settle them.")
-    out.append("")
-    out.append("| ID | Room | Type | Nominal W × H | Head | Opens (1030.2.1) | Area ≥ 5.7 sq ft (1030.2) | "
-               "Clear height ≥ 24 in (1030.2.1) | Clear width ≥ 20 in (1030.2.1) | Sill ≤ 44 in (1030.3) | Verdict | "
-               "Confidence |")
-    out.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
     for w in egress:
-        tm = _type_mark(w)
-        v = f"**{w.verdict}**" if w.verdict == FAIL else w.verdict
-        out.append(f'| {w.id} | {_md(w.subject.split(", ", 1)[1])} | '
-                   f"{_md(_ev(w, 'operation'))}" + (f" (type {_md(tm)})" if tm else "") + " | "
-                   f"{_md(_ev(w, 'width'))} × {_md(_ev(w, 'height'))} | {_md(_ev(w, 'head height'))} | "
-                   f"{_cell(_crit(w, 'Opens'))} | {_cell(_crit(w, 'Net clear opening'))} | "
-                   f"{_cell(_crit(w, 'Net clear height'))} | {_cell(_crit(w, 'Net clear width'))} | "
-                   f"{_cell(_crit(w, 'Bottom'))} | {v} | {w.confidence} |")
-    out.append("")
-    out.append("The area limit is 5.0 sq ft for a grade-floor opening (1030.2 Exception), and grade-floor status is "
-               "not shown, so a nominal area fails only at or below 5.0. Values are as printed on the schedule; "
-               "Appendix B gives each window's row.")
-    out.append("")
+        out.append(_heading(w, f"{w.subject.split(', ', 1)[0]}, {_where(w)}"))
+        out.append("")
+        tm = _ev(w, "type mark")
+        row = _row(w)
+        read = (f"{_ev(w, 'operation')}" + (f" (type {tm})" if tm else "") +
+                f", {_ev(w, 'width')} wide × {_ev(w, 'height')} high, head height {_ev(w, 'head height')}, "
+                f"EGRESS {_ev(w, 'egress').strip() or '(blank)'}")
+        out.append(f"- **Read from the window schedule" + (f", table row {row}" if row else "") + f":** {_md(read)}.")
+        out.append("")
+        out.append("| Requirement | Code | The schedule shows | Result |")
+        out.append("|---|---|---|---|")
+        for prefix, label in _TESTS:
+            c = _crit(w, prefix)
+            if c is None:
+                continue
+            out.append(f"| {_label(prefix, label, c)} | {_sections(c.code)} | {_md(_shows(c))} | {_result(c)} |")
+        out.append("")
+        likely = [fl["message"] for c in w.criteria for fl in c.flags
+                  if fl["code"] in ("sill_at_limit", "partial_opening_at_minimum")]
+        for msg in likely:
+            m = re.match(r"expect a Fail on [^:]+: (.*)", msg)
+            out.append(f"- **Likely to fail:** {_cap(m.group(1) if m else msg)}")
+        if w.verdict == CNE:
+            need = list(dict.fromkeys(t for s in w.settle for t, did, _ in _docs(s)
+                                      if did in ("PROJECT:WINDOW-DETAILS", "PROJECT:ELEVATIONS")))
+            if need:
+                out.append(f"- **Would settle it:** {' or '.join(need).lower()}.")
+        room = next((r for r in results.rooms if w.id in r.related), None)
+        if room is not None:
+            out.append(f"- **Room:** {_room(room)} ({room.id}, {room.verdict}).")
+        out += _confidence(w)
+        out.append("")
 
 
 def _not_applicable(results: Results, out: list[str]) -> None:
     na = [w for w in results.windows if w.verdict == NA]
     if not na:
         return
-    out.append("## 7. Windows: Not Applicable")
+    out.append("### Windows the rule doesn't apply to")
     out.append("")
-    out.append("| ID | Room | EGRESS cell | Verdict | Confidence | Why | Code |")
-    out.append("|---|---|---|---|---|---|---|")
-    for w in na:
-        if "POL-E-NOT-DESIGNATED" in w.policies:
-            why = (f"Not marked egress; 1030.1 needs one escape opening per sleeping room, not every window. "
-                   f"Considered in {', '.join(_link(r) for r in w.related)}.")
-        elif "POL-E-NOT-SLEEPING" in w.policies:
-            why = "Not a sleeping room (1030.1 applies to sleeping rooms)."
-        elif "POL-E-SLEEPING" in w.policies:
-            why = "Not clearly a sleeping room, so not evaluated. Confirm its use (see §2); if it is a sleeping room, it needs an escape opening."
-        else:
-            why = _plain(w.summary)
-        egress_cell = _ev(w, "egress").strip() or "(blank)"
-        out.append(f'| {w.id} | {_md(w.subject.split(", ", 1)[1])} | {_md(egress_cell)} | '
-                   f"{w.verdict} | {w.confidence} | {_md(why)} | {_md(_sections(*w.code_refs))} |")
-    out.append("")
+    groups = [
+        ("POL-E-NOT-SLEEPING", "**Not in a bedroom.** The escape-window rule applies to sleeping rooms only "
+                               "(IBC 1030.1)."),
+        ("POL-E-NOT-DESIGNATED", "**In a bedroom, but not marked egress.** A bedroom needs one escape window, not "
+                                 "every window to be one (IBC 1030.1). Each is still considered in its bedroom's "
+                                 "entry."),
+        ("POL-E-SLEEPING", "**Room use unclear.** The name isn't clearly a bedroom, so the rule wasn't applied. If "
+                           "people sleep there, it needs an escape window (IBC 1030.1). Confirm the room's use."),
+    ]
+    shown: set[str] = set()
+    for pol, text in groups + [("", "**Other.**")]:
+        ws = [w for w in na if w.id not in shown and (pol in w.policies or not pol)]
+        if not ws:
+            continue
+        shown |= {w.id for w in ws}
+        out.append(text)
+        out.append("")
+        out.append("| ID | Room | EGRESS cell | Schedule row | Verdict | Confidence |")
+        out.append("|---|---|---|---|---|---|")
+        for w in ws:
+            out.append(f"| {w.id} | {_md(_where(w))} | {_md(_ev(w, 'egress').strip() or '(blank)')} | "
+                       f"{_row(w) or '—'} | {w.verdict} | {w.confidence} |")
+        out.append("")
 
 
 def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]) -> None:
     fs = results.all
-    out.append("## Appendix")
+    out.append("## Appendix: for checking the tool")
     out.append("")
-    out.append("For checking the tool, not for reading the verdicts. File names are the tool's input files; rule ids "
-               "(`POL-…`) are the tool's named judgement calls.")
+    out.append("Not needed to read the verdicts. File names are the tool's input files; rule ids (`POL-…`) are the "
+               "tool's named judgement calls. Table rows are counted from 1 at the top of each table, header rows "
+               "included.")
     out.append("")
     cites: dict[str, str] = {}
     for f in fs:
@@ -512,26 +561,6 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
     for sec, where in sorted(cites.items()):
         out.append(f"| {_md(sec)} | {where} |")
     out.append("")
-    out.append("### B. Where each value was read")
-    out.append("")
-    out.append("Rows are counted from 1 at the top of each table, header rows included.")
-    out.append("")
-    out.append("| ID | In section | Source |")
-    out.append("|---|---|---|")
-    for f in fs:
-        srcs = list(dict.fromkeys(e["source"].split(", label")[0] for e in f.evidence))
-        rows: dict[str, list[str]] = {}
-        other = []
-        for x in srcs:
-            m = re.fullmatch(r"(.+?) table row (\d+)", x)
-            if m:
-                rows.setdefault(m.group(1), []).append(m.group(2))
-            else:
-                other.append(x)
-        srcs = [f"{k} table row{'s' if len(v) > 1 else ''} {', '.join(v)}" for k, v in rows.items()] + other
-        if srcs:
-            out.append(f"| {_link(f.id)} | {_section_of(f)} | {_md('; '.join(srcs))} |")
-    out.append("")
     used: dict[str, list[str]] = {}
     for f in fs:
         for p in f.policies:
@@ -543,7 +572,7 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
     for a in results.attention:
         for p in re.findall(r"POL-[A-Z0-9-]+", a.detail):
             used.setdefault(p, [])
-    out.append("### C. Rules the tool applied")
+    out.append("### B. Rules the tool applied")
     out.append("")
     out.append("Judgement calls are named rules, the same for every project, each with a test.")
     out.append("")
@@ -551,16 +580,15 @@ def _appendix(results: Results, inputs: list[dict], command: str, out: list[str]
     out.append("|---|---|---|---|")
     for pid in [p for p in POLICIES if p in used]:
         p = POLICIES[pid]
-        ids = list(dict.fromkeys(used[pid]))
-        by = ", ".join(_link(i) for i in ids)
-        out.append(f"| `{p.id}` {_md(p.title)} | {_md(p.rule)} | {_md('; '.join(dict.fromkeys(_rests(x) for x in p.rests_on)))} | "
-                   f"{by or 'whole report'} |")
+        by = ", ".join(dict.fromkeys(used[pid]))
+        out.append(f"| `{p.id}` {_md(p.title)} | {_md(p.rule)} | "
+                   f"{_md('; '.join(dict.fromkeys(_rests(x) for x in p.rests_on)))} | {by or 'whole report'} |")
     out.append("")
     unused = [p for p in POLICIES if p not in used]
     if unused:
         out.append("Not needed for this project: " + ", ".join(f"`{p}` ({POLICIES[p].title})" for p in unused) + ".")
         out.append("")
-    out.append("### D. Inputs")
+    out.append("### C. Inputs")
     out.append("")
     out.append("| Input | File | sha256 (first 12) |")
     out.append("|---|---|---|")
@@ -576,10 +604,15 @@ def render(results: Results, inputs: list[dict], command: str) -> str:
     by_id = {f.id: f for f in fs}
     counts = {v: sum(f.verdict == v for f in fs) for v in VERDICTS}
     out: list[str] = []
-    _header(results, counts, out)
+    _summary(results, counts, out)
     _corrections(results, by_id, out)
-    _checks(results, by_id, out)
+    _look(results, by_id, out)
     _requests(results, out)
+    out.append("## 4. Every finding in full")
+    out.append("")
+    out.append("Each entry gives the verdict, what was read from the sheets, any arithmetic, the code section and the "
+               "confidence.")
+    out.append("")
     _height(results.height, out)
     _rooms(results, by_id, out)
     _windows(results, out)
